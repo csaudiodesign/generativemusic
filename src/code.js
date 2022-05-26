@@ -996,16 +996,16 @@ generateButton.addEventListener('click', async () => {
         masterVolumeDrone.volume = 2;
     }
     else if(rhythmDensity === 1){
-        amplitudeLFODrone = 0.3
+        amplitudeLFODrone = 0.25
         masterVolumeDrone.volume = 4;
     }
     else if(rhythmDensity === 2){
-        amplitudeLFODrone = 0.25
+        amplitudeLFODrone = 0.2
         masterVolumeDrone.volume = 5;
     }
     else if(rhythmDensity === 3){
-        amplitudeLFODrone = 0.2
-        masterVolumeDrone.volume = 6;
+        amplitudeLFODrone = 0.15
+        masterVolumeDrone.volume = 3;
    }
     const lfoDrone = new LFO({frequency: "8n", min: 0, max: 1, amplitude: amplitudeLFODrone, phase: 120}).connect(masterDroneGain.gain).start();
 
