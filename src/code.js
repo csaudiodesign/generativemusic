@@ -8,8 +8,13 @@ import * as Nexus from 'nexusui';
 import audioFileUrlKick1 from 'url:./samples/kick01.mp3';
 import audioFileUrlKick2 from 'url:./samples/kick02.mp3';
 import audioFileUrlKick3 from 'url:./samples/kick03.mp3';
+import audioFileUrlKick4 from 'url:./samples/kick04.mp3';
 
 import audioFileUrlBass101 from 'url:./samples/bass101.mp3';
+import audioFileUrlBass102 from 'url:./samples/bass103.mp3';
+import audioFileUrlBass103 from 'url:./samples/bass102.mp3';
+import audioFileUrlBass104 from 'url:./samples/bass104.mp3';
+import audioFileUrlBass105 from 'url:./samples/bass105.mp3';
 
 import audioFileUrlKlick1 from 'url:./samples/klick1.mp3';
 import audioFileUrlKlick2 from 'url:./samples/klick2.mp3';
@@ -47,14 +52,16 @@ eq.highFrequency = 8600;
 
 //master gains
 const masterGain = new Gain(1).connect(eq);
-const kickMasterGain = new Volume(-3).connect(masterGain);
-const klickMasterGain = new Gain(0.9).connect(masterGain);
+const kickMasterGain = new Volume(4).connect(masterGain);
+const klickMasterGain = new Volume(-3).connect(masterGain);
 const masterRhythmFigureGain1 = new Gain(1).connect(masterGain);
 const masterRhythmFigureGain2 = new Gain(1).connect(masterGain);
-const masterNoiseGain = new Gain(1).connect(masterGain);
+const masterNoiseGain = new Volume(0).connect(masterGain);
+const bassMasterGain = new Volume(3).connect(masterGain);
+
 
 const masterVolumeDrone = new Volume(6).connect(masterGain);
-const autoFilterDrone = new BiquadFilter(150,'highpass').connect(masterVolumeDrone);
+const autoFilterDrone = new BiquadFilter(200,'highpass').connect(masterVolumeDrone);
 const masterDroneGain = new Gain(1.).connect(autoFilterDrone);
 
 import p5 from 'p5';
@@ -171,8 +178,13 @@ let myp5 = new p5(sketch);
 const bufferKick1 = new ToneAudioBuffer();
 const bufferKick2 = new ToneAudioBuffer();
 const bufferKick3 = new ToneAudioBuffer();
+const bufferKick4 = new ToneAudioBuffer();
 
 const bufferBass101 = new ToneAudioBuffer();
+const bufferBass102 = new ToneAudioBuffer();
+const bufferBass103 = new ToneAudioBuffer();
+const bufferBass104 = new ToneAudioBuffer();
+const bufferBass105 = new ToneAudioBuffer();
 
 const bufferKlick1 = new ToneAudioBuffer();
 const bufferKlick2 = new ToneAudioBuffer();
@@ -197,7 +209,12 @@ klickMasterGain.connect(wave);
 const playerKick1 = new Player(bufferKick1).connect(kickMasterGain);
 const playerKick2 = new Player(bufferKick2).connect(kickMasterGain);
 const playerKick3 = new Player(bufferKick3).connect(kickMasterGain);
-const playerBass = new Player(bufferBass101).connect(kickMasterGain);
+const playerKick4 = new Player(bufferKick4).connect(kickMasterGain);
+const playerBass = new Player(bufferBass101).connect(bassMasterGain);
+const playerBass2 = new Player(bufferBass102).connect(bassMasterGain);
+const playerBass3 = new Player(bufferBass103).connect(bassMasterGain);
+const playerBass4 = new Player(bufferBass104).connect(bassMasterGain);
+const playerBass5 = new Player(bufferBass105).connect(bassMasterGain);
 const playerKlick1 = new Player(bufferKlick1).connect(klickMasterGain);
 const playerKlick2 = new Player(bufferKlick2).connect(klickMasterGain);
 const playerKlick3 = new Player(bufferKlick3).connect(klickMasterGain);
@@ -643,8 +660,10 @@ generateButton.addEventListener('click', async () => {
     sequencer.matrix.set.row(1,quarterNote);
 
 
-    const rhythmDensity = Math.floor(Math.random()*4);
+    var rhythmDensity = Math.floor(Math.random()*4);
     console.log(rhythmDensity);
+
+    rhythmDensity = 3;
 
     //Generate Kicks
 
@@ -715,7 +734,7 @@ generateButton.addEventListener('click', async () => {
     else if(rhythmDensity === 3){
         bar1Bass = [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0];
         bar2Bass = [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0];
-        bar3Bass = [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        bar3Bass = [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0];
     }
     
 
@@ -768,8 +787,13 @@ generateButton.addEventListener('click', async () => {
     await bufferKick1.load(audioFileUrlKick1);
     await bufferKick2.load(audioFileUrlKick2);
     await bufferKick3.load(audioFileUrlKick3);
+    await bufferKick4.load(audioFileUrlKick4);
 
     await bufferBass101.load(audioFileUrlBass101);
+    await bufferBass102.load(audioFileUrlBass102);
+    await bufferBass103.load(audioFileUrlBass103);
+    await bufferBass104.load(audioFileUrlBass104);
+    await bufferBass105.load(audioFileUrlBass105);
 
     await bufferKlick1.load(audioFileUrlKlick1);
     await bufferKlick2.load(audioFileUrlKlick2);
@@ -794,10 +818,11 @@ generateButton.addEventListener('click', async () => {
 
     //------>>>>play Kick 
     function playKick(time, note) {
-        const random = Math.ceil(Math.random()*3);
+        const random = Math.ceil(Math.random()*4);
         if(random === 3) playerKick1.start(time);
         else if(random === 2) playerKick2.start(time);
-        else playerKick3.start(time);
+        else if (random === 1) playerKick3.start(time);
+        else  playerKick4.start(time);
         
     };
 
@@ -827,7 +852,12 @@ generateButton.addEventListener('click', async () => {
 
     //------>>>>play Bass
     function playBass(time, note) {
-        playerBass.start(time);
+        const random = Math.ceil(Math.random()*5);
+        if(random === 5) playerBass.start(time);
+        else if(random === 4) playerBass2.start(time);
+        else if(random === 3) playerBass4.start(time);
+        else if(random === 2) playerBass5.start(time);
+        else playerBass3.start(time);
     };
 
     current = 0;
@@ -869,7 +899,7 @@ generateButton.addEventListener('click', async () => {
     });
 
     function playRhythmFigure1(time, note) {
-        envRhythmFigure1.decay = generateRandom(0.2,0.9)
+        envRhythmFigure1.decay = generateRandom(0.5,0.9)
         envRhythmFigure1Noise.triggerAttackRelease(time);
         envRhythmFigure1.triggerAttackRelease(time);
     };
@@ -901,7 +931,7 @@ generateButton.addEventListener('click', async () => {
 
     //------>>>>play Rythm Figure 2
     gainsRythmFigure2 = gainsRythmFigure2.map((item,index) => {
-        return (new Gain({gain: exponentialGain(index,0.5,500)}).connect(envRhythmFigure2)); //connect(env)
+        return (new Gain({gain: exponentialGain(index,0.7,500)}).connect(envRhythmFigure2)); //connect(env)
     });
 
     oscillatorRhythmFigure2 = oscillatorRhythmFigure2.map((item,index) => {
@@ -1014,11 +1044,11 @@ generateButton.addEventListener('click', async () => {
     oscillatorDrone = oscillatorDrone.map((item,index) => {
         return (new Oscillator({frequency: frequencies[index], amplitude: 0,type: "sine"})).connect(gainsDrone[index]).start();
     });
-
+    
     function playDrone(time, note) {
         gainsDrone.forEach(
             (e,i) => {
-                e.gain.rampTo(exponentialGain(i, 0.4, 800),1);
+                e.gain.rampTo(exponentialGain(i, 0.4, 800),0.6);
             });
         //envDrone.triggerAttackRelease(time, "3:0:0");
     };
