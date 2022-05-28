@@ -63,7 +63,7 @@ const masterNoiseGain = new Volume(2).connect(masterGain);
 const bassMasterGain = new Volume(0).connect(masterGain);
 
 var rhythmDensity = Math.floor(Math.random()*5);
-//rhythmDensity = 0;
+//rhythmDensity = 3;
 console.log(rhythmDensity);
 
 
@@ -303,6 +303,7 @@ let frequenciesDrone =  [...Array(32)];
 let frequenciesZwei =  [...Array(32)];
 let frequenciesDrei =  [...Array(32)];
 let offsetFRQ1 = 5;
+if (rhythmDensity===3) offsetFRQ1 = 2;
 let frequenciesRhythmFigure2 =  [...Array(32)];
 if (rhythmDensity===1) var offsetFRQ2 = 2;
 else var offsetFRQ2 = 10;
@@ -374,8 +375,10 @@ frequenciesZwei.forEach((item,index) => {
 });
 
 frequenciesDrei.forEach((item,index) => {
-    frequenciesDrei[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index+8,2)));
+    frequenciesDrei[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index+2,2)));
 });
+
+
 
 
 frequenciesRhythmFigure2.forEach((item,index) => {
@@ -1423,7 +1426,7 @@ generateButton.addEventListener('click', async () => {
         freqLFO = '1n'
     }
     else if(rhythmDensity === 3){
-        amplitudeLFODrone = 0.15;
+        amplitudeLFODrone = 0;
         masterVolumeDrone.volume.value = 0;
    }
    else if(rhythmDensity === 4){
