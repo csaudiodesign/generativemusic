@@ -22,14 +22,14 @@ function generateRandom(min, max) {
 }
 
 
-let rhythmDensity = Math.round(generateRandom(3,6));
-rhythmDensity = 3;
+let rhythmDensity = Math.round(generateRandom(3,7));
+//rhythmDensity = 3;
 console.log(rhythmDensity);
 
 ///////////MASTER CHAIN--------------------------------------------------------------------------------
 const limiter = new Limiter(0).toDestination();
 limiter.threshold = -5;
-const volMaster = new Volume(0).connect(limiter);
+const volMaster = new Volume(6).connect(limiter);
 const eq = new EQ3(-6,-3,0).connect(volMaster);
 eq.highFrequency = 8600;
 const masterGain = new Gain(1).connect(eq);
@@ -338,8 +338,8 @@ let frequenciesRF1 =  [...Array(32)];
 let frequenciesRF13 =  [...Array(5)];
 
 if (rhythmDensity===3){
-    var oscillatorRhythmFigure1 = [...Array(5)];
-    var gainsRythmFigure1 = [...Array(5)]; 
+    var oscillatorRhythmFigure1 = [...Array(32)];
+    var gainsRythmFigure1 = [...Array(32)]; 
     distortionRF1.wet.value = 1;
     bitCrusherRF1.wet.value = 0;
     masterDistortionRF1.volume.value = -100;
@@ -711,11 +711,11 @@ frequencies.forEach((item,index) => {
 });
 
 frequenciesRF1.forEach((item,index) => {
-    frequenciesRF1[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index +5,2)));
+    frequenciesRF1[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index + 2,2)));
 });
 
 frequenciesRF13.forEach((item,index) => {
-    frequenciesRF13[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index +12,2)));
+    frequenciesRF13[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index +2,3)));
 });
 
 
@@ -1432,7 +1432,7 @@ generateButton.addEventListener('click', async () => {
     };
 
     gainsRythmFigure1 = gainsRythmFigure1.map((item,index) => {
-        return (new Gain({gain: exponentialGain(index,20,150)}).connect(envRhythmFigure1)); //connect(env)
+        return (new Gain({gain: exponentialGain(index,15,150)}).connect(envRhythmFigure1)); //connect(env)
     });
 
     const gainNoiseRhythmFigure1 = new Gain(0.2).connect(envRhythmFigure1Noise);
@@ -1455,6 +1455,8 @@ generateButton.addEventListener('click', async () => {
     }
 
     else if (rhythmDensity===3) {
+        masterNoiseGain.volume.value = 0;
+        //masterRhythmFigureGain1.volume.value=6;
         oscillatorRhythmFigure1 = oscillatorRhythmFigure1.map((item,index) => {
             return (new Oscillator({frequency: frequenciesRF13[index], type: "sine"})).connect(gainsRythmFigure1[index]).start();
         });
@@ -1570,8 +1572,9 @@ generateButton.addEventListener('click', async () => {
         freqLFO = '1n'
     }
     if(rhythmDensity===3){
+        numberofSineDrone = 12;
         ramptime = 1;
-        masterRhythmFigureGain1.volume.value = 3;
+        masterRhythmFigureGain1.volume.value = 5;
         masterVolumeDrone.volume.value = 2;
         droneTriggerGains =            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     }
