@@ -1,7 +1,6 @@
 "use strict";
 import {FeedbackDelay,Distortion,BitCrusher,Delay, BiquadFilter,Volume, EQ3,Limiter,Destination, LFO, Waveform, Reverb, Tremolo, Noise, start, MidiClass, Part, Oscillator, Gain, Transport, AmplitudeEnvelope, Synth, Offline, ToneAudioBuffer, Player} from 'tone';
 import * as Nexus from 'nexusui';
-
 //import { asdf } from './stuff';
 ///////////VARIATION-----------------------------------------------------------------------------------
 function generateRandom(min, max) {
@@ -22,8 +21,8 @@ function generateRandom(min, max) {
 }
 
 
-let rhythmDensity = Math.round(generateRandom(3,7));
-rhythmDensity = 5;
+let rhythmDensity = Math.round(generateRandom(3,8));
+rhythmDensity = 3;
 console.log(rhythmDensity);
 
 ///////////MASTER CHAIN--------------------------------------------------------------------------------
@@ -469,20 +468,30 @@ const playerKlick14 = new Player(bufferKlick14).connect(klickMasterGain).connect
 const playerKlick15 = new Player(bufferKlick15).connect(klickMasterGain).connect(reverbKlick).connect(delayKlick);
 const playerKlick16 = new Player(bufferKlick16).connect(klickMasterGain).connect(reverbKlick).connect(delayKlick);
 
-///////////SEQUENCER------------------------------------------------------------------------------
-var sequencer = new
-Nexus.Sequencer('#seq',{
+///////////NEXUS------------------------------------------------------------------------------
+var sequencer = new Nexus.Sequencer('#seq',{
     'size': [1500,300],
     'mode': 'toggle',
     'rows': 7,
     'columns': 144,
-   });
+    });
 sequencer.colorize("fill","#808080")
 sequencer.colorize("accent","#000000")
 const bar = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 const quarterNote = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
 sequencer.matrix.set.row(0,bar);
 sequencer.matrix.set.row(1,quarterNote);
+
+var slider = new Nexus.Slider('#volume',{
+    'size': [20,120],
+    'mode': 'relative',  // 'relative' or 'absolute'
+    'min': -100,
+    'max': 6,
+    'step': 0,
+    'value': 6
+})
+slider.colorize("fill","#808080");
+slider.colorize("accent","#000000");
 
 //initialize components
 const rhythmfigure2MasterGain = new Gain(1).toDestination();
@@ -703,8 +712,6 @@ hideButton.addEventListener('click', async () => {
         a.style.display = "none";
       }
 });
-
-
 
 frequencies.forEach((item,index) => {
     frequencies[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index +offsetFRQ1,2)));
@@ -977,15 +984,23 @@ function bassRhythm(array, fullKickOutput,flag){
             }
         }
 
-        // 5. Rule 
-        if (array.every((e,i) => {
-            if(array[i] === 1 && fullKickOutput[i] === 1){
-                return false;
+        if(array !==  fullKickOutput)
+        {        // 5. Rule 
+            if (array.every((e,i) => {
+     
+                if(array[i] === 1 && fullKickOutput[i] === 1){
+                    return false;
+                }
+                else return true;
+            }))
+             {
+                break;
             }
-            else return true;
-        }))
-            {
-            break;
+            
+        }
+        else if(array ===  fullKickOutput){
+            console.log('arrays are equal!')
+            return false;
         }
 
     }
@@ -1048,14 +1063,23 @@ function bassRhythm2(array, fullKickOutput,flag){
         }
 
         // 5. Rule 
-        if (array.every((e,i) => {
-            if(array[i] === 1 && fullKickOutput[i] === 1){
-                return false;
+        if(array !==  fullKickOutput)
+        {        // 5. Rule 
+            if (array.every((e,i) => {
+     
+                if(array[i] === 1 && fullKickOutput[i] === 1){
+                    return false;
+                }
+                else return true;
+            }))
+             {
+                break;
             }
-            else return true;
-        }))
-            {
-            break;
+            
+        }
+        else if(array ===  fullKickOutput){
+            console.log('arrays are equal!')
+            return false;
         }
 
     }
@@ -1257,8 +1281,16 @@ function doubleTime(array,amount){
 
 generateButton.addEventListener('click', async () => {
 
+    volMaster.volume.value = -100;
     await start();
+    volMaster.volume.rampTo(6,3);
+    slider.on('change',function(v) {
+        console.log(v);
+        volMaster.volume.value = v;
+      })
+    
     if(rhythmDensity===5) await reverbRF2.ready;
+    
 
     ////////////LOAD AUDIO SAMPLES----------------------------------------------------------------------------------------
     await bufferKick1.load(audioFileUrlKick1);
@@ -1852,12 +1884,14 @@ generateButton.addEventListener('click', async () => {
     partDroneGains.loopEnd = '9:0:0';
     partDroneGains.loop = true;
 
-    /////////////SET SEQUENCER-------------------------------------------------------------------------------------------------
+    /////////////SET Interface Slide-------------------------------------------------------------------------------------------------
     sequencer.matrix.set.row(2,fullgeneratedKick);
     sequencer.matrix.set.row(3,fullgeneratedBass);
     sequencer.matrix.set.row(4,fullgeneratedRhythmFigure1);
     sequencer.matrix.set.row(5,fullgeneratedRhythmFigure2);
     sequencer.matrix.set.row(6,fullgeneratedKlicks);
+
+
     
     /////////////PLAY BEAT-------------------------------------------------------------------------------------------------
     console.log('BPM: '+ Transport.bpm.value);
