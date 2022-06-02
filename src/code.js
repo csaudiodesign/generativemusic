@@ -22,7 +22,7 @@ function generateRandom(min, max) {
 
 
 let rhythmDensity = Math.round(generateRandom(3,8));
-rhythmDensity = 3;
+//rhythmDensity = 3;
 console.log(rhythmDensity);
 
 ///////////MASTER CHAIN--------------------------------------------------------------------------------
@@ -477,10 +477,6 @@ var sequencer = new Nexus.Sequencer('#seq',{
     });
 sequencer.colorize("fill","#808080")
 sequencer.colorize("accent","#000000")
-const bar = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-const quarterNote = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
-sequencer.matrix.set.row(0,bar);
-sequencer.matrix.set.row(1,quarterNote);
 
 //initialize components
 const rhythmfigure2MasterGain = new Gain(1).toDestination();
@@ -944,7 +940,7 @@ function bassRhythm(array, fullKickOutput,flag){
             }
     
             //2. Rule
-            arrayABS = triggerABS(array);
+             arrayABS = triggerABS(array);
     
             if(flag === 1){ // 4. Rule
                 if(array[0] === 0){
@@ -962,7 +958,7 @@ function bassRhythm(array, fullKickOutput,flag){
     
             else { // 4. Rule
                 if (arrayABS.every((e,i) => {
-                    if(e < 4 && i === count-1){ // 3.Rule
+                    if(e < 4  && i === count-1){ // 3.Rule
                         return true
                     }
                     else if(e < 4) return false;
@@ -972,25 +968,17 @@ function bassRhythm(array, fullKickOutput,flag){
                 }
             }
         }
-
-        if(array !==  fullKickOutput)
-        {        // 5. Rule 
-            if (array.every((e,i) => {
+        // 5. Rule 
+            array.map((e,i) => {
      
                 if(array[i] === 1 && fullKickOutput[i] === 1){
-                    return false;
+                    return array[i] = 0;
                 }
-                else return true;
-            }))
+                else return e;
+            });
              {
                 break;
             }
-            
-        }
-        else if(array ===  fullKickOutput){
-            console.log('arrays are equal!')
-            return false;
-        }
 
     }
 
@@ -1052,23 +1040,15 @@ function bassRhythm2(array, fullKickOutput,flag){
         }
 
         // 5. Rule 
-        if(array !==  fullKickOutput)
-        {        // 5. Rule 
-            if (array.every((e,i) => {
+        array.map((e,i) => {
      
-                if(array[i] === 1 && fullKickOutput[i] === 1){
-                    return false;
-                }
-                else return true;
-            }))
-             {
-                break;
+            if(array[i] === 1 && fullKickOutput[i] === 1){
+                return array[i] = 0;
             }
-            
-        }
-        else if(array ===  fullKickOutput){
-            console.log('arrays are equal!')
-            return false;
+            else return e;
+        });
+        {
+            break;
         }
 
     }
@@ -1869,6 +1849,10 @@ generateButton.addEventListener('click', async () => {
     partDroneGains.loop = true;
 
     /////////////SET Interface Slide-------------------------------------------------------------------------------------------------
+    const bar = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    const quarterNote = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
+    sequencer.matrix.set.row(0,bar);
+    sequencer.matrix.set.row(1,quarterNote);
     sequencer.matrix.set.row(2,fullgeneratedKick);
     sequencer.matrix.set.row(3,fullgeneratedBass);
     sequencer.matrix.set.row(4,fullgeneratedRhythmFigure1);
@@ -1883,6 +1867,7 @@ generateButton.addEventListener('click', async () => {
         partKick.start();
         partBass.start();
         partRhythmFigure1.start();
+        masterRhythmFigureGain1.volume.value = 0;
         //partRhythmFigure2.start();
         partKlick.start();
         partDrone.start();
