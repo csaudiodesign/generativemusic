@@ -482,17 +482,6 @@ const quarterNote = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0
 sequencer.matrix.set.row(0,bar);
 sequencer.matrix.set.row(1,quarterNote);
 
-var slider = new Nexus.Slider('#volume',{
-    'size': [20,120],
-    'mode': 'relative',  // 'relative' or 'absolute'
-    'min': -100,
-    'max': 6,
-    'step': 0,
-    'value': 6
-})
-slider.colorize("fill","#808080");
-slider.colorize("accent","#000000");
-
 //initialize components
 const rhythmfigure2MasterGain = new Gain(1).toDestination();
 //const reverbRhythmFigure2 = new Reverb(5).connect(rhythmfigure2MasterGain);
@@ -1284,11 +1273,6 @@ generateButton.addEventListener('click', async () => {
     volMaster.volume.value = -100;
     await start();
     volMaster.volume.rampTo(6,3);
-    slider.on('change',function(v) {
-        console.log(v);
-        volMaster.volume.value = v;
-      })
-    
     if(rhythmDensity===5) await reverbRF2.ready;
     
 
