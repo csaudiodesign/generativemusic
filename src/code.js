@@ -123,14 +123,14 @@ else if(rhythmDensity === 3){
 else if (rhythmDensity === 4){
     Transport.bpm.value = generateRandom(120,150);
     random = Math.random()
-    var bar1Kick = [1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0];
+    var bar1Kick = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0];
     var bar2Kick = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0];
     var bar3Kick = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0];
-    var bar4Kick = [1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0];
-    var bar5Kick = [1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0];
+    var bar4Kick = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0];
+    var bar5Kick = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0];
     var bar6Kick = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0];
     var bar7Kick = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0];
-    var bar8Kick = [1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0];
+    var bar8Kick = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0];
     var bar9Kick = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0];
     //const lfoDrone = new LFO({frequency: '4n', min: 80, max: 90, phase: 0}).connect(Transport).start();
 }
@@ -1576,7 +1576,7 @@ generateButton.addEventListener('click', async () => {
     }
 
     else if (rhythmDensity===3) {
-        masterNoiseGain.volume.value = 0;
+        masterNoiseGain.volume.value = -6;
         //masterRhythmFigureGain1.volume.value=6;
         oscillatorRhythmFigure1 = oscillatorRhythmFigure1.map((item,index) => {
             return (new Oscillator({frequency: frequenciesRF13[index], type: "sine"})).connect(gainsRythmFigure1[index]).start();
