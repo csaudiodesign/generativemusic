@@ -534,8 +534,8 @@ if(rhythmDensity===8){
 
 
 const lfoGainDrone = new Gain(1).connect(masterDroneGain);
-/*
-import p5 from 'p5';
+
+/*import p5 from 'p5';
 let sketch = function(p) {
     let masterVolume = -6; // in decibel.
 
@@ -574,7 +574,7 @@ let sketch = function(p) {
 
         Destination.volume.value = masterVolume;
     }
-*/
+
 // On window resize, update the canvas size
     p.windowResized = function() {
         p.resizeCanvas(p.windowWidth, p.windowHeight);
@@ -644,7 +644,7 @@ let sketch = function(p) {
       }
 };
 let myp5 = new p5(sketch);
-
+*/
 
 //const buffer = new ToneAudioBuffer();
 
