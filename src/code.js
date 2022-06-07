@@ -22,12 +22,12 @@ function generateRandom(min, max) {
 
 
 let rhythmDensity = Math.round(generateRandom(3,8));
-//rhythmDensity = 3;
+rhythmDensity = 3;
 console.log(rhythmDensity);
 
 ///////////MASTER CHAIN--------------------------------------------------------------------------------
 const limiter = new Limiter(0).toDestination();
-limiter.threshold = -5;
+limiter.threshold = -0.9;
 const volMaster = new Volume(6).connect(limiter);
 const eq = new EQ3(-6,-3,0).connect(volMaster);
 eq.highFrequency = 8600;
@@ -322,16 +322,22 @@ else if(rhythmDensity === 8){
 ///////////RHYTHM FIGURE 1------------------------------------------------------------------------------
 const masterRhythmFigureGain1 = new Volume(3).connect(masterGain);
 const masterNoiseGain = new Volume(2).connect(masterGain);
-const bitCrusherNoise = new BitCrusher(4).connect(masterNoiseGain);
-const bitCrusherRF1 = new BitCrusher(4).connect(masterNoiseGain);
-const distortionNoise = new Distortion(0.5).connect(masterNoiseGain);
-const masterDistortionRF1 = new Volume(-10).connect(masterNoiseGain);
+
+const bitCrusherNoiseVolume = new Volume(0).connect(masterNoiseGain);
+const bitCrusherNoise = new BitCrusher(4).connect(bitCrusherNoiseVolume);
+const distortionNoiseVolume = new Volume(0).connect(masterNoiseGain);
+const distortionNoise = new Distortion(0.5).connect(distortionNoiseVolume);
+
+const masterBitCrusherRF1 = new Volume(-10).connect(masterRhythmFigureGain1);
+const bitCrusherRF1 = new BitCrusher(4).connect(masterBitCrusherRF1);
+const masterDistortionRF1 = new Volume(-10).connect(masterRhythmFigureGain1);
 const distortionRF1 = new Distortion(0.5).connect(masterDistortionRF1);
 
 distortionNoise.wet.value = 0;
 distortionRF1.wet.value = 0;
 bitCrusherNoise.wet.value = 0;
 bitCrusherRF1.wet.value = 0;
+bitCrusherNoiseVolume.volume.value = -100;
 
 let frequenciesRF1 =  [...Array(32)];
 let frequenciesRF13 =  [...Array(5)];
@@ -339,9 +345,10 @@ let frequenciesRF13 =  [...Array(5)];
 if (rhythmDensity===3){
     var oscillatorRhythmFigure1 = [...Array(32)];
     var gainsRythmFigure1 = [...Array(32)]; 
-    distortionRF1.wet.value = 1;
+    distortionRF1.wet.value = 0;
     bitCrusherRF1.wet.value = 0;
     masterDistortionRF1.volume.value = -100;
+    bitCrusherNoiseVolume.volume.value = -100;
 }
 else {
     var gainsRythmFigure1 = [...Array(32)];
@@ -535,7 +542,7 @@ if(rhythmDensity===8){
 
 const lfoGainDrone = new Gain(1).connect(masterDroneGain);
 
-/*import p5 from 'p5';
+import p5 from 'p5';
 let sketch = function(p) {
     let masterVolume = -6; // in decibel.
 
@@ -644,7 +651,7 @@ let sketch = function(p) {
       }
 };
 let myp5 = new p5(sketch);
-*/
+
 
 //const buffer = new ToneAudioBuffer();
 
@@ -1455,7 +1462,6 @@ generateButton.addEventListener('click', async () => {
     }
     if(rhythmDensity===3) {
         let random = Math.ceil( Math.random()*5);
-        console.log(random);
         if(random === 1) fullgeneratedKlicks = generateKlicks1();
         else if(random === 2 )fullgeneratedKlicks = generateKlicks2();
         else if(random === 3 )fullgeneratedKlicks = generateKlicks3();
@@ -1485,7 +1491,6 @@ generateButton.addEventListener('click', async () => {
     }
     if(rhythmDensity===7) {
         let random = Math.ceil( Math.random()*4);
-        console.log(random);
         if(random === 1) fullgeneratedKlicks = generateKlicks1();
         //else if(random === 2 )fullgeneratedKlicks = generateKlicks1();
         else if(random === 3 )fullgeneratedKlicks = generateKlicks3();
@@ -1550,10 +1555,11 @@ generateButton.addEventListener('click', async () => {
         else envRhythmFigure1Noise.decay = generateRandom(0.2,0.8)
         envRhythmFigure1Noise.triggerAttackRelease(time);
         envRhythmFigure1.triggerAttackRelease(time);
+        console.log(limiter.reduction);
     };
 
     gainsRythmFigure1 = gainsRythmFigure1.map((item,index) => {
-        return (new Gain({gain: exponentialGain(index,15,150)}).connect(envRhythmFigure1)); //connect(env)
+        return (new Gain({gain: exponentialGain(index,15,200)}).connect(envRhythmFigure1)); //connect(env)
     });
 
     const gainNoiseRhythmFigure1 = new Gain(0.2).connect(envRhythmFigure1Noise);
@@ -1561,7 +1567,7 @@ generateButton.addEventListener('click', async () => {
 
     if (rhythmDensity===0){
         masterRhythmFigureGain1.volume.value = -100;
-        bitCrusherNoise.wet.value = 1;
+        bitCrusherNoise.wet.value = 0.3;
         masterNoiseGain.volume.value = 3;
     }
 
@@ -1695,7 +1701,7 @@ generateButton.addEventListener('click', async () => {
     if(rhythmDensity===3){
         numberofSineDrone = 12;
         ramptime = 1;
-        masterRhythmFigureGain1.volume.value = 5;
+        masterRhythmFigureGain1.volume.value = 20;
         masterVolumeDrone.volume.value = 2;
         droneTriggerGains =            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     }
@@ -1868,6 +1874,7 @@ generateButton.addEventListener('click', async () => {
         partBass.start();
         partRhythmFigure1.start();
         masterRhythmFigureGain1.volume.value = 0;
+        noiseRhythmFigure1.volume.value = 0;
         //partRhythmFigure2.start();
         partKlick.start();
         partDrone.start();
@@ -1900,6 +1907,7 @@ generateButton.addEventListener('click', async () => {
     }
     if (rhythmDensity===7){
         delayKlickVolume.volume.value = -10;
+        masterVolumeDrone .volume.value = 8; //6
         partKick.start();
         partBass.start();
         partKlick.start();
@@ -1915,5 +1923,7 @@ generateButton.addEventListener('click', async () => {
         //partRhythmFigure2.start();
         partDroneGains.start();
     }
+    
+
 });
 
