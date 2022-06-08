@@ -454,13 +454,13 @@ const envNoiseKlick = new AmplitudeEnvelope({
     sustain: 0.0,
     release: 0.0,
 }).connect(oscNoiseClickVolume);
-const noiseClick = new Noise("pink").connect(envNoiseKlick).start();
-/*const oscNoiseClick = new Oscillator(440, "sine8").connect(envNoiseKlick).start();
+//const noiseClick = new Noise("pink").connect(envNoiseKlick).start();
+const oscNoiseClick = new Oscillator(440, "sine8").connect(envNoiseKlick).start();
 let randomOSCNoiseClicktype= Math.floor(Math.random()*4);
 if(randomOSCNoiseClicktype === 0) oscNoiseClick.type = 'sine2'
 if(randomOSCNoiseClicktype === 1) oscNoiseClick.type = 'triangle2'
 if(randomOSCNoiseClicktype === 2) oscNoiseClick.type = 'sawtooth2'
-if(randomOSCNoiseClicktype === 3) oscNoiseClick.type = 'sine16'*/
+if(randomOSCNoiseClicktype === 3) oscNoiseClick.type = 'sine16'
 
 import audioFileUrlKlick1 from 'url:./samples/klick1.mp3';
 import audioFileUrlKlick2 from 'url:./samples/klick2.mp3';
