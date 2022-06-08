@@ -21,7 +21,7 @@ function generateRandom(min, max) {
 }
 
 
-let rhythmDensity = Math.round(generateRandom(3,8));
+let rhythmDensity = Math.round(generateRandom(3,9));
 //rhythmDensity = 8;
 console.log(rhythmDensity);
 
