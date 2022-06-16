@@ -1075,7 +1075,7 @@ generateButton.addEventListener('click', async () => {
     const delayKlickVolume = new Volume(-100).connect(klickMasterGain);
     const delayKlick = new FeedbackDelay('4n', 0.5).connect(delayKlickVolume);
 
-    const oscNoiseClickVolume = new Volume(-8).connect(masterGain);
+    const oscNoiseClickVolume = new Volume(-4).connect(masterGain);
     const envNoiseKlick = new AmplitudeEnvelope({
         attack: 0.01,
         decay: 0.0001,
