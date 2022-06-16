@@ -1,8 +1,13 @@
 "use strict";
 import {Players,ToneAudioBuffers,FeedbackDelay,Distortion,BitCrusher,Delay, BiquadFilter,Volume, EQ3,Limiter,Destination, LFO, Waveform, Reverb, Tremolo, Noise, start, MidiClass, Part, Oscillator, Gain, Transport, AmplitudeEnvelope, Synth, Offline, ToneAudioBuffer, Player, connect} from 'tone';
 import * as Nexus from 'nexusui';
-//import { asdf } from './stuff';
-import { kickSamples, bassSamples, klickSamples } from './importaudiofiles';
+import { Kicks } from './class.kicks';
+import { Klicks } from './class.klicks';
+import { Bass } from './class.bass';
+const kicks = new Kicks(0.75);
+const klicks = new Klicks(0.75);
+const bass = new Bass(1);
+
 
 function shuffle(array) {
     const r = (from = 0, to = 1) => from + Math.random() * (to - from);
@@ -18,7 +23,6 @@ function shuffle(array) {
 
 	return array;
 }
-
 
 function triggerABS(array)
 {   
@@ -688,13 +692,13 @@ generateButton.addEventListener('click', async () => {
 
    
     let rhythmDensity = Math.round(generateRandom(3,9));
-    rhythmDensity = 3;
+    rhythmDensity = 9;
     console.log(rhythmDensity);
 
     ///////////MASTER CHAIN--------------------------------------------------------------------------------
-    const finalMasterVolume = new Volume(2).toDestination();
-    const limiter = new Limiter(-30).connect(finalMasterVolume);
-    const volMaster = new Volume(24).connect(limiter);
+    const finalMasterVolume = new Volume(6).toDestination();
+    const limiter = new Limiter(0).connect(finalMasterVolume);
+    const volMaster = new Volume(10).connect(limiter);
     const eq = new EQ3(-6,-3,0).connect(volMaster);
     eq.highFrequency = 8600;
     const masterGain = new Gain(1).connect(eq);
@@ -702,62 +706,18 @@ generateButton.addEventListener('click', async () => {
     
     
     
-    /* volMaster.volume.value = -100; */
-   /*  volMaster.volume.rampTo(6,3); */
+    volMaster.volume.value = -100;
+    volMaster.volume.rampTo(6,3);
 
     ///////////KICK----------------------------------------------------------------------------------------
-    const kickMasterGain = new Volume(4).connect(masterGain);
+    const kickMasterGain = new Volume(0).connect(masterGain);
     ////////////LOAD AUDIO SAMPLES----------------------------------------------------------------------------------------
        
     
     const biquadKickVolume = new Volume(-100).connect(masterGain);
     const biquadKick = new BiquadFilter(200,'bandpass').connect(biquadKickVolume)
 
-    /* const kickBuffers = new ToneAudioBuffers({
-        urls: {
-            C1: "kick01.mp3",
-            D1: "kick02.mp3",
-            E1: "kick03.mp3",
-            F1: "kick04.mp3",
-        },
-        onload: () => console.log("Kick loaded"),
-        baseUrl: "./samples/"
-    }); */
-
-    const playerKicks = new Players({
-            C1: "./samples/kick01.mp3",
-            D1: "./samples/kick02.mp3",
-            E1: "./samples/kick03.mp3",
-            F1: "./samples/kick04.mp3",
-        },
-        () => {
-            playerKicks.connect(kickMasterGain);
-            playerKicks.connect(biquadKick);
-            console.log('buffers loaded:', playerKicks.loaded);
-        }
-    );
-    
-    console.log(playerKicks.get('C1'));
-    
-    let url = 'https://tonejs.github.io/audio/berklee/gong_1.mp3';
-
-    const player = new Player('https://tonejs.github.io/audio/berklee/gong_1.mp3').toDestination();
-    
-    player.loaded = true;
-    player.autostart = true;
-    player.loop  = true;
-    console.log(player.get());
-    
-    
-
-    
-    
-
-
-/*     const playerKick1 = new Player(kicks[0]).connect(kickMasterGain).connect(biquadKick);
-    const playerKick2 = new Player(kicks[1]).connect(kickMasterGain).connect(biquadKick);
-    const playerKick3 = new Player(kicks[2]).connect(kickMasterGain).connect(biquadKick);
-    const playerKick4 = new Player(kicks[3]).connect(kickMasterGain).connect(biquadKick); */
+    kicks.out.connect(kickMasterGain).connect(biquadKick);
 
     let bar1Kick;
     let bar2Kick;
@@ -915,23 +875,7 @@ generateButton.addEventListener('click', async () => {
     ///////////BASS----------------------------------------------------------------------------------------
     const bassMasterGain = new Volume(0).connect(masterGain);
 
-    const bassBuffers = new ToneAudioBuffers({
-        urls: {
-            C1: 'bass101.mp3',
-            D1: 'bass102.mp3',
-            E1: 'bass103.mp3',
-            F1: 'bass104.mp3',
-            G1: 'bass105.mp3'
-        },
-        onload: () => {
-            console.log("Bass loaded")},
-        baseUrl: "./samples/"
-    });
-
-    const playerBasses = new Players({
-        urls: bassBuffers,
-        connect: () => bassMasterGain
-    });
+    bass.out.connect(bassMasterGain);
 
     let bar1Bass;
     let bar2Bass;
@@ -1176,36 +1120,7 @@ generateButton.addEventListener('click', async () => {
     if(randomOSCNoiseClicktype === 2) oscNoiseClick.type = 'sawtooth2'
     if(randomOSCNoiseClicktype === 3) oscNoiseClick.type = 'sine16'
 
-
-    const klickBuffers = new ToneAudioBuffers({
-        urls: {
-            C1: 'klick1.mp3',
-            D1: 'klick2.mp3',
-            E1: 'klick3.mp3',
-            F1: 'klick4.mp3',
-            G1: 'klick5.mp3',
-            A1: 'klick6.mp3',
-            H1: 'klick7.mp3',
-            C2: 'klick8.mp3',
-            D2: 'klick9.mp3',
-            E2: 'klick10.mp3',
-            F2: 'klick11.mp3',
-            G2: 'klick12.mp3',
-            A2: 'klick13.mp3',
-            H2: 'klick14.mp3',
-            C3: 'klick15.mp3',
-            D3: 'klick16.mp3'
-        },
-        onload: () => console.log("Klicks loaded"),
-        baseUrl: "./samples/"
-    });
-
-    const playerKlicks = new Players({
-        urls: klickBuffers,
-        connect: () => klickMasterGain,
-        connect: () => reverbKlick,
-        connect: () => delayKlick,
-    });
+    klicks.out.connect(klickMasterGain).connect(reverbKlick).connect(delayKlick);
 
     const masterVolumeDrone = new Volume(6).connect(masterGain);
     var filterFRQDrone = 100
@@ -1316,8 +1231,6 @@ generateButton.addEventListener('click', async () => {
     });
     sequencer.colorize("fill","#808080")
     sequencer.colorize("accent","#000000")
-    
-    
 
     ////////////GENERATE KICK----------------------------------------------------------------------------------------
     let flag = 0;
@@ -1392,7 +1305,6 @@ generateButton.addEventListener('click', async () => {
         flag = checklastTrigger(generatedBar2Kick);
     }
 
-    
     const fullgeneratedKick = generatedBar1Kick.concat(generatedBar2Kick,generatedBar3Kick,generatedBar4Kick,generatedBar5Kick,generatedBar6Kick,generatedBar7Kick,generatedBar8Kick,generatedBar9Kick);
     const fullKickOutput = [generatedBar1Kick, generatedBar2Kick, generatedBar3Kick,generatedBar4Kick,generatedBar5Kick,generatedBar6Kick,generatedBar7Kick,generatedBar8Kick,generatedBar9Kick];
 
@@ -1489,7 +1401,7 @@ generateButton.addEventListener('click', async () => {
     }
     if(rhythmDensity===3) {
         let random = Math.ceil( Math.random()*5);
-        if(random === 1) fullgeneratedKlicks = generateKlicks1();
+     if(random === 1) fullgeneratedKlicks = generateKlicks1();
         else if(random === 2 )fullgeneratedKlicks = generateKlicks2();
         else if(random === 3 )fullgeneratedKlicks = generateKlicks3();
         else if(random === 4 )fullgeneratedKlicks = generateKlicks5();
@@ -1535,21 +1447,16 @@ generateButton.addEventListener('click', async () => {
     if(rhythmDensity===9) {
         fullgeneratedKlicks = generateKlicks4();
     }
-
-    //playerKicks.get("C1").start();
-    //console.log(playerKicks.player('C1'));
-    //playerKicks.player('C1').start();
     
 
     /////////////PLAY KICKS-------------------------------------------------------------------------------------------------
     function playKick(time, note) {
-        //playerKicks.player('C1').start();
-        
+    //kicks.kit.triggerAttack('C1');
         const random = Math.ceil(Math.random()*4);
-/*         if(random === 3) playerKicks.buffer = kickBuffers.get("C1").start(time);
-        else if(random === 2) playerKicks.buffer = kickBuffers.get("C1").start(time);
-        else if (random === 1) playerKicks.buffer = kickBuffers.get("C1").start(time);
-        else  playerKicks.buffer = kickBuffers.get("C1").start(time); */
+        if(random === 3) kicks.kit.player('C1').start(time);
+        else if(random === 2) kicks.kit.player('D1').start(time);
+        else if (random === 1) kicks.kit.player('E1').start(time);
+        else kicks.kit.player('F1').start(time);
     };
     
     const patternKick = translateBinarytoTone(fullgeneratedKick);
@@ -1558,20 +1465,20 @@ generateButton.addEventListener('click', async () => {
     partKick.loop = true;
 
     if(rhythmDensity===6){
-        playerKick1.playbackRate = 20;
-        playerKick2.playbackRate = 20;
-        playerKick3.playbackRate = 20;
-        playerKick4.playbackRate = 20;
+        kicks.kit.player.playbackRate = 20;
+        kicks.kit.player.playbackRate = 20;
+        kicks.kit.player.playbackRate = 20;
+        kicks.kit.player.playbackRate = 20;
     }
 
     /////////////PLAY BASS-------------------------------------------------------------------------------------------------
     function playBass(time, note) {
         const random = Math.ceil(Math.random()*5);
-        if(random === 5) playerBass.start(time);
-        else if(random === 4) playerBass2.start(time);
-        else if(random === 3) playerBass4.start(time);
-        else if(random === 2) playerBass5.start(time);
-        else playerBass3.start(time);
+        if(random === 5) bass.kit.player('C1').start(time);
+        else if(random === 4) bass.kit.player('D1').start(time);
+        else if(random === 3) bass.kit.player('E1').start(time);
+        else if(random === 2) bass.kit.player('F1').start(time);
+        else bass.kit.player('G1').start(time);
     };
 
     const patternBass = translateBinarytoTone(fullgeneratedBass);
@@ -1661,24 +1568,25 @@ generateButton.addEventListener('click', async () => {
     
     /////////////PLAY KLICK-------------------------------------------------------------------------------------------------
     function playKlick(time, note) {
+        
         const random = Math.floor(Math.random()*16);
         const random2 = Math.floor(Math.random()*3);
-        if (random === 0) playerKlick1.start(time);
-        if (random === 1) playerKlick2.start(time);
-        if (random === 2) playerKlick3.start(time);
-        if (random === 3) playerKlick4.start(time);
-        if (random === 4) playerKlick5.start(time);
-        if (random === 5) playerKlick6.start(time);
-        if (random === 6) playerKlick7.start(time);
-        if (random === 7) playerKlick8.start(time);
-        if (random === 8) playerKlick9.start(time);
-        if (random === 9) playerKlick10.start(time);
-        if (random === 10) playerKlick11.start(time);
-        if (random === 11) playerKlick12.start(time);
-        if (random === 12) playerKlick13.start(time);
-        if (random === 13) playerKlick14.start(time);
-        if (random === 14) playerKlick15.start(time);
-        if (random === 15) playerKlick16.start(time);
+        if (random === 0) klicks.kit.player('C1').start(time);
+        if (random === 1) klicks.kit.player('D1').start(time);
+        if (random === 2) klicks.kit.player('E1').start(time);
+        if (random === 3) klicks.kit.player('F1').start(time);
+        if (random === 4) klicks.kit.player('G1').start(time);
+        if (random === 5) klicks.kit.player('A1').start(time);
+        if (random === 6) klicks.kit.player('B1').start(time);
+        if (random === 7) klicks.kit.player('C2').start(time);
+        if (random === 8) klicks.kit.player('D2').start(time);
+        if (random === 9) klicks.kit.player('E2').start(time);
+        if (random === 10) klicks.kit.player('F2').start(time);
+        if (random === 11) klicks.kit.player('G2').start(time);
+        if (random === 12) klicks.kit.player('A2').start(time);
+        if (random === 13) klicks.kit.player('B2').start(time);
+        if (random === 14) klicks.kit.player('C3').start(time);
+        if (random === 15) klicks.kit.player('D3').start(time);
 
         if (rhythmDensity===7){
             if (random2 === 0){
@@ -1942,14 +1850,14 @@ generateButton.addEventListener('click', async () => {
     }
     if(rhythmDensity==3){
         partKick.start();
-/*         partBass.start();
+        partKlick.start();
+        partBass.start();
         partRhythmFigure1.start();
-        masterRhythmFigureGain1.volume.value = 10;
+        masterRhythmFigureGain1.volume.value = -10;
         noiseRhythmFigure1.volume.value = 5;
         //partRhythmFigure2.start();
-        partKlick.start();
         partDrone.start();
-        partDroneGains.start(); */
+        partDroneGains.start();
 
     }
     if(rhythmDensity==4){
