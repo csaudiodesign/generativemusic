@@ -42,6 +42,7 @@ import {
 const kicks = new Kicks(0.75);
 const klicks = new Klicks(0.75);
 const bass = new Bass(1);
+import p5 from 'p5';
 
 
 function shuffle(array) {
@@ -557,7 +558,6 @@ hideButton.addEventListener('click', async () => {
     }
 });
 
-import p5 from 'p5';
 let sketch = function (p) {
     let masterVolume = -6; // in decibel.
 
