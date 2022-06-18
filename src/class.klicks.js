@@ -1,4 +1,4 @@
-import { Gain, EQ3, Sampler, Players } from "tone";
+import { Gain, EQ3, Players, Reverb,FeedbackDelay} from "tone";
 
 export class Klicks {
 
@@ -9,6 +9,10 @@ export class Klicks {
 
         this.out = new Gain(volume);
         this.eq = new EQ3(0, 0, 0);
+        this.reverb = new Reverb (1);
+        this.reverb.wet.value = 0;
+        this.delay = new FeedbackDelay('4n', 0.5);
+        this.delay.wet.value = 0;
 
         this.kit = new Players({
             C1: './samples/klick1.mp3',
@@ -29,7 +33,7 @@ export class Klicks {
             D3: './samples/klick16.mp3'
         }, () => {
             console.log('Klicks loaded');
-            this.kit.chain(this.eq, this.out);
+            this.kit.chain(this.eq, this.reverb, this.delay, this.out);
 
         });
     };   

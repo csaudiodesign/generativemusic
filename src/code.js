@@ -39,7 +39,7 @@ import {
 import {
     Bass
 } from './class.bass';
-const kicks = new Kicks(0.75);
+const kicks = new Kicks(3);
 const klicks = new Klicks(0.75);
 const bass = new Bass(1);
 import p5 from 'p5';
@@ -686,7 +686,7 @@ generateButton.addEventListener('click', async () => {
 
 
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    rhythmDensity = 9;
+    /* rhythmDensity = 7; */
     console.log(rhythmDensity);
 
     ///////////MASTER CHAIN--------------------------------------------------------------------------------
@@ -705,13 +705,7 @@ generateButton.addEventListener('click', async () => {
 
     ///////////KICK----------------------------------------------------------------------------------------
     const kickMasterGain = new Volume(0).connect(masterGain);
-    ////////////LOAD AUDIO SAMPLES----------------------------------------------------------------------------------------
-
-
-    const biquadKickVolume = new Volume(-100).connect(masterGain);
-    const biquadKick = new BiquadFilter(200, 'bandpass').connect(biquadKickVolume)
-
-    kicks.out.connect(kickMasterGain).connect(biquadKick);
+    kicks.out.connect(kickMasterGain);
 
     let bar1Kick;
     let bar2Kick;
@@ -858,7 +852,6 @@ generateButton.addEventListener('click', async () => {
     }
     ///////////BASS----------------------------------------------------------------------------------------
     const bassMasterGain = new Volume(0).connect(masterGain);
-
     bass.out.connect(bassMasterGain);
 
     let bar1Bass;
@@ -1063,16 +1056,13 @@ generateButton.addEventListener('click', async () => {
         sustain: 1,
         release: 0.01,
     }).connect(filterRF2).connect(delayRF2).connect(reverbRF2);
+    if (rhythmDensity === 5) await reverbRF2.ready;
 
 
 
     ///////////Klick------------------------------------------------------------------------------
     const klickMasterGain = new Volume(6).connect(masterGain);
-    const reverbKlickVolume = new Volume(-20).connect(klickMasterGain);
-    const reverbKlick = new Reverb(100).connect(reverbKlickVolume);
-    reverbKlickVolume.volume.value = -100;
-    const delayKlickVolume = new Volume(-100).connect(klickMasterGain);
-    const delayKlick = new FeedbackDelay('4n', 0.5).connect(delayKlickVolume);
+    klicks.out.connect(klickMasterGain);
 
     const oscNoiseClickVolume = new Volume(-4).connect(masterGain);
     const envNoiseKlick = new AmplitudeEnvelope({
@@ -1082,9 +1072,6 @@ generateButton.addEventListener('click', async () => {
         release: 0.0,
     }).connect(oscNoiseClickVolume);
 
-
-    if (rhythmDensity === 5) await reverbRF2.ready;
-
     const oscNoiseClick = new Oscillator(440, "sine8").connect(envNoiseKlick).start();
     let randomOSCNoiseClicktype = Math.floor(Math.random() * 4);
     if (randomOSCNoiseClicktype === 0) oscNoiseClick.type = 'sine2'
@@ -1092,7 +1079,6 @@ generateButton.addEventListener('click', async () => {
     if (randomOSCNoiseClicktype === 2) oscNoiseClick.type = 'sawtooth2'
     if (randomOSCNoiseClicktype === 3) oscNoiseClick.type = 'sine16'
 
-    klicks.out.connect(klickMasterGain).connect(reverbKlick).connect(delayKlick);
 
     const masterVolumeDrone = new Volume(6).connect(masterGain);
     var filterFRQDrone = 100
@@ -1390,13 +1376,16 @@ generateButton.addEventListener('click', async () => {
         fullgeneratedKlicks = generateKlicks3();
         fullgeneratedKlicks = doubleTime(fullgeneratedKlicks, 2);
         klickMasterGain.volume.value = -5;
-        reverbKlickVolume.volume.value = -10;
+        //reverbKlickVolume.volume.value = -10;
+        klicks.reverb.wet.value = 0.5;
+        klicks.reverb.decay = 100;
     }
     if (rhythmDensity === 6) {
         fullgeneratedKlicks = generateKlicks3();
         fullgeneratedKlicks = doubleTime(fullgeneratedKlicks, 2);
         klickMasterGain.volume.value = -5;
-        reverbKlickVolume.volume.value = -10;
+        klicks.reverb.wet.value = 0.5;
+        klicks.reverb.decay = 100;
     }
     if (rhythmDensity === 7) {
         let random = Math.ceil(Math.random() * 4);
@@ -1571,16 +1560,19 @@ generateButton.addEventListener('click', async () => {
 
         if (rhythmDensity === 7) {
             if (random2 === 0) {
-                reverbKlickVolume.volume.value = generateRandom(-20, -15);
-                delayKlick.delayTime.value = '4n'
+                klicks.reverb.wet.value = generateRandom(0.1,0.9);
+                klicks.reverb.decay = 100;
+                klicks.delay.delayTime.value = '4n';
             }
             if (random2 === 1) {
-                reverbKlickVolume.volume.value = generateRandom(-30, -15);
-                delayKlick.delayTime.value = '8n'
+                klicks.reverb.wet.value = generateRandom(0.1,0.9);
+                klicks.reverb.decay = 100;
+                klicks.delay.delayTime.value = '8n';
             }
             if (random2 === 2) {
-                reverbKlickVolume.volume.value = generateRandom(-30, -15);
-                delayKlick.delayTime.value = '2n'
+                klicks.reverb.wet.value = generateRandom(0.1,0.9);
+                klicks.reverb.decay = 100;
+                klicks.delay.delayTime.value = '2n';
             }
         } else if (rhythmDensity === 9) {
             envNoiseKlick.attack = generateRandom(0.001, 0.0001);
@@ -1928,8 +1920,11 @@ generateButton.addEventListener('click', async () => {
         partDroneGains.start();
     }
     if (rhythmDensity === 6) {
-        kickMasterGain.volume.value = -100;
-        biquadKickVolume.volume.value = -10;
+
+        kicks.biquad.frequency.value  = 300;
+        kicks.biquad.type = 'bandpass';
+/*         kickMasterGain.volume.value = -100;
+        biquadKickVolume.volume.value = 10; //-10 */
         partKick.start();
         partBass.start();
         partKlick.start();
@@ -1937,7 +1932,7 @@ generateButton.addEventListener('click', async () => {
         partDroneGains.start();
     }
     if (rhythmDensity === 7) {
-        delayKlickVolume.volume.value = -10;
+        klicks.delay.wet.value = 0.5
         masterVolumeDrone.volume.value = 8; //6
         partKick.start();
         partBass.start();
