@@ -52,6 +52,11 @@ import {
 const rF1 = new rhythmFigure1(12);
 const rF1Noise = new rhythmFigure1Noise(0);
 
+import {
+    rhythmFigure2,
+} from './class.rhythmFigure2';
+const rf2 = new rhythmFigure2;
+
 function shuffle(array) {
     const r = (from = 0, to = 1) => from + Math.random() * (to - from);
     var m = array.length,
@@ -692,7 +697,7 @@ generateButton.addEventListener('click', async () => {
     }
 
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    rhythmDensity = 9;
+    rhythmDensity = 6;
     console.log(rhythmDensity);
 
     ///////////MASTER CHAIN--------------------------------------------------------------------------------
@@ -993,24 +998,10 @@ generateButton.addEventListener('click', async () => {
 
     ///////////RHYTHM FIGURE 2------------------------------------------------------------------------------
     const masterRhythmFigureGain2 = new Volume(-10).connect(masterGain);
-    
+    rf2.out.connect(masterRhythmFigureGain2);
+    rf2.oscillatorRhythmFigure2.forEach((e) => e.start());
 
-    const filterRF2 = new BiquadFilter(750, 'bandpass').connect(masterRhythmFigureGain2);
-    const gainDelayRF2 = new Volume(-3).connect(masterRhythmFigureGain2);
-    const delayRF2 = new FeedbackDelay('2n', 0.5).connect(gainDelayRF2);
-    const gainReverbRF2 = new Volume().connect(filterRF2)
-    const reverbRF2 = new Reverb(150).connect(gainReverbRF2);
-
-    let oscillatorRhythmFigure2 = [...Array(32)];
-    let gainsRythmFigure2 = [...Array(32)];
-
-    const envRhythmFigure2 = new AmplitudeEnvelope({
-        attack: 0.9,
-        decay: 0.01,
-        sustain: 1,
-        release: 0.01,
-    }).connect(filterRF2).connect(delayRF2).connect(reverbRF2);
-    if (rhythmDensity === 5) await reverbRF2.ready;
+    //if (rhythmDensity === 5) await reverbRF2.ready;
 
     ///////////Klick------------------------------------------------------------------------------
     const klickMasterGain = new Volume(6).connect(masterGain);
@@ -1086,7 +1077,7 @@ generateButton.addEventListener('click', async () => {
 
     let frequencies = [...Array(32)];
     let frequenciesDrone = [...Array(32)];
-    let frequenciesZwei = [...Array(32)];
+    
     let frequenciesDrei = [...Array(32)];
     let offsetFRQ1 = 5;
     if (rhythmDensity === 3) offsetFRQ1 = 2;
@@ -1110,10 +1101,6 @@ generateButton.addEventListener('click', async () => {
 
     frequenciesDrone.forEach((item, index) => {
         frequenciesDrone[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index + 5, 2.5)));
-    });
-
-    frequenciesZwei.forEach((item, index) => {
-        frequenciesZwei[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index + 3, 2)));
     });
 
     frequenciesDrei.forEach((item, index) => {
@@ -1405,25 +1392,16 @@ generateButton.addEventListener('click', async () => {
 
     /////////////PLAY RHYTHM FIGURE 2-------------------------------------------------------------------------------------------------
     function playRhythmFigure2(time, note) {
-        gainsRythmFigure2.forEach(
+        rf2.gains.forEach(
             (e, i) => {
                 e.gain.rampTo(exponentialGain(i, numberofSineDrone, 800), ramptime);
             });
-        envRhythmFigure2.triggerAttackRelease(time, "8n");
+        rf2.env.triggerAttackRelease(time, "8n");
     };
 
-    gainsRythmFigure2 = gainsRythmFigure2.map((item, index) => {
-        return (new Gain({
-            gain: exponentialGain(index, 32, 500)
-        }).connect(envRhythmFigure2)); //connect(env)
-    });
 
-    oscillatorRhythmFigure2 = oscillatorRhythmFigure2.map((item, index) => {
-        return (new Oscillator({
-            frequency: frequenciesZwei[index],
-            type: "sine"
-        })).connect(gainsRythmFigure2[index]).start();
-    });
+
+
 
     const patternRhythmFigure2 = translateBinarytoTone(fullgeneratedRhythmFigure2);
     const partRhythmFigure2 = new Part(playRhythmFigure2, patternRhythmFigure2);
@@ -1809,6 +1787,11 @@ generateButton.addEventListener('click', async () => {
     if (rhythmDensity === 5) {
         partKlick.start();
         partBass.start();
+        rf2.reverb.decay = 400;
+        rf2.reverb.wet.value = 0.3;
+        rf2.delay.wet.value = 0.3;
+        rf2.filter.type = 'highpass';
+        rf2.filter.frequency.value = 400;
         partRhythmFigure2.start();
         partDroneGains.start();
     }
@@ -1822,6 +1805,11 @@ generateButton.addEventListener('click', async () => {
         partBass.start();
         partKlick.start();
         partRhythmFigure2.start();
+        rf2.reverb.decay = 400;
+        rf2.reverb.wet.value = 0.3;
+        rf2.delay.wet.value = 0.3;
+        rf2.filter.type = 'highpass';
+        rf2.filter.frequency.value = 400;
         partDroneGains.start();
     }
     if (rhythmDensity === 7) {

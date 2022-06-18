@@ -54,7 +54,7 @@ export class rhythmFigure1 {
             })).connect(gainsRythmFigure1[index]);
         });
 
-        console.log('RhyhtmFigure2 ready');
+        console.log('RhyhtmFigure1 ready');
         this.env.chain(this.eq, this.out);
 
     };   
@@ -83,8 +83,6 @@ export class rhythmFigure1Noise {
         })
 
         this.noise = new Noise("pink").connect(this.env);
-
-
         this.env.chain(this.bitcrusher,this.distortion,this.eq, this.out);
     }
 
