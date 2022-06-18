@@ -44,7 +44,6 @@ const klicks = new Klicks(0.75);
 const bass = new Bass(1);
 import p5 from 'p5';
 
-
 function shuffle(array) {
     const r = (from = 0, to = 1) => from + Math.random() * (to - from);
     var m = array.length,
