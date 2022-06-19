@@ -57,9 +57,17 @@ const rF1 = new rhythmFigure1(12);
 const rF1Noise = new rhythmFigure1Noise(0);
 
 import {
+    Drone,
+    DroneNoise
+} from './class.drone';
+const drone = new Drone(0);
+const droneNoise = new DroneNoise(0);
+
+import {
     rhythmFigure2,
 } from './class.rhythmFigure2';
 const rf2 = new rhythmFigure2;
+
 
 function shuffle(array) {
     const r = (from = 0, to = 1) => from + Math.random() * (to - from);
@@ -574,25 +582,26 @@ hideButton.addEventListener('click', async () => {
     }
 });
 
+function generateRandom(min, max) {
+
+    // find diff
+    let difference = max - min;
+
+    // generate random number 
+    let rand = Math.random();
+
+    // multiply with difference 
+    rand = Math.round(rand * difference * 100) / 100;
+
+    // add with min value 
+    rand = rand + min;
+
+    return rand;
+}
 
 generateButton.addEventListener('click', async () => {
-    function generateRandom(min, max) {
 
-        // find diff
-        let difference = max - min;
-
-        // generate random number 
-        let rand = Math.random();
-
-        // multiply with difference 
-        rand = Math.round(rand * difference * 100) / 100;
-
-        // add with min value 
-        rand = rand + min;
-
-        return rand;
-    }
-
+    //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
     rhythmDensity = 8;
     console.log(rhythmDensity);
@@ -609,12 +618,11 @@ generateButton.addEventListener('click', async () => {
     volMaster.volume.value = -100;
     volMaster.volume.rampTo(6, 3);
     let oscillatorDrone = [...Array(32)];
-    let gainsDrone = [...Array(32)];
 
     let frequencies = [...Array(32)];
     let frequenciesDrone = [...Array(32)];
     
-    let frequenciesDrei = [...Array(32)];
+
     let offsetFRQ1 = 5;
     if (rhythmDensity === 3) offsetFRQ1 = 2;
     let frequenciesRhythmFigure2 = [...Array(32)];
@@ -637,10 +645,6 @@ generateButton.addEventListener('click', async () => {
 
     frequenciesDrone.forEach((item, index) => {
         frequenciesDrone[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index + 5, 2.5)));
-    });
-
-    frequenciesDrei.forEach((item, index) => {
-        frequenciesDrei[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index + 2, 2)));
     });
 
     frequenciesRhythmFigure2.forEach((item, index) => {
@@ -1280,86 +1284,26 @@ generateButton.addEventListener('click', async () => {
     //////////////////////////////////////////////////////////////////<<DRONE------------------------------------------------------------------------------
 
     const masterVolumeDrone = new Volume(6).connect(masterGain);
+    drone.out.connect(masterVolumeDrone);
+    drone.osc.forEach((e) => e.start());
+    droneNoise.out.connect(masterVolumeDrone);
+    droneNoise.noise.start();
+    droneNoise.lfo.start();
+
     var filterFRQDrone = 100
-    if (rhythmDensity === 1) filterFRQDrone = 200;
     const autoFilterDrone = new BiquadFilter(filterFRQDrone, 'highpass').connect(masterVolumeDrone);
+    let masterDroneGain = new Gain(1).connect(autoFilterDrone);
     if (rhythmDensity === 0) autoFilterDrone.type = 'bandpass';
-
-    if (rhythmDensity === 0) {
-        const gainReverbDrone = new Volume(-30).connect(masterVolumeDrone)
-        const reverbDrone = new Reverb(20).connect(gainReverbDrone);
-        var envDrone = new AmplitudeEnvelope({
-            attack: 0.01,
-            decay: 0.6,
-            sustain: 1,
-            release: 0.2,
-        }).connect(autoFilterDrone).connect(reverbDrone);
-        var masterDroneGain = new Gain(1).connect(envDrone);
-    }
-
-    if (rhythmDensity === 1) {
-        var masterDroneGain = new Gain(1).connect(autoFilterDrone);
-    }
-
-    if (rhythmDensity === 2) {
-        const gainReverbDrone = new Volume(-30).connect(masterVolumeDrone)
-        const reverbDrone = new Reverb(100).connect(gainReverbDrone);
-        let masterDroneGain = new Gain(1).connect(autoFilterDrone).connect(reverbDrone);
-    }
-    if (rhythmDensity === 3) {
-        masterDroneGain = new Gain(1).connect(autoFilterDrone);
-    }
-    if (rhythmDensity === 4) {
-        masterDroneGain = new Gain(1).connect(autoFilterDrone);
-    }
-    if (rhythmDensity === 5) {
-        masterDroneGain = new Gain(1).connect(autoFilterDrone);
-    }
-    if (rhythmDensity === 6) {
-        masterDroneGain = new Gain(1).connect(autoFilterDrone);
-    }
-    if (rhythmDensity === 7) {
-        masterDroneGain = new Gain(1).connect(autoFilterDrone);
-    }
-    if (rhythmDensity === 8) {
-        masterDroneGain = new Gain(1).connect(autoFilterDrone);
-    }
-    if (rhythmDensity === 9) {
-        masterDroneGain = new Gain(1).connect(autoFilterDrone);
-    }
 
     let ramptime = 0.6;
     let numberofSineDrone = 15;
-    let amplitudeLFODrone = 0;
     let minLFODrone = 0;
     let freqLFO = '4n'
     const droneTrigger = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0];
     let droneTriggerGains = [...Array(144)];
 
-    if (rhythmDensity === 0) {
-        numberofSineDrone = 25;
-        ramptime = 0.1;
-        amplitudeLFODrone = 0.8;
-        minLFODrone = 0.2;
-        masterVolumeDrone.volume.value = 0;
-        freqLFO = '8n'
-    }
-    if (rhythmDensity === 1) {
-        numberofSineDrone = 15;
-        amplitudeLFODrone = 0;
-        masterVolumeDrone.volume.value = 5;
-        klickMasterGain.volume.value = 6;
-    }
-    if (rhythmDensity === 2) {
-        numberofSineDrone = 15;
-        ramptime = 4;
-        amplitudeLFODrone = 0.4;
-        minLFODrone = 0.2;
-        masterVolumeDrone.volume.value = 0;
-        freqLFO = '1n'
-    }
     if (rhythmDensity === 3) {
-        numberofSineDrone = 12;
+        //numberofSineDrone = 12;
         ramptime = 1;
         masterRhythmFigureGain1.volume.value = 20;
         masterVolumeDrone.volume.value = 2;
@@ -1380,7 +1324,6 @@ generateButton.addEventListener('click', async () => {
     }
     if (rhythmDensity === 6) {
         masterRhythmFigureGain2.volume.value = 0;
-        amplitudeLFODrone = 0;
         masterVolumeDrone.volume.value = 2;
         random = Math.random()
         if (random > 0.5) droneTriggerGains = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -1389,15 +1332,12 @@ generateButton.addEventListener('click', async () => {
     if (rhythmDensity === 7) {
         ramptime = 5;
         numberofSineDrone = 10;
-        amplitudeLFODrone = 0.2;
         minLFODrone = 0.2;
         freqLFO = '1n'
         masterVolumeDrone.volume.value = 2;
         droneTriggerGains = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
     if (rhythmDensity === 8) {
-        masterRhythmFigureGain2.volume.value = 0;
-        amplitudeLFODrone = 0;
         masterVolumeDrone.volume.value = 3;
         random = Math.random()
         ramptime = 5;
@@ -1406,7 +1346,6 @@ generateButton.addEventListener('click', async () => {
     }
     if (rhythmDensity === 9) {
         masterRhythmFigureGain2.volume.value = 0;
-        amplitudeLFODrone = 0;
         masterVolumeDrone.volume.value = 3;
         random = Math.random()
         ramptime = 5;
@@ -1424,178 +1363,41 @@ generateButton.addEventListener('click', async () => {
     };
 
     function playDroneGains(time, note) {
-        gainsDrone.forEach(
+        drone.gains.forEach(
             (e, i) => {
                 e.gain.rampTo(exponentialGain(i, numberofSineDrone, 800), ramptime);
             });
     };
 
-    gainsDrone = gainsDrone.map((item, index) => {
-        return (new Gain({
-            gain: exponentialGain(index, numberofSineDrone, 800)
-        }).connect(masterDroneGain)); //connect(env)
-    });
 
-    if (rhythmDensity === 0) {
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesDrone[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-    } else if (rhythmDensity === 1) {
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesZwei[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-    } else if (rhythmDensity === 2) {
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesDrei[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-    } else if (rhythmDensity === 3) {
-        let random = Math.random()
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesDrei[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-        const noiseDroneVolume = new Volume(-50).connect(masterGain);
-        const noiseDroneFilter = new BiquadFilter(2000, 'highpass').connect(noiseDroneVolume);
-        const noiseDrone = new Noise('pink').connect(noiseDroneFilter).start();
-        const noiseDroneLFO = new LFO({
-            frequency: 0.1,
-            min: 1000,
-            max: 4500,
-            amplitude: 1,
-            phase: 0
-        }).connect(noiseDroneFilter.frequency).start();
-
-    } else if (rhythmDensity === 4) {
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesDrei[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-        const noiseDroneVolume = new Volume(-50).connect(masterGain);
-        const noiseDroneFilter = new BiquadFilter(2000, 'highpass').connect(noiseDroneVolume);
-        const noiseDrone = new Noise('pink').connect(noiseDroneFilter).start();
-        const noiseDroneLFO = new LFO({
-            frequency: 0.1,
-            min: 1000,
-            max: 6000,
-            amplitude: 1,
-            phase: 0
-        }).connect(noiseDroneFilter.frequency).start();
+     if (rhythmDensity === 4) {
+        droneNoise.gain.volume.value = -50;
     } else if (rhythmDensity === 5) {
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesDrei[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-        const noiseDroneVolume = new Volume(-37).connect(masterGain);
-        const noiseDroneFilter = new BiquadFilter(2000, 'highpass').connect(noiseDroneVolume);
-        const noiseDrone = new Noise('pink').connect(noiseDroneFilter).start();
-        const noiseDroneLFO = new LFO({
-            frequency: 0.1,
-            min: 1000,
-            max: 6000,
-            amplitude: 1,
-            phase: 0
-        }).connect(noiseDroneFilter.frequency).start();
+        droneNoise.gain.volume.value = -37;
+        droneNoise.lfo.min = 1000;
+        droneNoise.lfo.max = 6000;
     } else if (rhythmDensity === 6) {
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesDrei[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-        const noiseDroneVolume = new Volume(-37).connect(masterGain);
-        const noiseDroneFilter = new BiquadFilter(2000, 'highpass').connect(noiseDroneVolume);
-        const noiseDrone = new Noise('pink').connect(noiseDroneFilter).start();
-        const noiseDroneLFO = new LFO({
-            frequency: 0.1,
-            min: 1000,
-            max: 6000,
-            amplitude: 1,
-            phase: 0
-        }).connect(noiseDroneFilter.frequency).start();
+        droneNoise.gain.volume.value = -37;
+        droneNoise.lfo.min = 1000;
+        droneNoise.lfo.max = 6000;
+        
     } else if (rhythmDensity === 7) {
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesDrei[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-        const noiseDroneVolume = new Volume(-37).connect(masterGain);
-        const noiseDroneFilter = new BiquadFilter(2000, 'highpass').connect(noiseDroneVolume);
-        const noiseDrone = new Noise('pink').connect(noiseDroneFilter).start();
-        const noiseDroneLFO = new LFO({
-            frequency: 0.1,
-            min: 5500,
-            max: 6000,
-            amplitude: 1,
-            phase: 0
-        }).connect(noiseDroneFilter.frequency).start();
+        droneNoise.gain.volume.value = -37;
+        droneNoise.lfo.min = 5500;
+        droneNoise.lfo.max = 6000;
     } else if (rhythmDensity === 8) {
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesDrei[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-        const noiseDroneVolume = new Volume(-40).connect(masterGain);
-        const noiseDroneFilter = new BiquadFilter(2000, 'highpass').connect(noiseDroneVolume);
-        const noiseBitcrusherVolume = new Volume(-2).connect(noiseDroneVolume);
-        const noiseBitcrusher = new BitCrusher(10).connect(noiseBitcrusherVolume);
-        const noiseDistortionVolume = new Volume(-4).connect(noiseDroneVolume);
-        const noiseDistortion = new Distortion(1).connect(noiseDistortionVolume);
-        const noiseDrone = new Noise('pink').connect(noiseDroneFilter).connect(noiseBitcrusher).connect(noiseDistortion).start();
-        const noiseDroneLFO = new LFO({
-            frequency: 0.1,
-            min: 4000,
-            max: 6000,
-            amplitude: 1,
-            phase: 0
-        }).connect(noiseDroneFilter.frequency).start();
+        droneNoise.gain.volume.value = -45;
+        droneNoise.lfo.min = 4000;
+        droneNoise.lfo.max = 6000;
+        droneNoise.bitcrusher.wet.value = 0.5
+        droneNoise.distortion.wet.value = 0.5
     } else if (rhythmDensity === 9) {
-        oscillatorDrone = oscillatorDrone.map((item, index) => {
-            return (new Oscillator({
-                frequency: frequenciesDrei[index],
-                type: "sine"
-            })).connect(gainsDrone[index]).start();
-        });
-        const noiseDroneVolume = new Volume(-40).connect(masterGain);
-        const noiseDroneFilter = new BiquadFilter(2000, 'highpass').connect(noiseDroneVolume);
-        const noiseBitcrusherVolume = new Volume(-2).connect(noiseDroneVolume);
-        const noiseBitcrusher = new BitCrusher(10).connect(noiseBitcrusherVolume);
-        const noiseDistortionVolume = new Volume(-4).connect(noiseDroneVolume);
-        const noiseDistortion = new Distortion(1).connect(noiseDistortionVolume);
-        const noiseDrone = new Noise('pink').connect(noiseDroneFilter).connect(noiseBitcrusher).connect(noiseDistortion).start();
-        const noiseDroneLFO = new LFO({
-            frequency: 0.1,
-            min: 4000,
-            max: 6000,
-            amplitude: 1,
-            phase: 0
-        }).connect(noiseDroneFilter.frequency).start();
+        droneNoise.gain.volume.value = -45;
+        droneNoise.lfo.min = 4000;
+        droneNoise.lfo.max = 6000;
+        droneNoise.bitcrusher.wet.value = 0.5
+        droneNoise.distortion.wet.value = 0.5
     }
-
-    const lfoDrone = new LFO({
-        frequency: freqLFO,
-        min: 0,
-        max: 1,
-        amplitude: amplitudeLFODrone,
-        phase: 125
-    }).connect(masterDroneGain.gain).start();
-    lfoDrone.min = minLFODrone;
 
     const patternDrone = translateBinarytoTone(droneTrigger);
     const partDrone = new Part(playDrone, patternDrone);
