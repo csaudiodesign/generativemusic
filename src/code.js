@@ -43,7 +43,11 @@ import {
 const kicks = new Kicks(3);
 const klicks = new Klicks(0.75);
 const bass = new Bass(1);
-import p5 from 'p5';
+import {
+    running
+} from './scope';
+
+running();
 
 import {
     rhythmFigure1,
@@ -570,113 +574,6 @@ hideButton.addEventListener('click', async () => {
     }
 });
 
-let sketch = function (p) {
-    let masterVolume = -6; // in decibel.
-
-    let ready = false;
-
-    let osc; // these two will be our audio oscillators
-    let osc2;
-    let lfo; // low frequency oscillator
-
-    let wave; // this object allows us to draw waveforms
-    p.setup = function () {
-        p.createCanvas(p.windowWidth, p.windowHeight);
-
-
-        // 4 differents types: sine (default), square, triangle and sawtooth
-        osc = new Oscillator({
-            type: "sine",
-            frequency: 220,
-            volume: -3
-        });
-        osc.toDestination(); // --> shorthand for "connect(Tone.Master)"
-
-        osc2 = new Oscillator({
-            type: "triangle",
-            frequency: 220,
-            volume: -3
-        });
-        osc2.frequency.value = 220; // 220hz -> A3
-        osc2.toDestination(); // --> shorthand for "connect(Tone.Master)"
-
-        lfo = new LFO("0.1hz", 210, 230);
-        lfo.connect(osc.frequency);
-
-        wave = new Waveform();
-        Destination.connect(wave);
-
-        Destination.volume.value = masterVolume;
-    }
-
-    // On window resize, update the canvas size
-    p.windowResized = function () {
-        p.resizeCanvas(p.windowWidth, p.windowHeight);
-    };
-
-    p.draw = function () {
-
-        p.background(0);
-
-        if (ready) {
-            // do the audio stuff
-
-            osc.frequency.value = p.map(p.mouseX, 0, p.width, 110, 880);
-
-            p.stroke(255);
-
-            let buffer = wave.getValue(0);
-
-            // look a trigger point where the samples are going from
-            // negative to positive
-            let start = 0;
-            for (let i = 1; i < buffer.length; i++) {
-                if (buffer[i - 1] < 0 && buffer[i] >= 0) {
-                    start = i;
-                    break; // interrupts a for loop
-                }
-            }
-
-            // calculate a new end point such that we always
-            // draw the same number of samples in each frame
-            let end = start + buffer.length / 2;
-
-            // drawing the waveform
-            for (let i = start; i < end; i++) {
-                let x1 = p.map(i - 1, start, end, 0, p.width);
-                let y1 = p.map(buffer[i - 1], -1, 1, 0, p.height);
-                let x2 = p.map(i, start, end, 0, p.width);
-                let y2 = p.map(buffer[i], -1, 1, 0, p.height);
-                p.line(x1, y1, x2, y2);
-            }
-        } else {
-            p.fill(255);
-            p.noStroke();
-            p.textAlign(p.CENTER, p.CENTER);
-            p.text("CLICK TO START", p.width / 2, p.height / 2);
-        }
-
-    };
-
-    p.mousePressed = function () {
-        if (!ready) {
-            // ! --> not
-            // start our audio objects here
-
-            //osc.start();
-            //osc2.start();
-            //lfo.start();
-
-            ready = true;
-        } else {
-            ready = false;
-            osc.stop();
-            osc2.stop();
-            lfo.stop();
-        }
-    }
-};
-let myp5 = new p5(sketch);
 
 generateButton.addEventListener('click', async () => {
     function generateRandom(min, max) {
@@ -701,7 +598,7 @@ generateButton.addEventListener('click', async () => {
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
-    const finalMasterVolume = new Volume(6).toDestination();
+    const finalMasterVolume = new Volume(0).toDestination();
     const limiter = new Limiter(0).connect(finalMasterVolume);
     const volMaster = new Volume(10).connect(limiter);
     const eq = new EQ3(-6, -3, 0).connect(volMaster);
