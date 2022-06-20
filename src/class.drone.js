@@ -1,4 +1,4 @@
-import { Volume, EQ3, LFO,Gain, Oscillator,MidiClass,Noise,Distortion,BitCrusher,FeedbackDelay,Reverb, BiquadFilter} from "tone";
+import { Volume, EQ3,Chorus, LFO,Gain, Oscillator,MidiClass,Noise,Distortion,BitCrusher,FeedbackDelay,Reverb, BiquadFilter} from "tone";
 
 let osc = [...Array(32)];
 let gains = [...Array(32)];
@@ -28,6 +28,16 @@ export class Drone {
 
         this.out = new Volume(volume);
         this.eq = new EQ3(0, 0, 0);
+        this.distortion = new Distortion({
+            distortion: 0.5,
+            wet: 0
+        });
+        this.chorus = new Chorus({
+            frequency: '4n',
+            delayTime: 2.5,
+            depth: 0.5,
+            wet: 0,
+        });
 
         this.gain = new Gain(1);
 
@@ -45,7 +55,7 @@ export class Drone {
         });
 
         console.log('Drone ready');
-        this.gain.chain(this.eq, this.out);
+        this.gain.chain(this.distortion,this.chorus,this.eq, this.out);
 
     };   
 }

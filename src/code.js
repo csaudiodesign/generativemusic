@@ -27,11 +27,13 @@ import {
     Offline,
     ToneAudioBuffer,
     Player,
-    connect
+    connect,
+    Chorus
 } from 'tone';
 import * as Nexus from 'nexusui';
 import {
-    Kicks
+    Kicks,
+    KickRhythm
 } from './class.kicks';
 import {
     Klicks
@@ -603,7 +605,7 @@ generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    rhythmDensity = 8;
+    /* rhythmDensity = 3; */
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -665,54 +667,24 @@ generateButton.addEventListener('click', async () => {
     let bar8Kick;
     let bar9Kick;
 
-    if (rhythmDensity === 0) {
-        bar1Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar2Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar3Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar4Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar5Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar6Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar7Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar8Kick = [1, 1, 1, , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar9Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        kickMasterGain.volume.value = 3;
-        Transport.bpm.value = 140;
-    } else if (rhythmDensity === 1) {
-        bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar2Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar3Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar4Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar5Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar6Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar7Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar8Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar9Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        kickMasterGain.volume.value = 4;
-        Transport.bpm.value = 170;
-    } else if (rhythmDensity === 2) {
-        bar1Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar2Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar3Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar4Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar5Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar6Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar7Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar8Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar9Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    /* const kickInputTriggers = KickRhythm(rhythmDensity)
+    kickInputTriggers */
 
-    } else if (rhythmDensity === 3) {
+
+    if (rhythmDensity === 3) {
         Transport.bpm.value = generateRandom(130, 160);
-        random = Math.random()
+
         if (random >= 0.3) {
             bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar2Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar3Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar4Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar5Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar6Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar7Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar8Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar9Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
         } else {
             bar1Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             bar2Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -798,6 +770,8 @@ generateButton.addEventListener('click', async () => {
         bar8Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         bar9Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
+
+
     let flag = 0;
     let generatedBar1Kick;
     let generatedBar2Kick;
@@ -1080,7 +1054,7 @@ generateButton.addEventListener('click', async () => {
     //////////////////////////////////////////////////////////////////<<RF1------------------------------------------------------------------------------
     //let rhythmFigure1 = await import('./class.rhythmFigure1');
 
-    const masterRhythmFigureGain1 = new Volume(3).connect(masterGain);
+    const masterRhythmFigureGain1 = new Volume(-10).connect(masterGain);
     rF1.out.connect(masterRhythmFigureGain1);
     rF1.oscillatorRhythmFigure1.forEach((e) => e.start());
 
@@ -1289,6 +1263,7 @@ generateButton.addEventListener('click', async () => {
     droneNoise.out.connect(masterVolumeDrone);
     droneNoise.noise.start();
     droneNoise.lfo.start();
+    drone.chorus.start();
 
     var filterFRQDrone = 100
     const autoFilterDrone = new BiquadFilter(filterFRQDrone, 'highpass').connect(masterVolumeDrone);
@@ -1450,9 +1425,14 @@ generateButton.addEventListener('click', async () => {
         partBass.start();
         partRhythmFigure1.start();
         masterRhythmFigureGain1.volume.value = -10;
+        rF1Noise.bitcrusher.wet.value = generateRandom(0.2,0.6);
+        rF1Noise.compressor.threshold.value = -50;
+        rF1Noise.compressor.ratio.value = 3;
         //partRhythmFigure2.start();
         partDrone.start();
+        drone.distortion.wet.value = generateRandom(0.01,0.1);
         partDroneGains.start();
+        drone.chorus.wet.value = generateRandom(0.1,0.2);
 
     }
     if (rhythmDensity == 4) {

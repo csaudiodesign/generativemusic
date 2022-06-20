@@ -1,4 +1,4 @@
-import { Volume, EQ3, AmplitudeEnvelope,Gain, Oscillator,MidiClass,Noise,Distortion,BitCrusher} from "tone";
+import { Volume, EQ3, AmplitudeEnvelope,Gain, Oscillator,MidiClass,Noise,Distortion,BitCrusher,Compressor} from "tone";
 
 let frequenciesRF1 = [...Array(32)];
 let frequenciesRF13 = [...Array(5)];
@@ -74,6 +74,12 @@ export class rhythmFigure1Noise {
         this.bitcrusher.wet.value = 0;
         this.distortion = new Distortion(0.5);
         this.distortion.wet.value = 0;
+        this.compressor = new Compressor({
+            threshold:-1,
+            ratio: 1,
+            attack: 0.01,
+            release: 0.1
+        });
 
         this.env = new AmplitudeEnvelope({
             attack: 0.01,
@@ -82,8 +88,8 @@ export class rhythmFigure1Noise {
             release: 0.0,
         })
 
-        this.noise = new Noise("pink").connect(this.env);
-        this.env.chain(this.bitcrusher,this.distortion,this.eq, this.out);
+        this.noise = new Noise("pink");
+        this.noise.chain(this.env,this.bitcrusher,this.distortion,this.eq,this.compressor,this.out);
     }
 
 }
