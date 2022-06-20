@@ -32,6 +32,7 @@ export class Drone {
             distortion: 0.5,
             wet: 0
         });
+        
         this.chorus = new Chorus({
             frequency: '4n',
             delayTime: 2.5,

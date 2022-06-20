@@ -225,11 +225,21 @@ function generateRandom(min, max) {
     return rand;
 }
 
+function exponentialGain(index, dropgains, loudnessControl) {
+    const scaledIndex = index / 32;
+    const random = Math.ceil(Math.random() * 32);
+    let exponentialGainValue = Math.round(Math.pow(scaledIndex - 1, 2) * 100) / loudnessControl;
+    exponentialGainValue *= Math.round(Math.random() * 10) / 10;
+
+    if (random <= dropgains) return (exponentialGainValue);
+    else return 0;
+}
+
 generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    rhythmDensity = 6;
+    /* rhythmDensity = 8; */
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -247,46 +257,13 @@ generateButton.addEventListener('click', async () => {
 
     volMaster.volume.value = -100;
     volMaster.volume.rampTo(6, 3);
-    let oscillatorDrone = [...Array(32)];
-
-    let frequencies = [...Array(32)];
-    let frequenciesDrone = [...Array(32)];
-    
-
-    let offsetFRQ1 = 5;
-    if (rhythmDensity === 3) offsetFRQ1 = 2;
-    let frequenciesRhythmFigure2 = [...Array(32)];
-    if (rhythmDensity === 1) var offsetFRQ2 = 2;
-    else var offsetFRQ2 = 10;
-
-    function exponentialGain(index, dropgains, loudnessControl) {
-        const scaledIndex = index / 32;
-        const random = Math.ceil(Math.random() * 32);
-        let exponentialGainValue = Math.round(Math.pow(scaledIndex - 1, 2) * 100) / loudnessControl;
-        exponentialGainValue *= Math.round(Math.random() * 10) / 10;
-
-        if (random <= dropgains) return (exponentialGainValue);
-        else return 0;
-    }
-
-    frequencies.forEach((item, index) => {
-        frequencies[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index + offsetFRQ1, 2)));
-    });
-
-    frequenciesDrone.forEach((item, index) => {
-        frequenciesDrone[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index + 5, 2.5)));
-    });
-
-    frequenciesRhythmFigure2.forEach((item, index) => {
-        frequenciesRhythmFigure2[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index + 10, 2)));
-    });
 
     //////////////////////////////////////////////////////////////////<<KICK------------------------------------------------------------------------------
     const kickMasterGain = new Volume(0).connect(masterGain);
     kicks.out.connect(kickMasterGain);
 
     const kicksForBass = generateKicks(rhythmDensity);
-    const generatedKick = converto2Dto1D(kicksForBass);
+    const kick = converto2Dto1D(kicksForBass);
 
     function playKick(time, note) {
         //kicks.kit.triggerAttack('C1');
@@ -297,7 +274,7 @@ generateButton.addEventListener('click', async () => {
         else kicks.kit.player('F1').start(time);
     };
 
-    const patternKick = translateBinarytoTone(generatedKick);
+    const patternKick = translateBinarytoTone(kick);
     const partKick = new Part(playKick, patternKick);
     partKick.loopEnd = '9:0:0';
     partKick.loop = true;
@@ -307,7 +284,6 @@ generateButton.addEventListener('click', async () => {
     bass.out.connect(bassMasterGain);
 
     const generatedBass = generateBass(rhythmDensity,kicksForBass);
-    console.log(generatedBass);
 
     function playBass(time, note) {
         const random = Math.ceil(Math.random() * 5);
@@ -412,18 +388,18 @@ generateButton.addEventListener('click', async () => {
 
         if (rhythmDensity === 7) {
             if (random2 === 0) {
-                klicks.reverb.wet.value = generateRandom(0.1,0.9);
-                klicks.reverb.decay = 100;
+                //klicks.reverb.wet.value = generateRandom(0.1,0.9);
+                klicks.reverb.decay = 1;
                 klicks.delay.delayTime.value = '4n';
             }
             if (random2 === 1) {
-                klicks.reverb.wet.value = generateRandom(0.1,0.9);
-                klicks.reverb.decay = 100;
+                //klicks.reverb.wet.value = generateRandom(0.1,0.9);
+                klicks.reverb.decay = 4;
                 klicks.delay.delayTime.value = '8n';
             }
             if (random2 === 2) {
-                klicks.reverb.wet.value = generateRandom(0.1,0.9);
-                klicks.reverb.decay = 100;
+                //klicks.reverb.wet.value = generateRandom(0.1,0.9);
+                klicks.reverb.decay = 3;
                 klicks.delay.delayTime.value = '2n';
             }
         } else if (rhythmDensity === 9) {
@@ -486,14 +462,14 @@ generateButton.addEventListener('click', async () => {
     const quarterNote = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
     sequencer.matrix.set.row(0, bar);
     sequencer.matrix.set.row(1, quarterNote);
-    sequencer.matrix.set.row(2, generatedKick);
+    sequencer.matrix.set.row(2, kick);
     sequencer.matrix.set.row(3, converto2Dto1D(generatedBass));
     sequencer.matrix.set.row(4, generatedRF1);
     sequencer.matrix.set.row(5, fullgeneratedRhythmFigure2);
     sequencer.matrix.set.row(6, fullgeneratedKlicks);
 
     /////////////PLAY BEAT-------------------------------------------------------------------------------------------------
-    console.log('BPM: ' + Transport.bpm.value);
+    
     if (rhythmDensity == 0) {
         partKick.start();
         partBass.start();
@@ -507,6 +483,8 @@ generateButton.addEventListener('click', async () => {
 
     }
     if (rhythmDensity == 3) {
+        Transport.bpm.value = generateRandom(100, 160);
+
         partKick.start();
         partKlick.start();
         partBass.start();
@@ -515,31 +493,44 @@ generateButton.addEventListener('click', async () => {
         rF1Noise.bitcrusher.wet.value = generateRandom(0.2,0.6);
         rF1Noise.compressor.threshold.value = -50;
         rF1Noise.compressor.ratio.value = 3;
-        //partRhythmFigure2.start();
-        partDrone.start();
-        drone.distortion.wet.value = generateRandom(0.01,0.1);
+
+        //DRONE
         partDroneGains.start();
-        drone.chorus.wet.value = generateRandom(0.1,0.2);
-        rampTimeDroneGain = 1;
-        numberofSineDrone = 15;
         masterVolumeDrone.volume.value = 2;
+        droneNoise.gain.volume.value = generateRandom(-55,-50);
+        droneNoise.distortion.wet.value = 1;
+        drone.distortion.wet.value = generateRandom(0.01,0.1);
+        drone.chorus.wet.value = generateRandom(0.1,0.2);
+        rampTimeDroneGain = generateRandom(0.01,1);
+        numberofSineDrone = Math.round(generateRandom(5,20));
 
     }
     if (rhythmDensity == 4) {
+        Transport.bpm.value = generateRandom(180, 200);
+
         partKick.start();
         partBass.start();
         partRhythmFigure1.start();
-        partRhythmFigure2.start();
+        //partRhythmFigure2.start();
         masterRhythmFigureGain2.volume.value = -5;
-        partKlick.start();
-        partDrone.start();
+        //partKlick.start();
+
+        //DRONE
         partDroneGains.start();
+        masterVolumeDrone.volume.value = 0;
+        droneNoise.gain.volume.value = generateRandom(-45,-30);
+        droneNoise.lfo.frequency.value = '16n';
+        droneNoise.lfo.min = generateRandom(500,8000);
+        droneNoise.lfo.min = droneNoise.lfo.min+100;
+        droneNoise.lfo.phase = 10;
         rampTimeDroneGain = 0.6;
-        numberofSineDrone = 15;
-        droneNoise.gain.volume.value = -50;
+        numberofSineDrone = Math.round(generateRandom(5,15));
+        
         
     }
     if (rhythmDensity === 5) {
+        Transport.bpm.value = generateRandom(120, 150);
+
         partKlick.start();
         partBass.start();
         rf2.reverb.decay = 400;
@@ -563,6 +554,7 @@ generateButton.addEventListener('click', async () => {
         droneNoise.lfo.max = 6000;
     }
     if (rhythmDensity === 6) {
+        Transport.bpm.value = generateRandom(120, 150);
         kicks.kit.player.playbackRate = 20;
         kicks.kit.player.playbackRate = 20;
         kicks.kit.player.playbackRate = 20;
@@ -591,24 +583,32 @@ generateButton.addEventListener('click', async () => {
         droneNoise.lfo.max = 6000;
     }
     if (rhythmDensity === 7) {
-        klicks.delay.wet.value = 0.5
+        Transport.bpm.value = generateRandom(150, 180);
+
+        
         masterVolumeDrone.volume.value = 8; //6
         partKick.start();
         partBass.start();
         partKlick.start();
         //partRhythmFigure1.start();
-        partDroneGains.start();
-        partDrone.start();
+        
         rampTimeDroneGain = 5;
         numberofSineDrone = 10;
         minLFODrone = 0.2;
         freqLFO = '1n'
+
+        //DRONE
+        partDroneGains.start();
         masterVolumeDrone.volume.value = 2;
         droneNoise.gain.volume.value = -37;
         droneNoise.lfo.min = 5500;
         droneNoise.lfo.max = 6000;
+        klicks.delay.wet.value = 0;
+        klicks.reverb.wet.value = 0.9;
     }
     if (rhythmDensity === 8) {
+        Transport.bpm.value = generateRandom(160, 185);
+
         bassMasterGain.volume.value = 2;
         partKick.start();
         partBass.start();
@@ -624,6 +624,8 @@ generateButton.addEventListener('click', async () => {
         droneNoise.distortion.wet.value = 0.5
     }
     if (rhythmDensity === 9) {
+        Transport.bpm.value = generateRandom(160, 185);
+
         bassMasterGain.volume.value = 2;
         klickMasterGain.volume.value = -100;
         partKick.start();
@@ -640,6 +642,8 @@ generateButton.addEventListener('click', async () => {
         droneNoise.bitcrusher.wet.value = 0.5
         droneNoise.distortion.wet.value = 0.5
     }
+
+    console.log('BPM: ' + Transport.bpm.value);
 
     await start();
     Transport.start();

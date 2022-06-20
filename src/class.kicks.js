@@ -181,33 +181,34 @@ function kickRhythm2(array, flag) {
 
 function fillKick(size,alternate){
     let flag = 0;
-    let kickInputTriggers = [[],[]];
+    let array = [[],[]];
 
     for (var i = 0; i < 9; i++) {
-        kickInputTriggers[i] = [];
+        array[i] = [];
+        console.log(array[i]);
         for (var j = 0; j < 16; j++) {
             if(alternate===0){
-                if(j<size)kickInputTriggers[i][j] = 1;
-                else kickInputTriggers[i][j] = 0;
+                if(j<size)array[i][j] = 1;
+                else array[i][j] = 0;
             }
             else{
                 if(flag === 0){
                     if(j<size){
-                        kickInputTriggers[i][j] = 1;
+                        array[i][j] = 1;
                         flag = 1;
                     }
                     else{
-                        kickInputTriggers[i][j] = 0;
+                        array[i][j] = 0;
                         flag = 1;
                     }
                 }
                 else{
                     if(j<size){
-                        kickInputTriggers[i][j] = 0;
+                        array[i][j] = 0;
                         flag = 0;
                     }
                     else{
-                        kickInputTriggers[i][j] = 0;
+                        array[i][j] = 0;
                         flag = 0;
                     }
 
@@ -216,7 +217,7 @@ function fillKick(size,alternate){
             
         }
     }
-    return kickInputTriggers;
+    return array;
 }
 
 export class Kicks {
@@ -244,59 +245,56 @@ export class Kicks {
 
 export function generateKicks(rhythmDensity) {
 
-    let kickInputTriggers = [[],[]];
+    let kickInput = [[],[]];
     let generatedKick = [...Array(9)];;
     let flag = 0;
 
     if (rhythmDensity === 3) {
-        Transport.bpm.value = generateRandom(130, 160);
-        random = Math.random()
-        if (random >= 0.3) {
-            let fill = 3;
-            kickInputTriggers = fillKick(3,0);
-
-        } else {
-            kickInputTriggers = fillKick(2,1);
+        random = Math.floor((Math.random()*3));
+        console.log('random is ' + random);
+        if (random === 0) {
+            kickInput = fillKick(3,0);
+        } else if (random === 1) {
+            kickInput = fillKick(2,1);
         }
+        else kickInput = fillKick(1,0);
 
     } else if (rhythmDensity === 4) {
-        Transport.bpm.value = generateRandom(120, 150);
-        kickInputTriggers = fillKick(4,0);
+        random = Math.floor((Math.random()*3));
+        if(random === 0) kickInput = fillKick(4,1);
+        if(random === 1) kickInput = fillKick(3,1);
+        if(random === 2) kickInput = fillKick(2,1);
+        
     } else if (rhythmDensity === 5) {
-        Transport.bpm.value = generateRandom(120, 150);
-        kickInputTriggers = fillKick(1,0);
+        kickInput = fillKick(1,0);
     } else if (rhythmDensity === 6) {
-        Transport.bpm.value = generateRandom(120, 150);
-        kickInputTriggers = fillKick(2,0);
+        kickInput = fillKick(2,0);
     } else if (rhythmDensity === 7) {
-        Transport.bpm.value = generateRandom(150, 180);
         random = Math.random()
-        kickInputTriggers = fillKick(2,0);
+        kickInput = fillKick(2,0);
     } else if (rhythmDensity === 8) {
-        Transport.bpm.value = generateRandom(160, 185);
-        kickInputTriggers = fillKick(3,0);
+        kickInput = fillKick(3,0);
     } else if (rhythmDensity === 9) {
-        Transport.bpm.value = generateRandom(160, 185);
-        kickInputTriggers = fillKick(3,0);
+        kickInput = fillKick(3,0);
     }
 
     if (rhythmDensity === 4) {
         generatedKick.map((e,i) =>{
-            e = kickRhythm2(kickInputTriggers[i],flag)
-            flag = checklastTrigger(kickInputTriggers[i]);
+            e = kickRhythm2(kickInput[i],flag)
+            flag = checklastTrigger(kickInput[i]);
             return generatedKick[i] = e;
         })
     }
     if (rhythmDensity === 8) {
         generatedKick.forEach((e,i) =>{
-            e= kickRhythm2(kickInputTriggers[i],flag)
-            flag = checklastTrigger(kickInputTriggers[i]);
+            e= kickRhythm2(kickInput[i],flag)
+            flag = checklastTrigger(kickInput[i]);
             return generatedKick[i] = e;
         })
     } else {
         generatedKick.map((e,i) =>{
-            e = kickRhythm(kickInputTriggers[i],flag)
-            flag = checklastTrigger(kickInputTriggers[i]);
+            e = kickRhythm(kickInput[i],flag)
+            flag = checklastTrigger(kickInput[i]);
             return generatedKick[i] = e;
         })
     }

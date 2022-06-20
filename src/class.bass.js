@@ -288,9 +288,7 @@ export function generateBass(rhythmDensity,kicksForBass){
             return generatedBass[i] = e;
         })
     }
-
-    console.log(generatedBass);
-
+    
     return converto2Dto1D(generatedBass);
 
 }

@@ -224,7 +224,6 @@ export function generateRF1(rhythmDensity) {
     let generatedRF1 = [...Array(9)];;
 
     rf1InputTriggers = fillRF1(1);
-    console.log(rf1InputTriggers);
 
     generatedRF1.map((e,i) =>{
         e = RhythmFigures(rf1InputTriggers[i],flag);
