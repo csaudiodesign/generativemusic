@@ -219,6 +219,15 @@ function fillKick(size,alternate){
     return kickInputTriggers;
 }
 
+function converto2Dto1D(array){
+    var newArr = [];
+    for(var i = 0; i < array.length; i++)
+    {
+        newArr = newArr.concat(array[i]);
+    }
+    return newArr;
+}
+
 export class Kicks {
 
     out;
@@ -251,10 +260,6 @@ export function generateKicks(rhythmDensity) {
     if (rhythmDensity === 3) {
         Transport.bpm.value = generateRandom(130, 160);
         random = Math.random()
-        //---->>>>
-        random = 5;
-
-
         if (random >= 0.3) {
             let fill = 3;
             kickInputTriggers = fillKick(3,0);
@@ -285,53 +290,24 @@ export function generateKicks(rhythmDensity) {
     }
 
     if (rhythmDensity === 4) {
-        generatedBar1Kick = kickRhythm2(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar1Kick);
-        generatedBar2Kick = kickRhythm2(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar3Kick = kickRhythm2(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar4Kick = kickRhythm2(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar5Kick = kickRhythm2(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar6Kick = kickRhythm2(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar7Kick = kickRhythm2(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar8Kick = kickRhythm2(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar9Kick = kickRhythm2(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar2Kick);
+        generatedKick.map((e,i) =>{
+            kickRhythm2(kickInputTriggers[i],flag)
+            flag = checklastTrigger(kickInputTriggers[i]);
+            return kickRhythm;
+        })
     }
     if (rhythmDensity === 8) {
-        generatedBar1Kick = kickRhythm2(bar1Kick, flag);
-        flag = checklastTrigger(generatedBar1Kick);
-        generatedBar2Kick = kickRhythm2(bar2Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar3Kick = kickRhythm2(bar3Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar4Kick = kickRhythm2(bar4Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar5Kick = kickRhythm2(bar5Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar6Kick = kickRhythm2(bar6Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar7Kick = kickRhythm2(bar7Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar8Kick = kickRhythm2(bar8Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar9Kick = kickRhythm2(bar9Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-    } else {
-        
         generatedKick.map((e,i) =>{
-            
+            kickRhythm2(kickInputTriggers[i],flag)
+            flag = checklastTrigger(kickInputTriggers[i]);
+            return kickRhythm;
+        })
+    } else {
+        generatedKick.map((e,i) =>{
             kickRhythm(kickInputTriggers[i],flag)
             flag = checklastTrigger(kickInputTriggers[i]);
             return kickRhythm;
         })
-        console.log(generatedKick);
 /* 
         generatedBar1Kick = kickRhythm(kickInputTriggers[0], flag);
         flag = checklastTrigger(generatedBar1Kick);
@@ -353,5 +329,5 @@ export function generateKicks(rhythmDensity) {
         flag = checklastTrigger(generatedBar2Kick); */
     }
 
-    return kickInputTriggers;
+    return converto2Dto1D(kickInputTriggers);
 }

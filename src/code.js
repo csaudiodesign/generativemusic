@@ -85,6 +85,10 @@ function shuffle(array) {
 
     return array;
 }
+function checklastTrigger(array) {
+    if (array[14] === 1) return 1;
+    else return 0;
+}
 
 function triggerABS(array) {
     const arrayABS = [];
@@ -492,7 +496,7 @@ generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    rhythmDensity = 3;
+    /* rhythmDensity = 3; */
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -547,116 +551,6 @@ generateButton.addEventListener('click', async () => {
     const generatedKick = generateKicks(rhythmDensity)
     console.log(generatedKick);
 
-
-  /*   if (rhythmDensity === 3) {
-        Transport.bpm.value = generateRandom(130, 160);
-
-        if (random >= 0.3) {
-            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-        } else {
-            bar1Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar2Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar3Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar4Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar5Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar6Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar7Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar8Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            bar9Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        }
-
-    } else if (rhythmDensity === 4) {
-        Transport.bpm.value = generateRandom(120, 150);
-        random = Math.random()
-        bar1Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar2Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar3Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar4Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar5Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar6Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar7Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar8Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar9Kick = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    } else if (rhythmDensity === 5) {
-        Transport.bpm.value = generateRandom(120, 150);
-        random = Math.random()
-        bar1Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar2Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar3Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar4Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar5Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar6Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar7Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar8Kick = [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar9Kick = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    } else if (rhythmDensity === 6) {
-        Transport.bpm.value = generateRandom(120, 150);
-        random = Math.random()
-        bar1Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar2Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar3Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar4Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar5Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar6Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar7Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar8Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar9Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    } else if (rhythmDensity === 7) {
-        Transport.bpm.value = generateRandom(150, 180);
-        random = Math.random()
-        bar1Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar2Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar3Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar4Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar5Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar6Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar7Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar8Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar9Kick = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    } else if (rhythmDensity === 8) {
-        Transport.bpm.value = generateRandom(160, 185);
-        random = Math.random()
-        bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar2Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar3Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar4Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar5Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar6Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar7Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar8Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar9Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    } else if (rhythmDensity === 9) {
-        Transport.bpm.value = generateRandom(160, 185);
-        random = Math.random()
-        bar1Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar2Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar3Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar4Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar5Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar6Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar7Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar8Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        bar9Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    } */
-
-
-    
-
-
-
-
-    //const fullgeneratedKick = generatedBar1Kick.concat(generatedBar2Kick, generatedBar3Kick, generatedBar4Kick, generatedBar5Kick, generatedBar6Kick, generatedBar7Kick, generatedBar8Kick, generatedBar9Kick);
-    //const fullKickOutput = [generatedBar1Kick, generatedBar2Kick, generatedBar3Kick, generatedBar4Kick, generatedBar5Kick, generatedBar6Kick, generatedBar7Kick, generatedBar8Kick, generatedBar9Kick];
-
     function playKick(time, note) {
         //kicks.kit.triggerAttack('C1');
         const random = Math.ceil(Math.random() * 4);
@@ -666,16 +560,13 @@ generateButton.addEventListener('click', async () => {
         else kicks.kit.player('F1').start(time);
     };
 
-    const patternKick = translateBinarytoTone(fullgeneratedKick);
+    const patternKick = translateBinarytoTone(generatedKick);
     const partKick = new Part(playKick, patternKick);
     partKick.loopEnd = '9:0:0';
     partKick.loop = true;
 
     if (rhythmDensity === 6) {
-        kicks.kit.player.playbackRate = 20;
-        kicks.kit.player.playbackRate = 20;
-        kicks.kit.player.playbackRate = 20;
-        kicks.kit.player.playbackRate = 20;
+
     }
 
     //////////////////////////////////////////////////////////////////<<BASS------------------------------------------------------------------------------
@@ -809,41 +700,41 @@ generateButton.addEventListener('click', async () => {
     let generatedBar9Bass;
 
     if (rhythmDensity === 8) {
-        generatedBar1Bass = bassRhythm2(bar1Bass, fullKickOutput[0], flag);
+        generatedBar1Bass = bassRhythm2(bar1Bass, generatedKick[0], flag);
         flag = checklastTrigger(generatedBar1Bass);
-        generatedBar2Bass = bassRhythm2(bar2Bass, fullKickOutput[1], flag);
+        generatedBar2Bass = bassRhythm2(bar2Bass, generatedKick[1], flag);
         flag = checklastTrigger(generatedBar2Bass);
-        generatedBar3Bass = bassRhythm2(bar3Bass, fullKickOutput[2], flag);
+        generatedBar3Bass = bassRhythm2(bar3Bass, generatedKick[2], flag);
         flag = checklastTrigger(generatedBar3Bass);
-        generatedBar4Bass = bassRhythm2(bar4Bass, fullKickOutput[3], flag);
+        generatedBar4Bass = bassRhythm2(bar4Bass, generatedKick[3], flag);
         flag = checklastTrigger(generatedBar4Bass);
-        generatedBar5Bass = bassRhythm2(bar5Bass, fullKickOutput[4], flag);
+        generatedBar5Bass = bassRhythm2(bar5Bass, generatedKick[4], flag);
         flag = checklastTrigger(generatedBar5Bass);
-        generatedBar6Bass = bassRhythm2(bar6Bass, fullKickOutput[5], flag);
+        generatedBar6Bass = bassRhythm2(bar6Bass, generatedKick[5], flag);
         flag = checklastTrigger(generatedBar6Bass);
-        generatedBar7Bass = bassRhythm2(bar7Bass, fullKickOutput[6], flag);
+        generatedBar7Bass = bassRhythm2(bar7Bass, generatedKick[6], flag);
         flag = checklastTrigger(generatedBar7Bass);
-        generatedBar8Bass = bassRhythm2(bar8Bass, fullKickOutput[7], flag);
+        generatedBar8Bass = bassRhythm2(bar8Bass, generatedKick[7], flag);
         flag = checklastTrigger(generatedBar8Bass);
-        generatedBar9Bass = bassRhythm2(bar9Bass, fullKickOutput[8], flag);
+        generatedBar9Bass = bassRhythm2(bar9Bass, generatedKick[8], flag);
     } else {
-        generatedBar1Bass = bassRhythm(bar1Bass, fullKickOutput[0], flag);
+        generatedBar1Bass = bassRhythm(bar1Bass, generatedKick[0], flag);
         flag = checklastTrigger(generatedBar1Bass);
-        generatedBar2Bass = bassRhythm(bar2Bass, fullKickOutput[1], flag);
+        generatedBar2Bass = bassRhythm(bar2Bass, generatedKick[1], flag);
         flag = checklastTrigger(generatedBar2Bass);
-        generatedBar3Bass = bassRhythm(bar3Bass, fullKickOutput[2], flag);
+        generatedBar3Bass = bassRhythm(bar3Bass, generatedKick[2], flag);
         flag = checklastTrigger(generatedBar3Bass);
-        generatedBar4Bass = bassRhythm(bar4Bass, fullKickOutput[3], flag);
+        generatedBar4Bass = bassRhythm(bar4Bass, generatedKick[3], flag);
         flag = checklastTrigger(generatedBar4Bass);
-        generatedBar5Bass = bassRhythm(bar5Bass, fullKickOutput[4], flag);
+        generatedBar5Bass = bassRhythm(bar5Bass, generatedKick[4], flag);
         flag = checklastTrigger(generatedBar5Bass);
-        generatedBar6Bass = bassRhythm(bar6Bass, fullKickOutput[5], flag);
+        generatedBar6Bass = bassRhythm(bar6Bass, generatedKick[5], flag);
         flag = checklastTrigger(generatedBar6Bass);
-        generatedBar7Bass = bassRhythm(bar7Bass, fullKickOutput[6], flag);
+        generatedBar7Bass = bassRhythm(bar7Bass, generatedKick[6], flag);
         flag = checklastTrigger(generatedBar7Bass);
-        generatedBar8Bass = bassRhythm(bar8Bass, fullKickOutput[7], flag);
+        generatedBar8Bass = bassRhythm(bar8Bass, generatedKick[7], flag);
         flag = checklastTrigger(generatedBar8Bass);
-        generatedBar9Bass = bassRhythm(bar9Bass, fullKickOutput[8], flag);
+        generatedBar9Bass = bassRhythm(bar9Bass, generatedKick[8], flag);
     }
 
     const fullgeneratedBass = generatedBar1Bass.concat(generatedBar2Bass, generatedBar3Bass, generatedBar4Bass, generatedBar5Bass, generatedBar6Bass, generatedBar7Bass, generatedBar8Bass, generatedBar9Bass);
@@ -1210,7 +1101,7 @@ generateButton.addEventListener('click', async () => {
     const quarterNote = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
     sequencer.matrix.set.row(0, bar);
     sequencer.matrix.set.row(1, quarterNote);
-    sequencer.matrix.set.row(2, fullgeneratedKick);
+    sequencer.matrix.set.row(2, generatedKick);
     sequencer.matrix.set.row(3, fullgeneratedBass);
     sequencer.matrix.set.row(4, fullgeneratedRhythmFigure1);
     sequencer.matrix.set.row(5, fullgeneratedRhythmFigure2);
@@ -1268,11 +1159,12 @@ generateButton.addEventListener('click', async () => {
         partDroneGains.start();
     }
     if (rhythmDensity === 6) {
-
+        kicks.kit.player.playbackRate = 20;
+        kicks.kit.player.playbackRate = 20;
+        kicks.kit.player.playbackRate = 20;
+        kicks.kit.player.playbackRate = 20;
         kicks.biquad.frequency.value  = 300;
         kicks.biquad.type = 'bandpass';
-/*         kickMasterGain.volume.value = -100;
-        biquadKickVolume.volume.value = 10; //-10 */
         partKick.start();
         partBass.start();
         partKlick.start();
