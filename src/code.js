@@ -36,7 +36,8 @@ import {
     generateKicks
 } from './class.kicks';
 import {
-    Klicks
+    Klicks,
+    genrateKlicks
 } from './class.klicks';
 import {
     Bass,
@@ -132,80 +133,6 @@ function triggerABS(array) {
 
 }
 
-
-
-
-
-
-/*
-1. Rule: Klicks düfren überall laden
-2. Rule: Klicks werden in zwei Gruppen abwechselnd abgespielt
-3. Rule: Wenn Gruppe1(Klicks werde nicht gepielt, Pause) dann wird bis zu 4 Schläge lang keine Klicks abgespielt
-4. Rule: Wenn Gruppe2(Klicks werden gepielt) dann werden bis zu 6 Klicks hintereinander abgespielt
-5. Rule: Wenn Gruppe2(Klicks werden gepielt) dann werden kommt danach immer Gruppe1 mit einer Pause
-6. Rule: Länge von beiden Gruppen sind zufällig
-*/
-function generateKlicks2() {
-    var array = new Array(144).fill(0);
-    array = array.map((e, i) => {
-        if (i % 2 === 0) return 1;
-        else return 0;
-    });
-    return array;
-}
-
-function generateKlicks3() {
-    var array = new Array(144).fill(0);
-    array = array.map((e, i) => {
-        if (i % 6 === 0) return 1;
-        else if (i % 6 === 2) {
-            const random = Math.random()
-            if (random >= 0.5) return 1;
-            else return 0;
-        } else return 0;
-    });
-    return array;
-}
-
-function generateKlicks5() {
-    var array = new Array(144).fill(0);
-    array = array.map((e, i) => {
-        if (i % 8 === 2) return 1;
-        else return 0;
-    });
-    return array;
-}
-
-function generateKlicks1() {
-    var array = new Array(144).fill(0);
-    array = array.map((e, i) => {
-        if (i % 8 === 0) return 1;
-        else return 0;
-    });
-    return array;
-}
-
-function generateKlicks4() {
-    var array = new Array(144).fill(0);
-    array = array.map((e, i) => {
-        if (i % 2 === 1) return 1;
-        else return 0;
-    });
-    return array;
-}
-
-function generateRF2() {
-    var array = new Array(144).fill(0);
-    array = array.map((e, i) => {
-        if (i % 24 === 4) {
-            random = Math.random()
-            if (random > 0.5) return 1
-            else return 0;
-        } else return 0;
-    });
-    return array;
-}
-
 function translateBinarytoTone(array) {
 
     let current = 0;
@@ -244,15 +171,6 @@ function translateBinarytoTone(array) {
     returnArray = returnArray.map((e, i) => [e[1], `C${i}`]);
 
     return returnArray;
-}
-
-function doubleTime(array, amount) {
-
-    for (let i = 0; i < amount; i++) {
-        const random = Math.floor(Math.random() * 72) * 2 - 1;
-        array[random] = 1;
-    }
-    return array;
 }
 
 const generateButton = document.getElementById('generate');
@@ -453,6 +371,8 @@ generateButton.addEventListener('click', async () => {
     const klickMasterGain = new Volume(6).connect(masterGain);
     klicks.out.connect(klickMasterGain);
 
+    const fullgeneratedKlicks = genrateKlicks(rhythmDensity);
+
     const oscNoiseClickVolume = new Volume(-4).connect(masterGain);
     const envNoiseKlick = new AmplitudeEnvelope({
         attack: 0.01,
@@ -467,69 +387,6 @@ generateButton.addEventListener('click', async () => {
     if (randomOSCNoiseClicktype === 1) oscNoiseClick.type = 'triangle2'
     if (randomOSCNoiseClicktype === 2) oscNoiseClick.type = 'sawtooth2'
     if (randomOSCNoiseClicktype === 3) oscNoiseClick.type = 'sine16'
-
-    var fullgeneratedKlicks
-    if (rhythmDensity === 0) {
-        fullgeneratedKlicks = generateKlicks2();
-        fullgeneratedKlicks = doubleTime(fullgeneratedKlicks, 2);
-    }
-    if (rhythmDensity === 1) {
-        fullgeneratedKlicks = generateKlicks3();
-    }
-    if (rhythmDensity === 2) {
-        fullgeneratedKlicks = generateKlicks5();
-    }
-    if (rhythmDensity === 3) {
-        let random = Math.ceil(Math.random() * 5);
-        if (random === 1) fullgeneratedKlicks = generateKlicks1();
-        else if (random === 2) fullgeneratedKlicks = generateKlicks2();
-        else if (random === 3) fullgeneratedKlicks = generateKlicks3();
-        else if (random === 4) fullgeneratedKlicks = generateKlicks5();
-        else fullgeneratedKlicks = generateKlicks2();
-        fullgeneratedKlicks = doubleTime(fullgeneratedKlicks, 2);
-    }
-    if (rhythmDensity === 4) {
-        let random = Math.ceil(Math.random() * 4);
-        if (random === 1) fullgeneratedKlicks = generateKlicks1();
-        else if (random === 2) fullgeneratedKlicks = generateKlicks2();
-        else if (random === 3) fullgeneratedKlicks = generateKlicks3();
-        else fullgeneratedKlicks = generateKlicks5();
-        fullgeneratedKlicks = doubleTime(fullgeneratedKlicks, 2);
-    }
-    if (rhythmDensity === 5) {
-        fullgeneratedKlicks = generateKlicks3();
-        fullgeneratedKlicks = doubleTime(fullgeneratedKlicks, 2);
-        klickMasterGain.volume.value = -5;
-        //reverbKlickVolume.volume.value = -10;
-        klicks.reverb.wet.value = 0.5;
-        klicks.reverb.decay = 100;
-    }
-    if (rhythmDensity === 6) {
-        fullgeneratedKlicks = generateKlicks3();
-        fullgeneratedKlicks = doubleTime(fullgeneratedKlicks, 2);
-        klickMasterGain.volume.value = -5;
-        klicks.reverb.wet.value = 0.5;
-        klicks.reverb.decay = 100;
-    }
-    if (rhythmDensity === 7) {
-        let random = Math.ceil(Math.random() * 4);
-        if (random === 1) fullgeneratedKlicks = generateKlicks1();
-        //else if(random === 2 )fullgeneratedKlicks = generateKlicks1();
-        else if (random === 3) fullgeneratedKlicks = generateKlicks3();
-        else fullgeneratedKlicks = generateKlicks5();
-
-    }
-    if (rhythmDensity === 8) {
-        let random = Math.ceil(Math.random() * 7);
-        if (random === 1) fullgeneratedKlicks = generateKlicks1();
-        else if (random === 2) fullgeneratedKlicks = generateKlicks2();
-        else if (random === 3) fullgeneratedKlicks = generateKlicks3();
-        else if (random === 4) fullgeneratedKlicks = generateKlicks5();
-        else fullgeneratedKlicks = generateKlicks2();
-    }
-    if (rhythmDensity === 9) {
-        fullgeneratedKlicks = generateKlicks4();
-    }
 
     function playKlick(time, note) {
 
@@ -779,6 +636,10 @@ generateButton.addEventListener('click', async () => {
         rf2.filter.frequency.value = 400;
         partRhythmFigure2.start();
         partDroneGains.start();
+        klickMasterGain.volume.value = -5;
+        //reverbKlickVolume.volume.value = -10;
+        klicks.reverb.wet.value = 0.5;
+        klicks.reverb.decay = 100;
     }
     if (rhythmDensity === 6) {
         kicks.kit.player.playbackRate = 20;
@@ -797,6 +658,9 @@ generateButton.addEventListener('click', async () => {
         rf2.filter.type = 'highpass';
         rf2.filter.frequency.value = 400;
         partDroneGains.start();
+        klickMasterGain.volume.value = -5;
+        klicks.reverb.wet.value = 0.5;
+        klicks.reverb.decay = 100;
     }
     if (rhythmDensity === 7) {
         klicks.delay.wet.value = 0.5
