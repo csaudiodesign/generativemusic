@@ -219,15 +219,6 @@ function fillKick(size,alternate){
     return kickInputTriggers;
 }
 
-function converto2Dto1D(array){
-    var newArr = [];
-    for(var i = 0; i < array.length; i++)
-    {
-        newArr = newArr.concat(array[i]);
-    }
-    return newArr;
-}
-
 export class Kicks {
 
     out;
@@ -291,43 +282,23 @@ export function generateKicks(rhythmDensity) {
 
     if (rhythmDensity === 4) {
         generatedKick.map((e,i) =>{
-            kickRhythm2(kickInputTriggers[i],flag)
+            e = kickRhythm2(kickInputTriggers[i],flag)
             flag = checklastTrigger(kickInputTriggers[i]);
-            return kickRhythm;
+            return generatedKick[i] = e;
         })
     }
     if (rhythmDensity === 8) {
-        generatedKick.map((e,i) =>{
-            kickRhythm2(kickInputTriggers[i],flag)
+        generatedKick.forEach((e,i) =>{
+            e= kickRhythm2(kickInputTriggers[i],flag)
             flag = checklastTrigger(kickInputTriggers[i]);
-            return kickRhythm;
+            return generatedKick[i] = e;
         })
     } else {
         generatedKick.map((e,i) =>{
-            kickRhythm(kickInputTriggers[i],flag)
+            e = kickRhythm(kickInputTriggers[i],flag)
             flag = checklastTrigger(kickInputTriggers[i]);
-            return kickRhythm;
+            return generatedKick[i] = e;
         })
-/* 
-        generatedBar1Kick = kickRhythm(kickInputTriggers[0], flag);
-        flag = checklastTrigger(generatedBar1Kick);
-        generatedBar2Kick = kickRhythm(kickInputTriggers[1], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar3Kick = kickRhythm(kickInputTriggers[2], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar4Kick = kickRhythm(kickInputTriggers[3], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar5Kick = kickRhythm(kickInputTriggers[4], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar6Kick = kickRhythm(kickInputTriggers[5], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar7Kick = kickRhythm(kickInputTriggers[6], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar8Kick = kickRhythm(kickInputTriggers[7], flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar9Kick = kickRhythm(kickInputTriggers[8], flag);
-        flag = checklastTrigger(generatedBar2Kick); */
-    }
-
-    return converto2Dto1D(kickInputTriggers);
+    
+    return generatedKick;
 }

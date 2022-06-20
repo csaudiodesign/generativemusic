@@ -162,7 +162,6 @@ function bassRhythm(array, fullKickOutput, flag) {
         }
 
     }
-
     return array;
 
 }
@@ -255,7 +254,7 @@ export class Bass {
     };   
 }
 
-export function generateBass(rhythmDensity,generatedKick){
+export function generateBass(rhythmDensity,kicksForBass){
 
     let bassInputTriggers = [[],[]];
     let generatedBass = [...Array(9)];;
@@ -277,20 +276,21 @@ export function generateBass(rhythmDensity,generatedKick){
         bassInputTriggers= fillBass(1,0);
     }
 
-
     if (rhythmDensity === 8) {
         generatedBass.map((e,i) =>{
-            bassRhythm2(generatedBass[i],flag)
-            flag = checklastTrigger(generatedBass[i]);
-            return kickRhythm;
+            e = bassRhythm2(bassInputTriggers[i],kicksForBass[i],flag)
+            flag = checklastTrigger(bassInputTriggers[i]);
+            return generatedBass[i] = e;
         })
     } else {
         generatedBass.map((e,i) =>{
-            bassRhythm(generatedBass[i],flag)
-            flag = checklastTrigger(generatedBass[i]);
-            return kickRhythm;
+            e = bassRhythm(bassInputTriggers[i],kicksForBass[i],flag)
+            flag = checklastTrigger(bassInputTriggers[i]);
+            return generatedBass[i] = e;
         })
     }
+
+    console.log(generatedBass);
 
     return converto2Dto1D(generatedBass);
 

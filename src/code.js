@@ -52,6 +52,15 @@ import {
 
 running();
 
+function converto2Dto1D(array){
+    var newArr = [];
+    for(var i = 0; i < array.length; i++)
+    {
+        newArr = newArr.concat(array[i]);
+    }
+    return newArr;
+}
+
 import {
     rhythmFigure1,
     rhythmFigure1Noise
@@ -363,7 +372,7 @@ generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    /* rhythmDensity = 3; */
+    rhythmDensity = 3;
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -415,8 +424,8 @@ generateButton.addEventListener('click', async () => {
     const kickMasterGain = new Volume(0).connect(masterGain);
     kicks.out.connect(kickMasterGain);
 
-    const generatedKick = generateKicks(rhythmDensity)
-    console.log(generatedKick);
+    const kicksForBass = generateKicks(rhythmDensity);
+    const generatedKick = converto2Dto1D(kicksForBass);
 
     function playKick(time, note) {
         //kicks.kit.triggerAttack('C1');
@@ -440,9 +449,8 @@ generateButton.addEventListener('click', async () => {
     const bassMasterGain = new Volume(0).connect(masterGain);
     bass.out.connect(bassMasterGain);
 
-    const generatedBass = generateBass(rhythmDensity,generatedKick);
-
-    const fullgeneratedBass = generatedBar1Bass.concat(generatedBar2Bass, generatedBar3Bass, generatedBar4Bass, generatedBar5Bass, generatedBar6Bass, generatedBar7Bass, generatedBar8Bass, generatedBar9Bass);
+    const generatedBass = generateBass(rhythmDensity,kicksForBass);
+    console.log(generatedBass);
 
     function playBass(time, note) {
         const random = Math.ceil(Math.random() * 5);
@@ -453,7 +461,7 @@ generateButton.addEventListener('click', async () => {
         else bass.kit.player('G1').start(time);
     };
 
-    const patternBass = translateBinarytoTone(fullgeneratedBass);
+    const patternBass = translateBinarytoTone(converto2Dto1D(generatedBass));
     const partBass = new Part(playBass, patternBass);
     partBass.loopEnd = '9:0:0';
     partBass.loop = true;
@@ -807,7 +815,7 @@ generateButton.addEventListener('click', async () => {
     sequencer.matrix.set.row(0, bar);
     sequencer.matrix.set.row(1, quarterNote);
     sequencer.matrix.set.row(2, generatedKick);
-    sequencer.matrix.set.row(3, fullgeneratedBass);
+    sequencer.matrix.set.row(3, converto2Dto1D(generatedBass));
     sequencer.matrix.set.row(4, fullgeneratedRhythmFigure1);
     sequencer.matrix.set.row(5, fullgeneratedRhythmFigure2);
     sequencer.matrix.set.row(6, fullgeneratedKlicks);
