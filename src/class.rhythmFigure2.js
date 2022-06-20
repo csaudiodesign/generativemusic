@@ -18,6 +18,19 @@ frequenciesZwei.forEach((item, index) => {
     frequenciesZwei[index] = MidiClass.mtof(MidiClass.ftom(Math.pow(index + 3, 2)));
 });
 
+function generateRhythmFigure2() {
+    var array = new Array(144).fill(0);
+    array = array.map((e, i) => {
+        if (i % 24 === 4) {
+            random = Math.random()
+            if (random > 0.5) return 1
+            else return 0;
+        } else return 0;
+    });
+    return array;
+}
+
+
 
 export class rhythmFigure2 {
 
@@ -89,4 +102,8 @@ export class rhythmFigure1Noise {
         this.env.chain(this.bitcrusher,this.distortion,this.eq, this.out);
     }
 
+}
+
+export function generateRF2(rhythmDensity){
+    return generateRhythmFigure2();
 }

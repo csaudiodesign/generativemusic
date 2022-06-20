@@ -78,6 +78,7 @@ const droneNoise = new DroneNoise(0);
 
 import {
     rhythmFigure2,
+    generateRF2
 } from './class.rhythmFigure2';
 const rf2 = new rhythmFigure2;
 
@@ -309,7 +310,7 @@ generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    rhythmDensity = 3;
+    rhythmDensity = 6;
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
