@@ -33,7 +33,7 @@ import {
 import * as Nexus from 'nexusui';
 import {
     Kicks,
-    KickRhythm
+    generateKicks
 } from './class.kicks';
 import {
     Klicks
@@ -116,117 +116,7 @@ function triggerABS(array) {
 
 }
 
-/*
-1. Rule: every trigger lands on even index incl. 0:             [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
-2. Rule: every trigger has min 4 tringgers distance:            [1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0]
-3. Rule: expertion: last trigger can have 2 trigger dicance:    [1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0]
-4. Rule: if there is a trigger on the 2nd last trigger of the bar before, the trigger cant land on the 2nd trigger becuase of 2. Rule: Bar1: [1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0], Bar2: [0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0]*/
-function kickRhythm(array, flag) {
 
-    //count how much triggers are in array
-    var count = 0;
-    array.forEach((e, i) => {
-        if (e === 1) count++;
-    });
-
-    var arrayABS = [];
-    while (true) {
-        //1. Rule
-        while (true) {
-            array = shuffle(array);
-            if (array.every((e, i) => {
-                    if (e === 1) return i % 2 === 0;
-                    else return true; // wenns kein schlag ist alles gut, soll weither ggehen
-                })) {
-                break;
-            }
-        }
-
-
-        //2. Rule
-        arrayABS = triggerABS(array);
-
-        if (flag === 1) { // 4. Rule
-            if (array[0] === 0) {
-                if (arrayABS.every((e, i) => {
-                        if (e < 4 && i === count - 1) { // 3. Rule
-                            return true
-                        } else if (e < 4) return false;
-                        else return true;
-                    })) {
-                    break;
-                }
-            }
-        } else if (flag === 0) { // 4. Rule
-            if (arrayABS.every((e, i) => {
-                    if (e < 4 && i === count - 1) { // 3.Rule
-                        return true
-                    } else if (e < 4) return false;
-                    else return true;
-                })) {
-                break;
-            }
-        }
-
-
-
-    }
-
-    return array;
-}
-
-function kickRhythm2(array, flag) {
-
-    //count how much triggers are in array
-    let count = 0;
-    array.forEach((e, i) => {
-        if (e === 1) count++;
-    });
-
-    var arrayABS = [];
-    while (true) {
-        //1. Rule
-        while (true) {
-            array = shuffle(array);
-            if (array.every((e, i) => {
-                    if (e === 1) return i % 2 === 0;
-                    else return true; // wenns kein schlag ist alles gut, soll weither ggehen
-                })) {
-                break;
-            }
-        }
-
-        //2. Rule
-        arrayABS = triggerABS(array);
-
-        if (flag === 1) { // 4. Rule
-            if (array[0] === 0) {
-                if (arrayABS.every((e, i) => {
-                        if (e < 2 && i === count - 1) { // 3. Rule
-                            return true
-                        } else if (e < 2) return false;
-                        else return true;
-                    })) {
-                    break;
-                }
-            }
-        } else if (flag === 0) { // 4. Rule
-            if (arrayABS.every((e, i) => {
-                    if (e < 2 && i === count - 1) { // 3.Rule
-                        return true
-                    } else if (e < 2) return false;
-                    else return true;
-                })) {
-                break;
-            }
-        }
-
-
-
-    }
-
-    return array;
-}
 
 /*
 1. Rule: every trigger lands on even index incl. 0:             [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
@@ -426,10 +316,7 @@ function RhythmFigures(array, flag) {
     return array;
 }
 
-function checklastTrigger(array) {
-    if (array[14] === 1) return 1;
-    else return 0;
-}
+
 
 /*
 1. Rule: Klicks düfren überall laden
@@ -605,7 +492,7 @@ generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    /* rhythmDensity = 3; */
+    rhythmDensity = 3;
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -657,21 +544,11 @@ generateButton.addEventListener('click', async () => {
     const kickMasterGain = new Volume(0).connect(masterGain);
     kicks.out.connect(kickMasterGain);
 
-    let bar1Kick;
-    let bar2Kick;
-    let bar3Kick;
-    let bar4Kick;
-    let bar5Kick;
-    let bar6Kick;
-    let bar7Kick;
-    let bar8Kick;
-    let bar9Kick;
-
-    /* const kickInputTriggers = KickRhythm(rhythmDensity)
-    kickInputTriggers */
+    const generatedKick = generateKicks(rhythmDensity)
+    console.log(generatedKick);
 
 
-    if (rhythmDensity === 3) {
+  /*   if (rhythmDensity === 3) {
         Transport.bpm.value = generateRandom(130, 160);
 
         if (random >= 0.3) {
@@ -769,82 +646,16 @@ generateButton.addEventListener('click', async () => {
         bar7Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         bar8Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         bar9Kick = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    }
+    } */
 
 
-    let flag = 0;
-    let generatedBar1Kick;
-    let generatedBar2Kick;
-    let generatedBar3Kick;
-    let generatedBar4Kick;
-    let generatedBar5Kick;
-    let generatedBar6Kick;
-    let generatedBar7Kick;
-    let generatedBar8Kick;
-    let generatedBar9Kick;
+    
 
-    if (rhythmDensity === 4) {
-        generatedBar1Kick = kickRhythm2(bar1Kick, flag);
-        flag = checklastTrigger(generatedBar1Kick);
-        generatedBar2Kick = kickRhythm2(bar2Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar3Kick = kickRhythm2(bar3Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar4Kick = kickRhythm2(bar4Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar5Kick = kickRhythm2(bar5Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar6Kick = kickRhythm2(bar6Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar7Kick = kickRhythm2(bar7Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar8Kick = kickRhythm2(bar8Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar9Kick = kickRhythm2(bar9Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-    }
-    if (rhythmDensity === 8) {
-        generatedBar1Kick = kickRhythm2(bar1Kick, flag);
-        flag = checklastTrigger(generatedBar1Kick);
-        generatedBar2Kick = kickRhythm2(bar2Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar3Kick = kickRhythm2(bar3Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar4Kick = kickRhythm2(bar4Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar5Kick = kickRhythm2(bar5Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar6Kick = kickRhythm2(bar6Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar7Kick = kickRhythm2(bar7Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar8Kick = kickRhythm2(bar8Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar9Kick = kickRhythm2(bar9Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-    } else {
-        generatedBar1Kick = kickRhythm(bar1Kick, flag);
-        flag = checklastTrigger(generatedBar1Kick);
-        generatedBar2Kick = kickRhythm(bar2Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar3Kick = kickRhythm(bar3Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar4Kick = kickRhythm(bar4Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar5Kick = kickRhythm(bar5Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar6Kick = kickRhythm(bar6Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar7Kick = kickRhythm(bar7Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar8Kick = kickRhythm(bar8Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-        generatedBar9Kick = kickRhythm(bar9Kick, flag);
-        flag = checklastTrigger(generatedBar2Kick);
-    }
 
-    const fullgeneratedKick = generatedBar1Kick.concat(generatedBar2Kick, generatedBar3Kick, generatedBar4Kick, generatedBar5Kick, generatedBar6Kick, generatedBar7Kick, generatedBar8Kick, generatedBar9Kick);
-    const fullKickOutput = [generatedBar1Kick, generatedBar2Kick, generatedBar3Kick, generatedBar4Kick, generatedBar5Kick, generatedBar6Kick, generatedBar7Kick, generatedBar8Kick, generatedBar9Kick];
+
+
+    //const fullgeneratedKick = generatedBar1Kick.concat(generatedBar2Kick, generatedBar3Kick, generatedBar4Kick, generatedBar5Kick, generatedBar6Kick, generatedBar7Kick, generatedBar8Kick, generatedBar9Kick);
+    //const fullKickOutput = [generatedBar1Kick, generatedBar2Kick, generatedBar3Kick, generatedBar4Kick, generatedBar5Kick, generatedBar6Kick, generatedBar7Kick, generatedBar8Kick, generatedBar9Kick];
 
     function playKick(time, note) {
         //kicks.kit.triggerAttack('C1');
