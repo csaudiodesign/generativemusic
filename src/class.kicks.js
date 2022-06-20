@@ -299,6 +299,7 @@ export function generateKicks(rhythmDensity) {
             flag = checklastTrigger(kickInputTriggers[i]);
             return generatedKick[i] = e;
         })
+    }
     
     return generatedKick;
 }

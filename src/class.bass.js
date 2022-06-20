@@ -67,7 +67,6 @@ function shuffle(array) {
     return array;
 }
 
-
 function triggerABS(array) {
     const arrayABS = [];
     var x = 0;

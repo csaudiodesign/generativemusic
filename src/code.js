@@ -63,7 +63,8 @@ function converto2Dto1D(array){
 
 import {
     rhythmFigure1,
-    rhythmFigure1Noise
+    rhythmFigure1Noise,
+    generateRF1
 } from './class.rhythmFigure1';
 const rF1 = new rhythmFigure1(12);
 const rF1Noise = new rhythmFigure1Noise(0);
@@ -132,69 +133,6 @@ function triggerABS(array) {
 
 
 
-
-/*
-1. Rule: every trigger lands on even index incl. 0:             [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
-2. Rule: every trigger has min 4 tringgers distance:            [1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0]
-3. Rule: expertion: last trigger can have 2 trigger dicance:    [1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0]
-4. Rule: if there is a trigger on the 2nd last trigger of the bar before, the trigger cant land on the 2nd trigger becuase of 2. Rule: Bar1: [1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0], Bar2: [0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0]*/
-function RhythmFigures(array, flag) {
-
-    //CHECK IF ARRAY EVEN HAVE TRIGGER
-
-    //count how much triggers are in array
-    var count = 0;
-    array.forEach((e, i) => {
-        if (e === 1) count++;
-    });
-
-    var arrayABS = [];
-
-    while (true) {
-        while (true) {
-            //1. Rule
-            while (true) {
-                array = shuffle(array);
-                if (array.every((e, i) => {
-                        if (e === 1) return i % 2 === 0;
-                        else return true; // wenns kein schlag ist alles gut, soll weither ggehen
-                    })) {
-                    break;
-                }
-            }
-
-            //2. Rule
-            arrayABS = triggerABS(array);
-
-            if (flag === 1) { // 4. Rule
-                if (array[0] === 0) {
-                    if (arrayABS.every((e, i) => {
-                            if (e < 4 && i === count - 1) { // 3. Rule
-                                return true
-                            } else if (e < 4) return false;
-                            else return true;
-                        })) {
-                        break;
-                    }
-                }
-            } else if (flag === 0) { // 4. Rule
-                if (arrayABS.every((e, i) => {
-                        if (e < 4 && i === count - 1) { // 3.Rule
-                            return true
-                        } else if (e < 4) return false;
-                        else return true;
-                    })) {
-                    break;
-                }
-            }
-
-        } {
-            break;
-        }
-
-    }
-    return array;
-}
 
 
 
@@ -343,7 +281,6 @@ hideButton.addEventListener('click', async () => {
     } else {
         z.style.display = "none";
     }
-
     if (a.style.display === "none") {
         a.style.display = "block";
     } else {
@@ -476,36 +413,7 @@ generateButton.addEventListener('click', async () => {
     rF1Noise.out.connect(masterRhythmFigureGain1);
     rF1Noise.noise.start();
 
-    let bar1RhythmFigure1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let bar2RhythmFigure1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let bar3RhythmFigure1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let bar4RhythmFigure1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let bar5RhythmFigure1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let bar6RhythmFigure1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let bar7RhythmFigure1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let bar8RhythmFigure1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let bar9RhythmFigure1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-    flag = 0;
-    const generatedRhythmFigure1Bar1 = RhythmFigures(bar1RhythmFigure1, flag);
-    flag = checklastTrigger(generatedRhythmFigure1Bar1);
-    const generatedRhythmFigure1Bar2 = RhythmFigures(bar2RhythmFigure1, flag);
-    flag = checklastTrigger(generatedRhythmFigure1Bar2);
-    const generatedRhythmFigure1Bar3 = RhythmFigures(bar3RhythmFigure1, flag);
-    flag = checklastTrigger(generatedRhythmFigure1Bar2);
-    const generatedRhythmFigure1Bar4 = RhythmFigures(bar4RhythmFigure1, flag);
-    flag = checklastTrigger(generatedRhythmFigure1Bar2);
-    const generatedRhythmFigure1Bar5 = RhythmFigures(bar5RhythmFigure1, flag);
-    flag = checklastTrigger(generatedRhythmFigure1Bar2);
-    const generatedRhythmFigure1Bar6 = RhythmFigures(bar6RhythmFigure1, flag);
-    flag = checklastTrigger(generatedRhythmFigure1Bar2);
-    const generatedRhythmFigure1Bar7 = RhythmFigures(bar7RhythmFigure1, flag);
-    flag = checklastTrigger(generatedRhythmFigure1Bar2);
-    const generatedRhythmFigure1Bar8 = RhythmFigures(bar8RhythmFigure1, flag);
-    flag = checklastTrigger(generatedRhythmFigure1Bar2);
-    const generatedRhythmFigure1Bar9 = RhythmFigures(bar9RhythmFigure1, flag);
-
-    const fullgeneratedRhythmFigure1 = generatedRhythmFigure1Bar1.concat(generatedRhythmFigure1Bar2, generatedRhythmFigure1Bar3, generatedRhythmFigure1Bar4, generatedRhythmFigure1Bar5, generatedRhythmFigure1Bar6, generatedRhythmFigure1Bar7, generatedRhythmFigure1Bar8, generatedRhythmFigure1Bar9);
+    const generatedRF1 = generateRF1(rhythmDensity);
 
     function playRhythmFigure1(time, note) {
         rF1.env.triggerAttackRelease(time);
@@ -515,7 +423,7 @@ generateButton.addEventListener('click', async () => {
         console.log(limiter.reduction);
     };
 
-    const patternRhythmFigure1 = translateBinarytoTone(fullgeneratedRhythmFigure1);
+    const patternRhythmFigure1 = translateBinarytoTone(generatedRF1);
     const partRhythmFigure1 = new Part(playRhythmFigure1, patternRhythmFigure1);
     partRhythmFigure1.loopEnd = '9:0:0';
     partRhythmFigure1.loop = true;
@@ -816,7 +724,7 @@ generateButton.addEventListener('click', async () => {
     sequencer.matrix.set.row(1, quarterNote);
     sequencer.matrix.set.row(2, generatedKick);
     sequencer.matrix.set.row(3, converto2Dto1D(generatedBass));
-    sequencer.matrix.set.row(4, fullgeneratedRhythmFigure1);
+    sequencer.matrix.set.row(4, generatedRF1);
     sequencer.matrix.set.row(5, fullgeneratedRhythmFigure2);
     sequencer.matrix.set.row(6, fullgeneratedKlicks);
 
