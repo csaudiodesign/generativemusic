@@ -45,22 +45,13 @@ import {
 } from './class.bass';
 
 const kicks = new Kicks(3);
-const klicks = new Klicks(0.75);
+const klicks = new Klicks(0);
 const bass = new Bass(1);
 import {
     running
 } from './scope';
 
-running();
 
-function converto2Dto1D(array){
-    var newArr = [];
-    for(var i = 0; i < array.length; i++)
-    {
-        newArr = newArr.concat(array[i]);
-    }
-    return newArr;
-}
 
 import {
     rhythmFigure1,
@@ -84,6 +75,25 @@ import {
 } from './class.rhythmFigure2';
 const rf2 = new rhythmFigure2;
 
+function nonRepeatingRhythmArray(length) {
+    let arr = [];
+    do {
+        let ran = Math.floor(Math.random() * length); 
+        arr = arr.indexOf(ran) > -1 ? arr : arr.concat(ran);
+     }while (arr.length < length)
+     
+     return arr;
+  }
+  
+
+function converto2Dto1D(array){
+    var newArr = [];
+    for(var i = 0; i < array.length; i++)
+    {
+        newArr = newArr.concat(array[i]);
+    }
+    return newArr;
+}
 
 function shuffle(array) {
     const r = (from = 0, to = 1) => from + Math.random() * (to - from);
@@ -239,7 +249,7 @@ generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    /* rhythmDensity = 8; */
+    /* rhythmDensity = 7; */
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -259,15 +269,47 @@ generateButton.addEventListener('click', async () => {
     volMaster.volume.rampTo(6, 3);
 
     //////////////////////////////////////////////////////////////////<<KICK------------------------------------------------------------------------------
-    const kickMasterGain = new Volume(0).connect(masterGain);
-    kicks.out.connect(kickMasterGain);
+    const masterVolumeKick = new Volume(0).connect(masterGain);
+    kicks.out.connect(masterVolumeKick);
+    
 
     const kicksForBass = generateKicks(rhythmDensity);
     const kick = converto2Dto1D(kicksForBass);
 
+    let nonRepeatingArray = nonRepeatingRhythmArray(7);
+
+
+    let kickCounter = 1;
+    //console.log(nonRepeatingArray);
+
     function playKick(time, note) {
-        //kicks.kit.triggerAttack('C1');
-        const random = Math.ceil(Math.random() * 4);
+        //const random = Math.ceil(Math.random() * 4);
+        kickCounter++
+        //console.log('Kick Counter: ' +kickCounter)
+
+        if(kickCounter>6){
+            kickCounter = 0;
+            random = nonRepeatingArray[kickCounter];
+            let lastNumberofArray = nonRepeatingArray[6]
+            while(true){
+                nonRepeatingArray = nonRepeatingRhythmArray(7);
+                console.log(nonRepeatingArray);
+                if(lastNumberofArray === nonRepeatingArray[6]) return false;
+                else{
+                    return true;
+                }
+            }
+        }
+        else {
+            //console.log('ELSE: ' +kickCounter);
+            random = nonRepeatingArray[kickCounter];
+        }
+
+        //onsole.log(random);
+
+        if (random === 6) kicks.kit.player('G1').start(time);
+        if (random === 5) kicks.kit.player('A1').start(time);
+        if (random === 4) kicks.kit.player('B1').start(time);
         if (random === 3) kicks.kit.player('C1').start(time);
         else if (random === 2) kicks.kit.player('D1').start(time);
         else if (random === 1) kicks.kit.player('E1').start(time);
@@ -345,8 +387,8 @@ generateButton.addEventListener('click', async () => {
     partRhythmFigure2.loop = true;
 
     //////////////////////////////////////////////////////////////////<<KLICK------------------------------------------------------------------------------
-    const klickMasterGain = new Volume(6).connect(masterGain);
-    klicks.out.connect(klickMasterGain);
+    const masterVolumeKlick = new Volume(6).connect(masterGain);
+    klicks.out.connect(masterVolumeKlick);
 
     const fullgeneratedKlicks = genrateKlicks(rhythmDensity);
 
@@ -388,18 +430,18 @@ generateButton.addEventListener('click', async () => {
 
         if (rhythmDensity === 7) {
             if (random2 === 0) {
-                //klicks.reverb.wet.value = generateRandom(0.1,0.9);
-                klicks.reverb.decay = 1;
+                klicks.reverb.wet.value = generateRandom(0.01,0.15);
+                klicks.delay.wet.value = generateRandom(0.01,0.2);
                 klicks.delay.delayTime.value = '4n';
             }
             if (random2 === 1) {
-                //klicks.reverb.wet.value = generateRandom(0.1,0.9);
-                klicks.reverb.decay = 4;
+                klicks.reverb.wet.value = generateRandom(0.01,0.15);
+                klicks.delay.wet.value = generateRandom(0.01,0.2);
                 klicks.delay.delayTime.value = '8n';
             }
             if (random2 === 2) {
-                //klicks.reverb.wet.value = generateRandom(0.1,0.9);
-                klicks.reverb.decay = 3;
+                klicks.reverb.wet.value = generateRandom(0.01,0.15);
+                klicks.delay.wet.value = generateRandom(0.01,0.2);
                 klicks.delay.delayTime.value = '2n';
             }
         } else if (rhythmDensity === 9) {
@@ -430,8 +472,6 @@ generateButton.addEventListener('click', async () => {
 
     let rampTimeDroneGain = 0.6;
     let numberofSineDrone = 15;
-    let minLFODrone = 0;
-    let freqLFO = '4n';
 
     const droneTriggerGains = generateDroneGains(rhythmDensity);
 
@@ -440,6 +480,7 @@ generateButton.addEventListener('click', async () => {
             (e, i) => {
                 e.gain.rampTo(exponentialGain(i, numberofSineDrone, 800), rampTimeDroneGain);
             });
+        if(rhythmDensity===7) numberofSineDrone = Math.round(generateRandom(5,12));
     };
 
     const patternDroneGains = translateBinarytoTone(droneTriggerGains);
@@ -540,7 +581,7 @@ generateButton.addEventListener('click', async () => {
         rf2.filter.frequency.value = 400;
         partRhythmFigure2.start();
         partDroneGains.start();
-        klickMasterGain.volume.value = -5;
+        masterVolumeKlick.volume.value = -5;
         //reverbKlickVolume.volume.value = -10;
         klicks.reverb.wet.value = 0.5;
         klicks.reverb.decay = 100;
@@ -571,7 +612,7 @@ generateButton.addEventListener('click', async () => {
         rf2.filter.type = 'highpass';
         rf2.filter.frequency.value = 400;
         partDroneGains.start();
-        klickMasterGain.volume.value = -5;
+        masterVolumeKlick.volume.value = -5;
         klicks.reverb.wet.value = 0.5;
         klicks.reverb.decay = 100;
         rampTimeDroneGain = 10;
@@ -583,59 +624,84 @@ generateButton.addEventListener('click', async () => {
         droneNoise.lfo.max = 6000;
     }
     if (rhythmDensity === 7) {
-        Transport.bpm.value = generateRandom(150, 180);
+        random1 = Math.random();
+        random2 = Math.random();
 
-        
-        masterVolumeDrone.volume.value = 8; //6
-        partKick.start();
+        Transport.bpm.value = generateRandom(120, 180);
+
+        if (random1 >= 0.5){
+            partKick.start();
+        }     
         partBass.start();
-        partKlick.start();
-        //partRhythmFigure1.start();
-        
-        rampTimeDroneGain = 5;
-        numberofSineDrone = 10;
-        minLFODrone = 0.2;
-        freqLFO = '1n'
+
+        //KLICKS
+        if (random2 >= 0.5){
+            partKlick.start();
+        }
+        if (random1 >= 0.5 && random2 < 0.5){
+            masterVolumeKick.volume.value = -10;
+        }
+
+        masterVolumeKlick.volume.value = 4;
+        klicks.eq.highFrequency.value = 3;
 
         //DRONE
         partDroneGains.start();
         masterVolumeDrone.volume.value = 2;
-        droneNoise.gain.volume.value = -37;
+        droneNoise.gain.volume.value = generateRandom(-50,-40);
+        droneNoise.distortion.wet.value = 1;
+        drone.distortion.wet.value = generateRandom(0.01,0.1);
         droneNoise.lfo.min = 5500;
         droneNoise.lfo.max = 6000;
         klicks.delay.wet.value = 0;
         klicks.reverb.wet.value = 0.9;
+        rampTimeDroneGain = Math.round(generateRandom(4,7));
+        numberofSineDrone = Math.round(generateRandom(5,20));
     }
     if (rhythmDensity === 8) {
+        random1 = Math.random();
+        random2 = Math.random();
+
         Transport.bpm.value = generateRandom(160, 185);
 
         bassMasterGain.volume.value = 2;
         partKick.start();
-        partBass.start();
-        partKlick.start();
+        
+        if (random1 >= 0.5){
+            partBass.start();
+        }
+        if (random2 >= 0.5){
+            partKlick.start();
+        }
+
+
+        //DRONE
         partDroneGains.start();
-        rampTimeDroneGain = 5;
-        numberofSineDrone = 15;
         masterVolumeDrone.volume.value = 3;
         droneNoise.gain.volume.value = -45;
-        droneNoise.lfo.min = 4000;
-        droneNoise.lfo.max = 6000;
-        droneNoise.bitcrusher.wet.value = 0.5
-        droneNoise.distortion.wet.value = 0.5
+        droneNoise.lfo.min = Math.round(generateRandom(3000,5000));
+        droneNoise.lfo.max = Math.round(generateRandom(6000,8000));
+        droneNoise.bitcrusher.wet.value = generateRandom(0.3,0.6);
+        droneNoise.distortion.wet.value = generateRandom(0.3,0.6);
+        rampTimeDroneGain = Math.round(generateRandom(5,9));
+        
     }
     if (rhythmDensity === 9) {
         Transport.bpm.value = generateRandom(160, 185);
 
         bassMasterGain.volume.value = 2;
-        klickMasterGain.volume.value = -100;
+        masterVolumeKlick.volume.value = -100;
         partKick.start();
         partBass.start();
         partKlick.start();
-        partDroneGains.start();
-        rampTimeDroneGain = 5;
-        numberofSineDrone = 15;
+
         masterRhythmFigureGain2.volume.value = 0;
+
+        partDroneGains.start();
         masterVolumeDrone.volume.value = 3;
+        rampTimeDroneGain = Math.round(generateRandom(4,7));
+        numberofSineDrone = Math.round(generateRandom(5,20));
+        
         droneNoise.gain.volume.value = -45;
         droneNoise.lfo.min = 4000;
         droneNoise.lfo.max = 6000;

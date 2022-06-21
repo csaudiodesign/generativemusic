@@ -1,4 +1,4 @@
-import { Gain, EQ3, Players, Reverb,FeedbackDelay} from "tone";
+import { Gain, EQ3, Players, Volume, Reverb,FeedbackDelay} from "tone";
 
 function doubleTime(array, amount) {
 
@@ -93,9 +93,14 @@ export class Klicks {
 
     constructor(volume) {
 
-        this.out = new Gain(volume);
-        this.eq = new EQ3(0, 0, 0);
-        this.reverb = new Reverb (1);
+        this.out = new Volume(volume);
+        this.eq = new EQ3({
+            low: 0,
+            mid: 0,
+            high: 0,
+            highFrequency: 8000,
+        });
+        this.reverb = new Reverb (100);
         this.reverb.wet.value = 0;
         this.delay = new FeedbackDelay('4n', 0.5);
         this.delay.wet.value = 0;

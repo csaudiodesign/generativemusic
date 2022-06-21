@@ -5,6 +5,20 @@ let frequenciesRF13 = [...Array(5)];
 let oscillatorRhythmFigure1 = [...Array(32)];
 let gainsRythmFigure1 = [...Array(32)];
 
+function shuffle(array) {
+    const r = (from = 0, to = 1) => from + Math.random() * (to - from);
+    var m = array.length,
+        t,
+        i;
+    while (m) {
+        i = Math.floor(r() * m--);
+        t = array[m]; // temporary storage
+        array[m] = array[i];
+        array[i] = t;
+    }
+
+    return array;
+}
 
 /*
 1. Rule: every trigger lands on even index incl. 0:             [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
