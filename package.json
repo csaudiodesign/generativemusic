@@ -2,9 +2,8 @@
   "name": "mm_instru",
   "version": "1.0.0",
   "source": "src/index.html",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "rm -rf publish && parcel build --no-optimize --no-source-maps --dist-dir publish && cp -r src/samples publish/ && surge ./publish teeny-pie.surge.sh"
   },
   "keywords": [],
   "author": "",
@@ -26,3 +25,4 @@
   "devDependencies": {},
   "description": ""
 }
+
