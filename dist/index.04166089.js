@@ -711,6 +711,9 @@ generateButton.addEventListener("click", async ()=>{
     volMaster.volume.value = -100;
     volMaster.volume.rampTo(6, 3);
     //////////////////////////////////////////////////////////////////<<KICK------------------------------------------------------------------------------
+    const kickEvent = new CustomEvent("kick", {
+        "detail": "kick trigger"
+    });
     const masterVolumeKick = new (0, _tone.Volume)(0).connect(masterGain);
     kicks.out.connect(masterVolumeKick);
     const kicksForBass = (0, _classKicks.generateKicks)(rhythmDensity);
@@ -719,6 +722,7 @@ generateButton.addEventListener("click", async ()=>{
     let kickCounter = 1;
     //console.log(nonRepeatingArray);
     function playKick(time, note) {
+        document.dispatchEvent(kickEvent);
         //const random = Math.ceil(rfx() * 4);
         kickCounter++;
         //console.log('Kick Counter: ' +kickCounter)
@@ -729,7 +733,7 @@ generateButton.addEventListener("click", async ()=>{
             let lastNumberofArray = nonRepeatingArray[6];
             while(true){
                 nonRepeatingArray = nonRepeatingRhythmArray(7);
-                console.log(nonRepeatingArray);
+                //console.log(nonRepeatingArray);
                 if (lastNumberofArray === nonRepeatingArray[6]) return false;
                 else return true;
             }
@@ -749,10 +753,14 @@ generateButton.addEventListener("click", async ()=>{
     partKick.loopEnd = "9:0:0";
     partKick.loop = true;
     //////////////////////////////////////////////////////////////////<<BASS------------------------------------------------------------------------------
+    const bassEvent = new CustomEvent("bass", {
+        "detail": "bass trigger"
+    });
     const bassMasterGain = new (0, _tone.Volume)(0).connect(masterGain);
     bass.out.connect(bassMasterGain);
     const generatedBass = (0, _classBass.generateBass)(rhythmDensity, kicksForBass);
     function playBass(time, note) {
+        document.dispatchEvent(bassEvent);
         const random = Math.ceil(rfx() * 5);
         if (random === 5) bass.kit.player("C1").start(time);
         else if (random === 4) bass.kit.player("D1").start(time);
@@ -766,6 +774,9 @@ generateButton.addEventListener("click", async ()=>{
     partBass.loop = true;
     //////////////////////////////////////////////////////////////////<<RF1------------------------------------------------------------------------------
     //let rhythmFigure1 = await import('./class.rhythmFigure1');
+    const rf1Event = new CustomEvent("rf1", {
+        "detail": "rf1 trigger"
+    });
     const masterRhythmFigureGain1 = new (0, _tone.Volume)(-10).connect(masterGain);
     rF1.out.connect(masterRhythmFigureGain1);
     rF1.oscillatorRhythmFigure1.forEach((e)=>e.start());
@@ -773,6 +784,7 @@ generateButton.addEventListener("click", async ()=>{
     rF1Noise.noise.start();
     const generatedRF1 = (0, _classRhythmFigure1.generateRF1)(rhythmDensity);
     function playRhythmFigure1(time, note) {
+        document.dispatchEvent(rf1Event);
         rF1.env.triggerAttackRelease(time);
         rF1.env.decay = generateRandom(0.2, 1);
         rF1Noise.env.decay = generateRandom(0.2, 0.8);
@@ -785,10 +797,14 @@ generateButton.addEventListener("click", async ()=>{
     partRhythmFigure1.loop = true;
     //////////////////////////////////////////////////////////////////<<RF2------------------------------------------------------------------------------
     const masterRhythmFigureGain2 = new (0, _tone.Volume)(-10).connect(masterGain);
+    const rf2Event = new CustomEvent("rf2", {
+        "detail": "rf2 trigger"
+    });
     rf2.out.connect(masterRhythmFigureGain2);
     rf2.oscillatorRhythmFigure2.forEach((e)=>e.start());
     const fullgeneratedRhythmFigure2 = (0, _classRhythmFigure2.generateRF2)();
     function playRhythmFigure2(time, note) {
+        document.dispatchEvent(rf2Event);
         rf2.gains.forEach((e, i)=>{
             e.gain.rampTo(exponentialGain(i, numberofSineDrone, 800), rampTimeDroneGain);
         });
@@ -800,6 +816,9 @@ generateButton.addEventListener("click", async ()=>{
     partRhythmFigure2.loop = true;
     //////////////////////////////////////////////////////////////////<<KLICK------------------------------------------------------------------------------
     const masterVolumeKlick = new (0, _tone.Volume)(6).connect(masterGain);
+    const klickEvent = new CustomEvent("klick", {
+        "detail": "kick trigger"
+    });
     klicks.out.connect(masterVolumeKlick);
     const fullgeneratedKlicks = (0, _classKlicks.genrateKlicks)(rhythmDensity);
     const oscNoiseClickVolume = new (0, _tone.Volume)(-4).connect(masterGain);
@@ -816,6 +835,7 @@ generateButton.addEventListener("click", async ()=>{
     if (randomOSCNoiseClicktype === 2) oscNoiseClick.type = "sawtooth2";
     if (randomOSCNoiseClicktype === 3) oscNoiseClick.type = "sine16";
     function playKlick(time, note) {
+        document.dispatchEvent(klickEvent);
         const random = Math.floor(rfx() * 16);
         const random2 = Math.floor(rfx() * 3);
         if (random === 0) klicks.kit.player("C1").start(time);
@@ -861,6 +881,9 @@ generateButton.addEventListener("click", async ()=>{
     partKlick.loop = true;
     //////////////////////////////////////////////////////////////////<<DRONE------------------------------------------------------------------------------
     const masterVolumeDrone = new (0, _tone.Volume)(6).connect(masterGain);
+    const droneEvent = new CustomEvent("drone", {
+        "detail": "drone trigger"
+    });
     drone.out.connect(masterVolumeDrone);
     drone.osc.forEach((e)=>e.start());
     droneNoise.out.connect(masterVolumeDrone);
@@ -875,6 +898,7 @@ generateButton.addEventListener("click", async ()=>{
     let numberofSineDrone = 15;
     const droneTriggerGains = (0, _classDrone.generateDroneGains)(rhythmDensity);
     function playDroneGains(time, note) {
+        document.dispatchEvent(droneEvent);
         drone.gains.forEach((e, i)=>{
             e.gain.rampTo(exponentialGain(i, numberofSineDrone, 800), rampTimeDroneGain);
         });

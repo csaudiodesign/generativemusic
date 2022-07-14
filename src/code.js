@@ -240,6 +240,7 @@ generateButton.addEventListener('click', async () => {
     volMaster.volume.rampTo(6, 3);
 
     //////////////////////////////////////////////////////////////////<<KICK------------------------------------------------------------------------------
+    const kickEvent = new CustomEvent('kick', { "detail": "kick trigger" });
     const masterVolumeKick = new Volume(0).connect(masterGain);
     kicks.out.connect(masterVolumeKick);
     
@@ -254,6 +255,7 @@ generateButton.addEventListener('click', async () => {
     //console.log(nonRepeatingArray);
 
     function playKick(time, note) {
+        document.dispatchEvent(kickEvent);
         //const random = Math.ceil(rfx() * 4);
         kickCounter++
         //console.log('Kick Counter: ' +kickCounter)
@@ -265,7 +267,7 @@ generateButton.addEventListener('click', async () => {
             let lastNumberofArray = nonRepeatingArray[6]
             while(true){
                 nonRepeatingArray = nonRepeatingRhythmArray(7);
-                console.log(nonRepeatingArray);
+                //console.log(nonRepeatingArray);
                 if(lastNumberofArray === nonRepeatingArray[6]) return false;
                 else{
                     return true;
@@ -294,12 +296,14 @@ generateButton.addEventListener('click', async () => {
     partKick.loop = true;
 
     //////////////////////////////////////////////////////////////////<<BASS------------------------------------------------------------------------------
+    const bassEvent = new CustomEvent('bass', { "detail": "bass trigger" });
     const bassMasterGain = new Volume(0).connect(masterGain);
     bass.out.connect(bassMasterGain);
 
     const generatedBass = generateBass(rhythmDensity,kicksForBass);
 
     function playBass(time, note) {
+        document.dispatchEvent(bassEvent);
         const random = Math.ceil(rfx() * 5);
         if (random === 5) bass.kit.player('C1').start(time);
         else if (random === 4) bass.kit.player('D1').start(time);
@@ -315,7 +319,7 @@ generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<RF1------------------------------------------------------------------------------
     //let rhythmFigure1 = await import('./class.rhythmFigure1');
-
+    const rf1Event = new CustomEvent('rf1', { "detail": "rf1 trigger" });
     const masterRhythmFigureGain1 = new Volume(-10).connect(masterGain);
     rF1.out.connect(masterRhythmFigureGain1);
     rF1.oscillatorRhythmFigure1.forEach((e) => e.start());
@@ -326,6 +330,7 @@ generateButton.addEventListener('click', async () => {
     const generatedRF1 = generateRF1(rhythmDensity);
 
     function playRhythmFigure1(time, note) {
+        document.dispatchEvent(rf1Event);
         rF1.env.triggerAttackRelease(time);
         rF1.env.decay = generateRandom(0.2, 1);
         rF1Noise.env.decay = generateRandom(0.2, 0.8)
@@ -340,12 +345,14 @@ generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<RF2------------------------------------------------------------------------------
     const masterRhythmFigureGain2 = new Volume(-10).connect(masterGain);
+    const rf2Event = new CustomEvent('rf2', { "detail": "rf2 trigger" });
     rf2.out.connect(masterRhythmFigureGain2);
     rf2.oscillatorRhythmFigure2.forEach((e) => e.start());
 
     const fullgeneratedRhythmFigure2 = generateRF2();
 
     function playRhythmFigure2(time, note) {
+        document.dispatchEvent(rf2Event);
         rf2.gains.forEach(
             (e, i) => {
                 e.gain.rampTo(exponentialGain(i, numberofSineDrone, 800), rampTimeDroneGain);
@@ -360,6 +367,7 @@ generateButton.addEventListener('click', async () => {
 
     //////////////////////////////////////////////////////////////////<<KLICK------------------------------------------------------------------------------
     const masterVolumeKlick = new Volume(6).connect(masterGain);
+    const klickEvent = new CustomEvent('klick', { "detail": "kick trigger" });
     klicks.out.connect(masterVolumeKlick);
 
     const fullgeneratedKlicks = genrateKlicks(rhythmDensity);
@@ -380,7 +388,7 @@ generateButton.addEventListener('click', async () => {
     if (randomOSCNoiseClicktype === 3) oscNoiseClick.type = 'sine16'
 
     function playKlick(time, note) {
-
+        document.dispatchEvent(klickEvent);
         const random = Math.floor(rfx() * 16);
         const random2 = Math.floor(rfx() * 3);
         if (random === 0) klicks.kit.player('C1').start(time);
@@ -430,6 +438,7 @@ generateButton.addEventListener('click', async () => {
     //////////////////////////////////////////////////////////////////<<DRONE------------------------------------------------------------------------------
 
     const masterVolumeDrone = new Volume(6).connect(masterGain);
+    const droneEvent = new CustomEvent('drone', { "detail": "drone trigger" });
     drone.out.connect(masterVolumeDrone);
     drone.osc.forEach((e) => e.start());
     droneNoise.out.connect(masterVolumeDrone);
@@ -448,6 +457,7 @@ generateButton.addEventListener('click', async () => {
     const droneTriggerGains = generateDroneGains(rhythmDensity);
 
     function playDroneGains(time, note) {
+        document.dispatchEvent(droneEvent);
         drone.gains.forEach(
             (e, i) => {
                 e.gain.rampTo(exponentialGain(i, numberofSineDrone, 800), rampTimeDroneGain);
