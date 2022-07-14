@@ -22,7 +22,7 @@ function generateRhythmFigure2() {
     var array = new Array(144).fill(0);
     array = array.map((e, i) => {
         if (i % 24 === 4) {
-            random = Math.random()
+            let random = Math.random()
             if (random > 0.5) return 1
             else return 0;
         } else return 0;

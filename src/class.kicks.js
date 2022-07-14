@@ -253,7 +253,7 @@ export function generateKicks(rhythmDensity) {
     let flag = 0;
 
     if (rhythmDensity === 3) {
-        random = Math.floor((Math.random()*3));
+        let random = Math.floor((Math.random()*3));
         console.log('random is ' + random);
         if (random === 0) {
             kickInput = fillKick(3,0);
@@ -263,7 +263,7 @@ export function generateKicks(rhythmDensity) {
         else kickInput = fillKick(1,0);
 
     } else if (rhythmDensity === 4) {
-        random = Math.floor((Math.random()*3));
+        let random = Math.floor((Math.random()*3));
         if(random === 0) kickInput = fillKick(4,1);
         if(random === 1) kickInput = fillKick(3,1);
         if(random === 2) kickInput = fillKick(2,1);
@@ -273,7 +273,7 @@ export function generateKicks(rhythmDensity) {
     } else if (rhythmDensity === 6) {
         kickInput = fillKick(2,0);
     } else if (rhythmDensity === 7) {
-        random = Math.random()
+        //random = Math.random()
         kickInput = fillKick(2,0);
     } else if (rhythmDensity === 8) {
         kickInput = fillKick(3,0);

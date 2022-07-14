@@ -286,6 +286,7 @@ generateButton.addEventListener('click', async () => {
         //const random = Math.ceil(Math.random() * 4);
         kickCounter++
         //console.log('Kick Counter: ' +kickCounter)
+        let random;
 
         if(kickCounter>6){
             kickCounter = 0;
@@ -588,7 +589,7 @@ generateButton.addEventListener('click', async () => {
         rampTimeDroneGain = 0.6;
         numberofSineDrone = 15;
         masterRhythmFigureGain2.volume.value = 0;
-        amplitudeLFODrone = 0;
+        //amplitudeLFODrone = 0;
         masterVolumeDrone.volume.value = 2;
         droneNoise.gain.volume.value = -37;
         droneNoise.lfo.min = 1000;
@@ -624,8 +625,8 @@ generateButton.addEventListener('click', async () => {
         droneNoise.lfo.max = 6000;
     }
     if (rhythmDensity === 7) {
-        random1 = Math.random();
-        random2 = Math.random();
+        let random1 = Math.random();
+        let random2 = Math.random();
 
         Transport.bpm.value = generateRandom(120, 180);
 
@@ -659,8 +660,8 @@ generateButton.addEventListener('click', async () => {
         numberofSineDrone = Math.round(generateRandom(5,20));
     }
     if (rhythmDensity === 8) {
-        random1 = Math.random();
-        random2 = Math.random();
+        let random1 = Math.random();
+        let random2 = Math.random();
 
         Transport.bpm.value = generateRandom(160, 185);
 

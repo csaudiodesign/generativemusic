@@ -35912,22 +35912,21 @@ function $48e418653d1eb56b$export$d0727105f16910fe(rhythmDensity) {
     ];
     let flag = 0;
     if (rhythmDensity === 3) {
-        random = Math.floor(Math.random() * 3);
+        let random = Math.floor(Math.random() * 3);
         console.log("random is " + random);
         if (random === 0) kickInput = $48e418653d1eb56b$var$fillKick(3, 0);
         else if (random === 1) kickInput = $48e418653d1eb56b$var$fillKick(2, 1);
         else kickInput = $48e418653d1eb56b$var$fillKick(1, 0);
     } else if (rhythmDensity === 4) {
-        random = Math.floor(Math.random() * 3);
+        let random = Math.floor(Math.random() * 3);
         if (random === 0) kickInput = $48e418653d1eb56b$var$fillKick(4, 1);
         if (random === 1) kickInput = $48e418653d1eb56b$var$fillKick(3, 1);
         if (random === 2) kickInput = $48e418653d1eb56b$var$fillKick(2, 1);
     } else if (rhythmDensity === 5) kickInput = $48e418653d1eb56b$var$fillKick(1, 0);
     else if (rhythmDensity === 6) kickInput = $48e418653d1eb56b$var$fillKick(2, 0);
-    else if (rhythmDensity === 7) {
-        random = Math.random();
-        kickInput = $48e418653d1eb56b$var$fillKick(2, 0);
-    } else if (rhythmDensity === 8) kickInput = $48e418653d1eb56b$var$fillKick(3, 0);
+    else if (rhythmDensity === 7) //random = Math.random()
+    kickInput = $48e418653d1eb56b$var$fillKick(2, 0);
+    else if (rhythmDensity === 8) kickInput = $48e418653d1eb56b$var$fillKick(3, 0);
     else if (rhythmDensity === 9) kickInput = $48e418653d1eb56b$var$fillKick(3, 0);
     if (rhythmDensity === 4) generatedKick.map((e, i)=>{
         e = $48e418653d1eb56b$var$kickRhythm2(kickInput[i], flag);
@@ -64392,7 +64391,7 @@ function $ad81f6362d05f163$export$a2b2d7914a45f81b(rhythmDensity) {
         0
     ];
     else if (rhythmDensity === 4) {
-        random = Math.random();
+        let random = Math.random();
         if (random > 0.5) droneTriggerGains = [
             1,
             0,
@@ -64686,7 +64685,7 @@ function $ad81f6362d05f163$export$a2b2d7914a45f81b(rhythmDensity) {
             0
         ];
     } else if (rhythmDensity === 5) {
-        random = Math.random();
+        let random = Math.random();
         if (random > 0.5) droneTriggerGains = [
             1,
             0,
@@ -64980,7 +64979,7 @@ function $ad81f6362d05f163$export$a2b2d7914a45f81b(rhythmDensity) {
             0
         ];
     } else if (rhythmDensity === 6) {
-        random = Math.random();
+        let random = Math.random();
         if (random > 0.5) droneTriggerGains = [
             1,
             0,
@@ -65420,7 +65419,7 @@ function $ad81f6362d05f163$export$a2b2d7914a45f81b(rhythmDensity) {
         0
     ];
     else if (rhythmDensity === 8) {
-        random = Math.random();
+        let random = Math.random();
         if (random > 0.5) droneTriggerGains = [
             1,
             0,
@@ -65714,7 +65713,7 @@ function $ad81f6362d05f163$export$a2b2d7914a45f81b(rhythmDensity) {
             0
         ];
     } else if (rhythmDensity === 9) {
-        random = Math.random();
+        let random = Math.random();
         if (random > 0.5) droneTriggerGains = [
             1,
             0,
@@ -66037,7 +66036,7 @@ function $6200da4dfb771318$var$generateRhythmFigure2() {
     var array = new Array(144).fill(0);
     array = array.map((e, i)=>{
         if (i % 24 === 4) {
-            random = Math.random();
+            let random = Math.random();
             if (random > 0.5) return 1;
             else return 0;
         } else return 0;
@@ -66302,6 +66301,7 @@ $21df9c1ea4331da7$var$generateButton.addEventListener("click", async ()=>{
         //const random = Math.ceil(Math.random() * 4);
         kickCounter++;
         //console.log('Kick Counter: ' +kickCounter)
+        let random;
         if (kickCounter > 6) {
             kickCounter = 0;
             random = nonRepeatingArray[kickCounter];
@@ -66843,7 +66843,7 @@ $21df9c1ea4331da7$var$generateButton.addEventListener("click", async ()=>{
         rampTimeDroneGain = 0.6;
         numberofSineDrone = 15;
         masterRhythmFigureGain2.volume.value = 0;
-        amplitudeLFODrone = 0;
+        //amplitudeLFODrone = 0;
         masterVolumeDrone.volume.value = 2;
         $21df9c1ea4331da7$var$droneNoise.gain.volume.value = -37;
         $21df9c1ea4331da7$var$droneNoise.lfo.min = 1000;
@@ -66879,8 +66879,8 @@ $21df9c1ea4331da7$var$generateButton.addEventListener("click", async ()=>{
         $21df9c1ea4331da7$var$droneNoise.lfo.max = 6000;
     }
     if (rhythmDensity === 7) {
-        random1 = Math.random();
-        random2 = Math.random();
+        let random1 = Math.random();
+        let random2 = Math.random();
         (0, $193d86afce95aa9f$export$86495b081fef8e52).bpm.value = $21df9c1ea4331da7$var$generateRandom(120, 180);
         if (random1 >= 0.5) partKick.start();
         partBass.start();
@@ -66903,8 +66903,8 @@ $21df9c1ea4331da7$var$generateButton.addEventListener("click", async ()=>{
         numberofSineDrone = Math.round($21df9c1ea4331da7$var$generateRandom(5, 20));
     }
     if (rhythmDensity === 8) {
-        random1 = Math.random();
-        random2 = Math.random();
+        let random1 = Math.random();
+        let random2 = Math.random();
         (0, $193d86afce95aa9f$export$86495b081fef8e52).bpm.value = $21df9c1ea4331da7$var$generateRandom(160, 185);
         bassMasterGain.volume.value = 2;
         partKick.start();
