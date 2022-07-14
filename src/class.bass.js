@@ -1,4 +1,6 @@
 import { Gain, EQ3, Sampler, Players } from "tone";
+const rfx = fxrand;
+
 function fillBass(size,alternate){
     let flag = 0;
     let kickInputTriggers = [[],[]];
@@ -53,7 +55,7 @@ function checklastTrigger(array) {
     else return 0;
 }
 function shuffle(array) {
-    const r = (from = 0, to = 1) => from + Math.random() * (to - from);
+    const r = (from = 0, to = 1) => from + rfx() * (to - from);
     var m = array.length,
         t,
         i;

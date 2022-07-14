@@ -1,9 +1,10 @@
 import { Gain, EQ3, Players, Volume, Reverb,FeedbackDelay} from "tone";
+const rfx = fxrand;
 
 function doubleTime(array, amount) {
 
     for (let i = 0; i < amount; i++) {
-        const random = Math.floor(Math.random() * 72) * 2 - 1;
+        const random = Math.floor(rfx() * 72) * 2 - 1;
         array[random] = 1;
     }
     return array;
@@ -40,7 +41,7 @@ function generateKlicks3() {
     array = array.map((e, i) => {
         if (i % 6 === 0) return 1;
         else if (i % 6 === 2) {
-            const random = Math.random()
+            const random = rfx()
             if (random >= 0.5) return 1;
             else return 0;
         } else return 0;
@@ -79,7 +80,7 @@ function generateRF2() {
     var array = new Array(144).fill(0);
     array = array.map((e, i) => {
         if (i % 24 === 4) {
-            random = Math.random()
+            random = rfx()
             if (random > 0.5) return 1
             else return 0;
         } else return 0;
@@ -134,7 +135,7 @@ export function genrateKlicks (rhythmDensity){
     let fullgeneratedKlicks;
 
     if (rhythmDensity === 3) {
-        let random = Math.ceil(Math.random() * 5);
+        let random = Math.ceil(rfx() * 5);
         if (random === 1) fullgeneratedKlicks = generateKlicks1();
         else if (random === 2) fullgeneratedKlicks = generateKlicks2();
         else if (random === 3) fullgeneratedKlicks = generateKlicks3();
@@ -143,7 +144,7 @@ export function genrateKlicks (rhythmDensity){
         fullgeneratedKlicks = doubleTime(fullgeneratedKlicks, 2);
     }
     else if (rhythmDensity === 4) {
-        let random = Math.ceil(Math.random() * 4);
+        let random = Math.ceil(rfx() * 4);
         if (random === 1) fullgeneratedKlicks = generateKlicks1();
         else if (random === 2) fullgeneratedKlicks = generateKlicks2();
         else if (random === 3) fullgeneratedKlicks = generateKlicks3();
@@ -159,14 +160,14 @@ export function genrateKlicks (rhythmDensity){
         fullgeneratedKlicks = doubleTime(fullgeneratedKlicks, 2);
     }
     else if (rhythmDensity === 7) {
-        let random = Math.ceil(Math.random() * 4);
+        let random = Math.ceil(rfx() * 4);
         if (random === 1) fullgeneratedKlicks = generateKlicks1();
         else if (random === 3) fullgeneratedKlicks = generateKlicks3();
         else fullgeneratedKlicks = generateKlicks5();
 
     }
     else if (rhythmDensity === 8) {
-        let random = Math.ceil(Math.random() * 7);
+        let random = Math.ceil(rfx() * 7);
         if (random === 1) fullgeneratedKlicks = generateKlicks1();
         else if (random === 2) fullgeneratedKlicks = generateKlicks2();
         else if (random === 3) fullgeneratedKlicks = generateKlicks3();
