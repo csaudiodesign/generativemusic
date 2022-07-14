@@ -216,7 +216,7 @@ function exponentialGain(index, dropgains, loudnessControl) {
     else return 0;
 }
 
-generateButton.addEventListener('click', async () => {
+function startAudio(){
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
@@ -695,4 +695,4 @@ generateButton.addEventListener('click', async () => {
 
     await start();
     Transport.start();
-});
+}

@@ -692,7 +692,7 @@ function exponentialGain(index, dropgains, loudnessControl) {
     if (random <= dropgains) return exponentialGainValue;
     else return 0;
 }
-generateButton.addEventListener("click", async ()=>{
+function startAudio() {
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
     /* rhythmDensity = 7; */ console.log(rhythmDensity);
@@ -1381,7 +1381,7 @@ generateButton.addEventListener("click", async ()=>{
     console.log("BPM: " + (0, _tone.Transport).bpm.value);
     await (0, _tone.start)();
     (0, _tone.Transport).start();
-});
+}
 
 },{"tone":"2tCfN","./class.kicks":"g1JB6","nexusui":"g09DG","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./scope":"45p2H","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx"}],"2tCfN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
