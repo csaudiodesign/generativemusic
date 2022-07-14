@@ -3,12 +3,13 @@ import { Volume, EQ3, AmplitudeEnvelope,Gain, Oscillator,MidiClass,Noise,Distort
 let oscillatorRhythmFigure2 = [...Array(32)];
 let gains = [...Array(32)];
 let frequenciesZwei = [...Array(32)];
+const rfx = fxrand;
 
 function exponentialGain(index, dropgains, loudnessControl) {
     const scaledIndex = index / 32;
-    const random = Math.ceil(Math.random() * 32);
+    const random = Math.ceil(rfx() * 32);
     let exponentialGainValue = Math.round(Math.pow(scaledIndex - 1, 2) * 100) / loudnessControl;
-    exponentialGainValue *= Math.round(Math.random() * 10) / 10;
+    exponentialGainValue *= Math.round(rfx() * 10) / 10;
 
     if (random <= dropgains) return (exponentialGainValue);
     else return 0;
@@ -22,7 +23,7 @@ function generateRhythmFigure2() {
     var array = new Array(144).fill(0);
     array = array.map((e, i) => {
         if (i % 24 === 4) {
-            let random = Math.random()
+            let random = rfx()
             if (random > 0.5) return 1
             else return 0;
         } else return 0;

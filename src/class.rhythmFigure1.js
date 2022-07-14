@@ -4,9 +4,10 @@ let frequenciesRF1 = [...Array(32)];
 let frequenciesRF13 = [...Array(5)];
 let oscillatorRhythmFigure1 = [...Array(32)];
 let gainsRythmFigure1 = [...Array(32)];
+const rfx = fxrand;
 
 function shuffle(array) {
-    const r = (from = 0, to = 1) => from + Math.random() * (to - from);
+    const r = (from = 0, to = 1) => from + rfx() * (to - from);
     var m = array.length,
         t,
         i;
@@ -95,9 +96,9 @@ function converto2Dto1D(array){
 
 function exponentialGain(index, dropgains, loudnessControl) {
     const scaledIndex = index / 32;
-    const random = Math.ceil(Math.random() * 32);
+    const random = Math.ceil(rfx() * 32);
     let exponentialGainValue = Math.round(Math.pow(scaledIndex - 1, 2) * 100) / loudnessControl;
-    exponentialGainValue *= Math.round(Math.random() * 10) / 10;
+    exponentialGainValue *= Math.round(rfx() * 10) / 10;
 
     if (random <= dropgains) return (exponentialGainValue);
     else return 0;

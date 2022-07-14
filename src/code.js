@@ -53,6 +53,7 @@ import {
 
 
 
+
 import {
     rhythmFigure1,
     rhythmFigure1Noise,
@@ -73,12 +74,14 @@ import {
     rhythmFigure2,
     generateRF2
 } from './class.rhythmFigure2';
+
+const rfx = fxrand;
 const rf2 = new rhythmFigure2;
 
 function nonRepeatingRhythmArray(length) {
     let arr = [];
     do {
-        let ran = Math.floor(Math.random() * length); 
+        let ran = Math.floor(rfx() * length); 
         arr = arr.indexOf(ran) > -1 ? arr : arr.concat(ran);
      }while (arr.length < length)
      
@@ -96,7 +99,7 @@ function converto2Dto1D(array){
 }
 
 function shuffle(array) {
-    const r = (from = 0, to = 1) => from + Math.random() * (to - from);
+    const r = (from = 0, to = 1) => from + rfx() * (to - from);
     var m = array.length,
         t,
         i;
@@ -185,38 +188,6 @@ function translateBinarytoTone(array) {
 }
 
 const generateButton = document.getElementById('generate');
-const hideButton = document.getElementById('hideall');
-
-hideButton.addEventListener("keyup", function (event) {
-    if (event.code === 65) {
-        event.preventDefault();
-        document.getElementById("hideall").click();
-    }
-});
-
-hideButton.addEventListener('click', async () => {
-    var x = document.getElementById("seq");
-    var z = document.getElementById("generate");
-    var a = document.getElementById("hideall");
-
-
-
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-    if (z.style.display === "none") {
-        z.style.display = "block";
-    } else {
-        z.style.display = "none";
-    }
-    if (a.style.display === "none") {
-        a.style.display = "block";
-    } else {
-        a.style.display = "none";
-    }
-});
 
 function generateRandom(min, max) {
 
@@ -224,7 +195,7 @@ function generateRandom(min, max) {
     let difference = max - min;
 
     // generate random number 
-    let rand = Math.random();
+    let rand = rfx();
 
     // multiply with difference 
     rand = Math.round(rand * difference * 100) / 100;
@@ -237,9 +208,9 @@ function generateRandom(min, max) {
 
 function exponentialGain(index, dropgains, loudnessControl) {
     const scaledIndex = index / 32;
-    const random = Math.ceil(Math.random() * 32);
+    const random = Math.ceil(rfx() * 32);
     let exponentialGainValue = Math.round(Math.pow(scaledIndex - 1, 2) * 100) / loudnessControl;
-    exponentialGainValue *= Math.round(Math.random() * 10) / 10;
+    exponentialGainValue *= Math.round(rfx() * 10) / 10;
 
     if (random <= dropgains) return (exponentialGainValue);
     else return 0;
@@ -283,7 +254,7 @@ generateButton.addEventListener('click', async () => {
     //console.log(nonRepeatingArray);
 
     function playKick(time, note) {
-        //const random = Math.ceil(Math.random() * 4);
+        //const random = Math.ceil(rfx() * 4);
         kickCounter++
         //console.log('Kick Counter: ' +kickCounter)
         let random;
@@ -329,7 +300,7 @@ generateButton.addEventListener('click', async () => {
     const generatedBass = generateBass(rhythmDensity,kicksForBass);
 
     function playBass(time, note) {
-        const random = Math.ceil(Math.random() * 5);
+        const random = Math.ceil(rfx() * 5);
         if (random === 5) bass.kit.player('C1').start(time);
         else if (random === 4) bass.kit.player('D1').start(time);
         else if (random === 3) bass.kit.player('E1').start(time);
@@ -402,7 +373,7 @@ generateButton.addEventListener('click', async () => {
     }).connect(oscNoiseClickVolume);
 
     const oscNoiseClick = new Oscillator(440, "sine8").connect(envNoiseKlick).start();
-    let randomOSCNoiseClicktype = Math.floor(Math.random() * 4);
+    let randomOSCNoiseClicktype = Math.floor(rfx() * 4);
     if (randomOSCNoiseClicktype === 0) oscNoiseClick.type = 'sine2'
     if (randomOSCNoiseClicktype === 1) oscNoiseClick.type = 'triangle2'
     if (randomOSCNoiseClicktype === 2) oscNoiseClick.type = 'sawtooth2'
@@ -410,8 +381,8 @@ generateButton.addEventListener('click', async () => {
 
     function playKlick(time, note) {
 
-        const random = Math.floor(Math.random() * 16);
-        const random2 = Math.floor(Math.random() * 3);
+        const random = Math.floor(rfx() * 16);
+        const random2 = Math.floor(rfx() * 3);
         if (random === 0) klicks.kit.player('C1').start(time);
         if (random === 1) klicks.kit.player('D1').start(time);
         if (random === 2) klicks.kit.player('E1').start(time);
@@ -490,25 +461,25 @@ generateButton.addEventListener('click', async () => {
     partDroneGains.loop = true;
 
     ///////////NEXUS------------------------------------------------------------------------------
-    var sequencer = new Nexus.Sequencer('#seq', {
+/*     var sequencer = new Nexus.Sequencer('#seq', {
         'size': [1500, 300],
         'mode': 'toggle',
         'rows': 7,
         'columns': 144,
     });
     sequencer.colorize("fill", "#808080")
-    sequencer.colorize("accent", "#000000")
+    sequencer.colorize("accent", "#000000") */
 
 
     const bar = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     const quarterNote = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
-    sequencer.matrix.set.row(0, bar);
+/*     sequencer.matrix.set.row(0, bar);
     sequencer.matrix.set.row(1, quarterNote);
     sequencer.matrix.set.row(2, kick);
     sequencer.matrix.set.row(3, converto2Dto1D(generatedBass));
     sequencer.matrix.set.row(4, generatedRF1);
     sequencer.matrix.set.row(5, fullgeneratedRhythmFigure2);
-    sequencer.matrix.set.row(6, fullgeneratedKlicks);
+    sequencer.matrix.set.row(6, fullgeneratedKlicks); */
 
     /////////////PLAY BEAT-------------------------------------------------------------------------------------------------
     
@@ -625,8 +596,8 @@ generateButton.addEventListener('click', async () => {
         droneNoise.lfo.max = 6000;
     }
     if (rhythmDensity === 7) {
-        let random1 = Math.random();
-        let random2 = Math.random();
+        let random1 = rfx();
+        let random2 = rfx();
 
         Transport.bpm.value = generateRandom(120, 180);
 
@@ -660,8 +631,8 @@ generateButton.addEventListener('click', async () => {
         numberofSineDrone = Math.round(generateRandom(5,20));
     }
     if (rhythmDensity === 8) {
-        let random1 = Math.random();
-        let random2 = Math.random();
+        let random1 = rfx();
+        let random2 = rfx();
 
         Transport.bpm.value = generateRandom(160, 185);
 
