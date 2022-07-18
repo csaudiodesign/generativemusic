@@ -2,9 +2,8 @@
   "name": "mm_instru",
   "version": "1.0.0",
   "source": "src/index.html",
-  "main": "index.js",
   "scripts": {
-    "start": "parcel build --no-source-maps --dist-dir dist"
+    "start": "parcel build --no-source-maps --dist-dir dist && parcel"
   },
   "keywords": [],
   "author": "",
