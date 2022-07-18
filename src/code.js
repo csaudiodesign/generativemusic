@@ -47,12 +47,6 @@ import {
 const kicks = new Kicks(3);
 const klicks = new Klicks(0);
 const bass = new Bass(1);
-import {
-    running
-} from './scope';
-
-
-
 
 import {
     rhythmFigure1,

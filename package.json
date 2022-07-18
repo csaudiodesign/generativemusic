@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel build --no-source-maps --dist-dir dist && parcel"
+    "start": "parcel build --no-source-maps --dist-dir built --detailed-report && parcel serve --dist-dir dist"
   },
   "keywords": [],
   "author": "",
