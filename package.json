@@ -4,7 +4,7 @@
   "source": "src/index.html",
   "main": "index.js",
   "scripts": {
-    "start": "parcel --no-hmr build --target --no-source-maps src/index.html "
+    "start": "parcel build --no-source-maps --dist-dir dist"
   },
   "keywords": [],
   "author": "",
@@ -24,10 +24,5 @@
   },
   "homepage": "https://github.com/milianmori/generativemusic#readme",
   "devDependencies": {},
-  "targets": {
-    "index": {
-		"optimize": true
-	}
-  },
   "description": ""
 }
