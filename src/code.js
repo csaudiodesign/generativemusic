@@ -693,6 +693,8 @@ function startAudio(){
 
     console.log('BPM: ' + Transport.bpm.value);
 
-    await start();
+    //await start();
     Transport.start();
 }
+
+window.startAudio = startAudio;
