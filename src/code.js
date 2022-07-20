@@ -30,7 +30,6 @@ import {
     connect,
     Chorus
 } from 'tone';
-import * as Nexus from 'nexusui';
 import {
     Kicks,
     generateKicks
@@ -464,26 +463,9 @@ function startAudio(){
     partDroneGains.loopEnd = '9:0:0';
     partDroneGains.loop = true;
 
-    ///////////NEXUS------------------------------------------------------------------------------
-/*     var sequencer = new Nexus.Sequencer('#seq', {
-        'size': [1500, 300],
-        'mode': 'toggle',
-        'rows': 7,
-        'columns': 144,
-    });
-    sequencer.colorize("fill", "#808080")
-    sequencer.colorize("accent", "#000000") */
-
 
     const bar = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     const quarterNote = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
-/*     sequencer.matrix.set.row(0, bar);
-    sequencer.matrix.set.row(1, quarterNote);
-    sequencer.matrix.set.row(2, kick);
-    sequencer.matrix.set.row(3, converto2Dto1D(generatedBass));
-    sequencer.matrix.set.row(4, generatedRF1);
-    sequencer.matrix.set.row(5, fullgeneratedRhythmFigure2);
-    sequencer.matrix.set.row(6, fullgeneratedKlicks); */
 
     /////////////PLAY BEAT-------------------------------------------------------------------------------------------------
     
