@@ -193,7 +193,7 @@ function startAudio(){
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    /* rhythmDensity = 7; */
+    rhythmDensity = 9;
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -210,7 +210,7 @@ function startAudio(){
     Transport.bpm.value = 150;
 
     volMaster.volume.value = -100;
-    volMaster.volume.rampTo(6, 3);
+    volMaster.volume.rampTo(6, 1);
 
     //////////////////////////////////////////////////////////////////<<KICK------------------------------------------------------------------------------
     const kickEvent = new CustomEvent('kick', { "detail": "kick trigger" });

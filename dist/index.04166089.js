@@ -693,7 +693,8 @@ function exponentialGain(index, dropgains, loudnessControl) {
 function startAudio() {
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    /* rhythmDensity = 7; */ console.log(rhythmDensity);
+    rhythmDensity = 9;
+    console.log(rhythmDensity);
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
     const finalMasterVolume = new (0, _tone.Volume)(0).toDestination();
     const limiter = new (0, _tone.Limiter)(0).connect(finalMasterVolume);
@@ -707,7 +708,7 @@ function startAudio() {
     const masterGain = new (0, _tone.Gain)(1).connect(eq);
     (0, _tone.Transport).bpm.value = 150;
     volMaster.volume.value = -100;
-    volMaster.volume.rampTo(6, 3);
+    volMaster.volume.rampTo(6, 1);
     //////////////////////////////////////////////////////////////////<<KICK------------------------------------------------------------------------------
     const kickEvent = new CustomEvent("kick", {
         "detail": "kick trigger"

@@ -10,8 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "math": "^0.0.3",
-    "nexusui": "^2.1.6",
-    "p5": "^1.4.1",
     "tone": "^14.7.77"
   },
   "repository": {
