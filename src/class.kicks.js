@@ -186,7 +186,7 @@ function fillKick(size,alternate){
 
     for (var i = 0; i < 9; i++) {
         array[i] = [];
-        console.log(array[i]);
+        //console.log(array[i]);
         for (var j = 0; j < 16; j++) {
             if(alternate===0){
                 if(j<size)array[i][j] = 1;

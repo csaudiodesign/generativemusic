@@ -9,6 +9,8 @@ import {
     Gain,
     Transport,
     AmplitudeEnvelope,
+    Context,
+    context,
 } from 'tone';
 import {
     Kicks,
@@ -413,9 +415,8 @@ function startAudio(){
     const masterVolumeDrone = new Volume(6).connect(masterGain);
     const droneEvent = new CustomEvent('drone', { "detail": "drone trigger" });
     drone.out.connect(masterVolumeDrone);
-    drone.osc.forEach((e) => e.start());
     droneNoise.out.connect(masterVolumeDrone);
-    droneNoise.noise.start();
+    
     droneNoise.lfo.start();
     drone.chorus.start();
 
@@ -649,8 +650,16 @@ function startAudio(){
 
     console.log('BPM: ' + Transport.bpm.value);
 
-    //await start();
-    Transport.start();
+    //const ac = new Context();
+
+    //Transport.start();
+    //droneNoise.noise.start();
+    //drone.osc.forEach((e) => e.start());
+    //Tone.context.state
+    console.log(context.state);
+    const acClick.addEventListener("click", function(){ alert("Hello World!"); });
+
+
 }
 
 window.startAudio = startAudio;

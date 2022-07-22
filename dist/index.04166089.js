@@ -884,9 +884,7 @@ function startAudio() {
         "detail": "drone trigger"
     });
     drone.out.connect(masterVolumeDrone);
-    drone.osc.forEach((e)=>e.start());
     droneNoise.out.connect(masterVolumeDrone);
-    droneNoise.noise.start();
     droneNoise.lfo.start();
     drone.chorus.start();
     let filterFRQDrone = 100;
@@ -1364,8 +1362,12 @@ function startAudio() {
         droneNoise.distortion.wet.value = 0.5;
     }
     console.log("BPM: " + (0, _tone.Transport).bpm.value);
-    //await start();
-    (0, _tone.Transport).start();
+    const ac = new (0, _tone.Context)();
+    //Transport.start();
+    //droneNoise.noise.start();
+    //drone.osc.forEach((e) => e.start());
+    //Tone.context.state
+    console.log((0, _tone.context).state);
 }
 window.startAudio = startAudio;
 
