@@ -657,8 +657,7 @@ function startAudio(){
     //drone.osc.forEach((e) => e.start());
     //Tone.context.state
     console.log(context.state);
-    const acClick.addEventListener("click", function(){ alert("Hello World!"); });
-
+    document.body.addEventListener("click", function(){ alert("Hello World!"); });
 
 }
 

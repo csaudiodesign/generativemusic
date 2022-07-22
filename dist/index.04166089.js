@@ -1362,12 +1362,15 @@ function startAudio() {
         droneNoise.distortion.wet.value = 0.5;
     }
     console.log("BPM: " + (0, _tone.Transport).bpm.value);
-    const ac = new (0, _tone.Context)();
+    //const ac = new Context();
     //Transport.start();
     //droneNoise.noise.start();
     //drone.osc.forEach((e) => e.start());
     //Tone.context.state
     console.log((0, _tone.context).state);
+    document.body.addEventListener("click", function() {
+        alert("Hello World!");
+    });
 }
 window.startAudio = startAudio;
 
@@ -34266,7 +34269,7 @@ function fillKick(size, alternate) {
     ];
     for(var i = 0; i < 9; i++){
         array[i] = [];
-        console.log(array[i]);
+        //console.log(array[i]);
         for(var j = 0; j < 16; j++)if (alternate === 0) {
             if (j < size) array[i][j] = 1;
             else array[i][j] = 0;
