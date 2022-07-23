@@ -1367,17 +1367,17 @@ function startAudio() {
     drone.osc.forEach((e)=>e.start());
 }
 window.startAudio = startAudio;
-console.log((0, _tone.Context).state);
+console.log((0, _tone.context).state);
 let alreadyKlicked = false;
-if ((0, _tone.Context).state === "suspended") window.addEventListener("click", ()=>{
+if ((0, _tone.context).state === "suspended") window.addEventListener("click", ()=>{
     if (alreadyKlicked === false) {
         alreadyKlicked = true;
         console.log("Clicked!");
-        (0, _tone.Context).resume();
+        (0, _tone.context).resume();
         window.startAudio();
     }
 });
-else if ((0, _tone.Context).state === "running") window.startAudio();
+else if ((0, _tone.context).state === "running") window.startAudio();
 
 },{"tone":"2tCfN","./class.kicks":"g1JB6","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx"}],"2tCfN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");

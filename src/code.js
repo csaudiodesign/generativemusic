@@ -9,7 +9,7 @@ import {
     Gain,
     Transport,
     AmplitudeEnvelope,
-    Context,
+    context,
 } from 'tone';
 import {
     Kicks,
@@ -656,21 +656,21 @@ function startAudio(){
 }
 
 window.startAudio = startAudio;
-console.log(Context.state);
+console.log(context.state);
 let alreadyKlicked = false;
 
-if (Context.state === 'suspended') {
+if (context.state === 'suspended') {
     window.addEventListener("click", () => {
         if (alreadyKlicked===false){
             alreadyKlicked = true;
             console.log("Clicked!")
-            Context.resume(); 
+            context.resume(); 
             window.startAudio();
         }
     });
 
 }
-else if(Context.state === 'running'){
+else if(context.state === 'running'){
     window.startAudio();
 }
 
