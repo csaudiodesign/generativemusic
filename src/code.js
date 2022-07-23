@@ -10,7 +10,6 @@ import {
     Transport,
     AmplitudeEnvelope,
     Context,
-    context,
 } from 'tone';
 import {
     Kicks,
@@ -650,15 +649,28 @@ function startAudio(){
 
     console.log('BPM: ' + Transport.bpm.value);
 
-    //const ac = new Context();
 
-    //Transport.start();
-    //droneNoise.noise.start();
-    //drone.osc.forEach((e) => e.start());
-    //Tone.context.state
-    console.log(context.state);
-    document.body.addEventListener("click", function(){ alert("Hello World!"); });
-
+    Transport.start();
+    droneNoise.noise.start();
+    drone.osc.forEach((e) => e.start());
 }
 
 window.startAudio = startAudio;
+console.log(Context.state);
+let alreadyKlicked = false;
+
+if (Context.state === 'suspended') {
+    window.addEventListener("click", () => {
+        if (alreadyKlicked===false){
+            alreadyKlicked = true;
+            console.log("Clicked!")
+            Context.resume(); 
+            window.startAudio();
+        }
+    });
+
+}
+else if(Context.state === 'running'){
+    window.startAudio();
+}
+

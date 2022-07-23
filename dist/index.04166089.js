@@ -1362,17 +1362,22 @@ function startAudio() {
         droneNoise.distortion.wet.value = 0.5;
     }
     console.log("BPM: " + (0, _tone.Transport).bpm.value);
-    //const ac = new Context();
-    //Transport.start();
-    //droneNoise.noise.start();
-    //drone.osc.forEach((e) => e.start());
-    //Tone.context.state
-    console.log((0, _tone.context).state);
-    document.body.addEventListener("click", function() {
-        alert("Hello World!");
-    });
+    (0, _tone.Transport).start();
+    droneNoise.noise.start();
+    drone.osc.forEach((e)=>e.start());
 }
 window.startAudio = startAudio;
+console.log((0, _tone.Context).state);
+let alreadyKlicked = false;
+if ((0, _tone.Context).state === "suspended") window.addEventListener("click", ()=>{
+    if (alreadyKlicked === false) {
+        alreadyKlicked = true;
+        console.log("Clicked!");
+        (0, _tone.Context).resume();
+        window.startAudio();
+    }
+});
+else if ((0, _tone.Context).state === "running") window.startAudio();
 
 },{"tone":"2tCfN","./class.kicks":"g1JB6","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx"}],"2tCfN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -34269,7 +34274,7 @@ function fillKick(size, alternate) {
     ];
     for(var i = 0; i < 9; i++){
         array[i] = [];
-        //console.log(array[i]);
+        console.log(array[i]);
         for(var j = 0; j < 16; j++)if (alternate === 0) {
             if (j < size) array[i][j] = 1;
             else array[i][j] = 0;
