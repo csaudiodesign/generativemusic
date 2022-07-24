@@ -659,7 +659,7 @@ window.startAudio = startAudio;
 console.log(context.state);
 let alreadyKlicked = false;
 
-if (context.state === 'suspended') {
+/* if (context.state === 'suspended') {
     window.addEventListener("click", () => {
         if (alreadyKlicked===false){
             alreadyKlicked = true;
@@ -672,5 +672,4 @@ if (context.state === 'suspended') {
 }
 else if(context.state === 'running'){
     window.startAudio();
-}
-
+} */

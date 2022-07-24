@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel build --no-source-maps --dist-dir built --detailed-report && parcel serve --dist-dir dist"
+    "start": "parcel build --no-source-maps --dist-dir built --detailed-report && parcel serve --dist-dir dist",
+    "deploy": "rm -rf publish && parcel build --no-optimize --no-source-maps --dist-dir publish && cp -r src/samples publish/ && surge ./publish shrill-hobbies.surge.sh && parcel serve --dist-dir dist"
   },
   "keywords": [],
   "author": "",
