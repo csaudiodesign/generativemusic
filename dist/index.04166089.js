@@ -693,8 +693,7 @@ function exponentialGain(index, dropgains, loudnessControl) {
 function startAudio() {
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    rhythmDensity = 9;
-    console.log(rhythmDensity);
+    /* rhythmDensity = 9; */ console.log(rhythmDensity);
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
     const finalMasterVolume = new (0, _tone.Volume)(0).toDestination();
     const limiter = new (0, _tone.Limiter)(0).connect(finalMasterVolume);

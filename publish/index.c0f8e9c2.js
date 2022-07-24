@@ -30250,8 +30250,7 @@ function $21df9c1ea4331da7$var$exponentialGain(index, dropgains, loudnessControl
 function $21df9c1ea4331da7$var$startAudio() {
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round($21df9c1ea4331da7$var$generateRandom(3, 9));
-    rhythmDensity = 9;
-    console.log(rhythmDensity);
+    /* rhythmDensity = 9; */ console.log(rhythmDensity);
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
     const finalMasterVolume = new (0, $7d48f9af04226b93$export$dde279e52d625429)(0).toDestination();
     const limiter = new (0, $3028028622c75f19$export$18d8154f27ea9172)(0).connect(finalMasterVolume);
