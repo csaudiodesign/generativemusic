@@ -649,22 +649,23 @@ function startAudio(){
 
     console.log('BPM: ' + Transport.bpm.value);
 
-
     Transport.start();
     droneNoise.noise.start();
     drone.osc.forEach((e) => e.start());
 }
 
-/* window.startAudio = startAudio;
+window.startAudio = startAudio;
 console.log(context.state);
 let alreadyKlicked = false;
 
 if (context.state === 'suspended') {
     window.addEventListener("click", () => {
         if (alreadyKlicked===false){
+            
             alreadyKlicked = true;
             console.log("Clicked!")
-            context.resume(); 
+            context.resume();
+            //StartAudioContext(Tone.context) https://codepen.io/enteleform/pen/PepqYV?__cf_chl_tk=v.XU_dfJYahRSsy0rdIL8X.eOLfqOMFlWbje9wiTnWE-1658652732-0-gaNycGzNB30
             window.startAudio();
         }
     });
@@ -672,4 +673,4 @@ if (context.state === 'suspended') {
 }
 else if(context.state === 'running'){
     window.startAudio();
-} */
+}
