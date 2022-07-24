@@ -1365,10 +1365,11 @@ function startAudio() {
     (0, _tone.Transport).start();
     droneNoise.noise.start();
     drone.osc.forEach((e)=>e.start());
-}
-window.startAudio = startAudio;
-console.log((0, _tone.context).state);
-let alreadyKlicked = false; /* if (context.state === 'suspended') {
+} /* window.startAudio = startAudio;
+console.log(context.state);
+let alreadyKlicked = false;
+
+if (context.state === 'suspended') {
     window.addEventListener("click", () => {
         if (alreadyKlicked===false){
             alreadyKlicked = true;

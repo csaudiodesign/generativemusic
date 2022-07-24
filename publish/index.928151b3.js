@@ -30921,10 +30921,11 @@ function $21df9c1ea4331da7$var$startAudio() {
     (0, $193d86afce95aa9f$export$86495b081fef8e52).start();
     $21df9c1ea4331da7$var$droneNoise.noise.start();
     $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
-}
-window.startAudio = $21df9c1ea4331da7$var$startAudio;
-console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
-let $21df9c1ea4331da7$var$alreadyKlicked = false; /* if (context.state === 'suspended') {
+} /* window.startAudio = startAudio;
+console.log(context.state);
+let alreadyKlicked = false;
+
+if (context.state === 'suspended') {
     window.addEventListener("click", () => {
         if (alreadyKlicked===false){
             alreadyKlicked = true;

@@ -655,11 +655,11 @@ function startAudio(){
     drone.osc.forEach((e) => e.start());
 }
 
-window.startAudio = startAudio;
+/* window.startAudio = startAudio;
 console.log(context.state);
 let alreadyKlicked = false;
 
-/* if (context.state === 'suspended') {
+if (context.state === 'suspended') {
     window.addEventListener("click", () => {
         if (alreadyKlicked===false){
             alreadyKlicked = true;
