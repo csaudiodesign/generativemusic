@@ -10,6 +10,7 @@ import {
     Transport,
     AmplitudeEnvelope,
     context,
+    Context,
 } from 'tone';
 import {
     Kicks,
@@ -48,6 +49,7 @@ import {
     rhythmFigure2,
     generateRF2
 } from './class.rhythmFigure2';
+import { Tone } from 'tone/build/esm/core/Tone';
 
 const rfx = fxrand;
 const rf2 = new rhythmFigure2;
@@ -60,9 +62,8 @@ function nonRepeatingRhythmArray(length) {
      }while (arr.length < length)
      
      return arr;
-  }
+}
   
-
 function converto2Dto1D(array){
     var newArr = [];
     for(var i = 0; i < array.length; i++)
@@ -86,6 +87,7 @@ function shuffle(array) {
 
     return array;
 }
+
 function checklastTrigger(array) {
     if (array[14] === 1) return 1;
     else return 0;
@@ -160,8 +162,6 @@ function translateBinarytoTone(array) {
 
     return returnArray;
 }
-
-const generateButton = document.getElementById('generate');
 
 function generateRandom(min, max) {
 
@@ -654,23 +654,24 @@ function startAudio(){
     drone.osc.forEach((e) => e.start());
 }
 
-window.startAudio = startAudio;
+//console.log(context.state);
+console.log(Tone.version);
 console.log(context.state);
 let alreadyKlicked = false;
 
 if (context.state === 'suspended') {
     window.addEventListener("click", () => {
         if (alreadyKlicked===false){
-            
             alreadyKlicked = true;
             console.log("Clicked!")
-            context.resume();
             //StartAudioContext(Tone.context) https://codepen.io/enteleform/pen/PepqYV?__cf_chl_tk=v.XU_dfJYahRSsy0rdIL8X.eOLfqOMFlWbje9wiTnWE-1658652732-0-gaNycGzNB30
-            window.startAudio();
+            startAudio();
+            window.removeEventListener("click",this);
+            console.log(context.state);
         }
     });
 
 }
 else if(context.state === 'running'){
-    window.startAudio();
+    startAudio();
 }

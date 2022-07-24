@@ -539,6 +539,7 @@ var _classBass = require("./class.bass");
 var _classRhythmFigure1 = require("./class.rhythmFigure1");
 var _classDrone = require("./class.drone");
 var _classRhythmFigure2 = require("./class.rhythmFigure2");
+var _tone1 = require("tone/build/esm/core/Tone");
 "use strict";
 const kicks = new (0, _classKicks.Kicks)(3);
 const klicks = new (0, _classKlicks.Klicks)(0);
@@ -670,7 +671,6 @@ function translateBinarytoTone(array) {
         ]);
     return returnArray;
 }
-const generateButton = document.getElementById("generate");
 function generateRandom(min, max) {
     // find diff
     let difference = max - min;
@@ -1366,21 +1366,23 @@ function startAudio() {
     droneNoise.noise.start();
     drone.osc.forEach((e)=>e.start());
 }
-window.startAudio = startAudio;
+//console.log(context.state);
+console.log((0, _tone1.Tone).version);
 console.log((0, _tone.context).state);
 let alreadyKlicked = false;
 if ((0, _tone.context).state === "suspended") window.addEventListener("click", ()=>{
     if (alreadyKlicked === false) {
         alreadyKlicked = true;
         console.log("Clicked!");
-        (0, _tone.context).resume();
         //StartAudioContext(Tone.context) https://codepen.io/enteleform/pen/PepqYV?__cf_chl_tk=v.XU_dfJYahRSsy0rdIL8X.eOLfqOMFlWbje9wiTnWE-1658652732-0-gaNycGzNB30
-        window.startAudio();
+        startAudio();
+        window.removeEventListener("click", undefined);
+        console.log((0, _tone.context).state);
     }
 });
-else if ((0, _tone.context).state === "running") window.startAudio();
+else if ((0, _tone.context).state === "running") startAudio();
 
-},{"tone":"2tCfN","./class.kicks":"g1JB6","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx"}],"2tCfN":[function(require,module,exports) {
+},{"tone":"2tCfN","./class.kicks":"g1JB6","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx","tone/build/esm/core/Tone":"6Gzxl"}],"2tCfN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getContext", ()=>(0, _global.getContext));

@@ -152,6 +152,7 @@ module.exports = $ce7b9c3a9cfdc2c9$var$_createClass, module.exports.__esModule =
 
 });
 
+var $21df9c1ea4331da7$exports = {};
 const $ffd1d50d2c55b871$export$83d89fbfd8236492 = "14.7.77";
 
 
@@ -30095,6 +30096,7 @@ function $6200da4dfb771318$export$1b7687825ff5a57e(rhythmDensity) {
 }
 
 
+
 "use strict";
 const $21df9c1ea4331da7$var$kicks = new (0, $48e418653d1eb56b$export$7f6d62d95a630450)(3);
 const $21df9c1ea4331da7$var$klicks = new (0, $1e8cb74b9ccead8b$export$4050a8406ef7a0ff)(0);
@@ -30226,7 +30228,6 @@ function $21df9c1ea4331da7$var$translateBinarytoTone(array) {
         ]);
     return returnArray;
 }
-const $21df9c1ea4331da7$var$generateButton = document.getElementById("generate");
 function $21df9c1ea4331da7$var$generateRandom(min, max) {
     // find diff
     let difference = max - min;
@@ -30922,18 +30923,20 @@ function $21df9c1ea4331da7$var$startAudio() {
     $21df9c1ea4331da7$var$droneNoise.noise.start();
     $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
 }
-window.startAudio = $21df9c1ea4331da7$var$startAudio;
+//console.log(context.state);
+console.log((0, $0eb7340e2d092af9$export$12b11dc969d02fed).version);
 console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
 let $21df9c1ea4331da7$var$alreadyKlicked = false;
 if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "suspended") window.addEventListener("click", ()=>{
     if ($21df9c1ea4331da7$var$alreadyKlicked === false) {
         $21df9c1ea4331da7$var$alreadyKlicked = true;
         console.log("Clicked!");
-        //context.resume();
-        StartAudioContext((0, $193d86afce95aa9f$export$a078c61943f9dbbe));
-        window.startAudio();
+        //StartAudioContext(Tone.context) https://codepen.io/enteleform/pen/PepqYV?__cf_chl_tk=v.XU_dfJYahRSsy0rdIL8X.eOLfqOMFlWbje9wiTnWE-1658652732-0-gaNycGzNB30
+        $21df9c1ea4331da7$var$startAudio();
+        window.removeEventListener("click", undefined);
+        console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
     }
 });
-else if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "running") window.startAudio();
+else if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "running") $21df9c1ea4331da7$var$startAudio();
 
 
