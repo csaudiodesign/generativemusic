@@ -10,8 +10,11 @@ import {
     Transport,
     AmplitudeEnvelope,
     context,
-    Context,
+    start,
 } from 'tone';
+
+//import * as ac from 'startaudiocontext';
+
 import {
     Kicks,
     generateKicks
@@ -50,6 +53,7 @@ import {
     generateRF2
 } from './class.rhythmFigure2';
 import { Tone } from 'tone/build/esm/core/Tone';
+import StartAudioContext from 'startaudiocontext';
 
 const rfx = fxrand;
 const rf2 = new rhythmFigure2;
@@ -194,7 +198,7 @@ function startAudio(){
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    /* rhythmDensity = 9; */
+    rhythmDensity = 9;
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -649,29 +653,50 @@ function startAudio(){
 
     console.log('BPM: ' + Transport.bpm.value);
 
-    Transport.start();
-    droneNoise.noise.start();
-    drone.osc.forEach((e) => e.start());
+
 }
 
-//console.log(context.state);
-console.log(Tone.version);
-console.log(context.state);
+
 let alreadyKlicked = false;
+console.log(context.state);
+
+start().then(() => {
+    console.log(context.state);
+    if (context.state==='running'){
+        startAudio();
+
+        (function waitForLoading() {
+            setTimeout(function() {
+                if (kicks.loaded && klicks.loaded && bass.loaded) {
+                    Transport.start();
+                    droneNoise.noise.start();
+                    drone.osc.forEach((e) => e.start());
+                } else {
+                    console.log('waiting for buffers to load...');             
+                    waitForLoading();
+                }
+            }, 42)
+        })(); 
+        
+    }
+}) 
+
 
 if (context.state === 'suspended') {
+    console.log('hello')
     window.addEventListener("click", () => {
         if (alreadyKlicked===false){
             alreadyKlicked = true;
             console.log("Clicked!")
-            //StartAudioContext(Tone.context) https://codepen.io/enteleform/pen/PepqYV?__cf_chl_tk=v.XU_dfJYahRSsy0rdIL8X.eOLfqOMFlWbje9wiTnWE-1658652732-0-gaNycGzNB30
+
             startAudio();
+            Transport.start();
+            droneNoise.noise.start();
+            drone.osc.forEach((e) => e.start());
+            
             window.removeEventListener("click",this);
             console.log(context.state);
         }
     });
 
-}
-else if(context.state === 'running'){
-    startAudio();
 }

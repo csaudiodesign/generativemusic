@@ -532,7 +532,9 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"hxvqY":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _tone = require("tone");
+//import * as ac from 'startaudiocontext';
 var _classKicks = require("./class.kicks");
 var _classKlicks = require("./class.klicks");
 var _classBass = require("./class.bass");
@@ -540,6 +542,8 @@ var _classRhythmFigure1 = require("./class.rhythmFigure1");
 var _classDrone = require("./class.drone");
 var _classRhythmFigure2 = require("./class.rhythmFigure2");
 var _tone1 = require("tone/build/esm/core/Tone");
+var _startaudiocontext = require("startaudiocontext");
+var _startaudiocontextDefault = parcelHelpers.interopDefault(_startaudiocontext);
 "use strict";
 const kicks = new (0, _classKicks.Kicks)(3);
 const klicks = new (0, _classKlicks.Klicks)(0);
@@ -693,7 +697,8 @@ function exponentialGain(index, dropgains, loudnessControl) {
 function startAudio() {
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    /* rhythmDensity = 9; */ console.log(rhythmDensity);
+    rhythmDensity = 9;
+    console.log(rhythmDensity);
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
     const finalMasterVolume = new (0, _tone.Volume)(0).toDestination();
     const limiter = new (0, _tone.Limiter)(0).connect(finalMasterVolume);
@@ -1361,27 +1366,44 @@ function startAudio() {
         droneNoise.distortion.wet.value = 0.5;
     }
     console.log("BPM: " + (0, _tone.Transport).bpm.value);
-    (0, _tone.Transport).start();
-    droneNoise.noise.start();
-    drone.osc.forEach((e)=>e.start());
 }
-//console.log(context.state);
-console.log((0, _tone1.Tone).version);
-console.log((0, _tone.context).state);
 let alreadyKlicked = false;
-if ((0, _tone.context).state === "suspended") window.addEventListener("click", ()=>{
-    if (alreadyKlicked === false) {
-        alreadyKlicked = true;
-        console.log("Clicked!");
-        //StartAudioContext(Tone.context) https://codepen.io/enteleform/pen/PepqYV?__cf_chl_tk=v.XU_dfJYahRSsy0rdIL8X.eOLfqOMFlWbje9wiTnWE-1658652732-0-gaNycGzNB30
+console.log((0, _tone.context).state);
+(0, _tone.start)().then(()=>{
+    console.log((0, _tone.context).state);
+    if ((0, _tone.context).state === "running") {
         startAudio();
-        window.removeEventListener("click", undefined);
-        console.log((0, _tone.context).state);
+        (function waitForLoading() {
+            setTimeout(function() {
+                if (kicks.loaded && klicks.loaded && bass.loaded) {
+                    (0, _tone.Transport).start();
+                    droneNoise.noise.start();
+                    drone.osc.forEach((e)=>e.start());
+                } else {
+                    console.log("waiting for buffers to load...");
+                    waitForLoading();
+                }
+            }, 42);
+        })();
     }
 });
-else if ((0, _tone.context).state === "running") startAudio();
+if ((0, _tone.context).state === "suspended") {
+    console.log("hello");
+    window.addEventListener("click", ()=>{
+        if (alreadyKlicked === false) {
+            alreadyKlicked = true;
+            console.log("Clicked!");
+            startAudio();
+            (0, _tone.Transport).start();
+            droneNoise.noise.start();
+            drone.osc.forEach((e)=>e.start());
+            window.removeEventListener("click", undefined);
+            console.log((0, _tone.context).state);
+        }
+    });
+}
 
-},{"tone":"2tCfN","./class.kicks":"g1JB6","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx","tone/build/esm/core/Tone":"6Gzxl"}],"2tCfN":[function(require,module,exports) {
+},{"tone":"2tCfN","./class.kicks":"g1JB6","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx","tone/build/esm/core/Tone":"6Gzxl","startaudiocontext":"ehf27","@parcel/transformer-js/src/esmodule-helpers.js":"aRELh"}],"2tCfN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getContext", ()=>(0, _global.getContext));
@@ -34303,10 +34325,12 @@ function fillKick(size, alternate) {
 class Kicks {
     out;
     kit;
+    loaded;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
         this.eq = new (0, _tone.EQ3)(0, 0, 0);
         this.biquad = new (0, _tone.BiquadFilter)(0, "highpass");
+        this.loaded = false;
         this.kit = new (0, _tone.Players)({
             "C1": "./samples/kick01.mp3",
             "D1": "./samples/kick02.mp3",
@@ -34317,6 +34341,7 @@ class Kicks {
             "B1": "./samples/kick07.mp3"
         }, ()=>{
             console.log("Kicks loaded");
+            this.loaded = true;
             this.kit.chain(this.eq, this.biquad, this.out);
         });
     }
@@ -34449,6 +34474,7 @@ function generateRF2() {
 class Klicks {
     out;
     kit;
+    loaded;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
         this.eq = new (0, _tone.EQ3)({
@@ -34461,6 +34487,7 @@ class Klicks {
         this.reverb.wet.value = 0;
         this.delay = new (0, _tone.FeedbackDelay)("4n", 0.5);
         this.delay.wet.value = 0;
+        this.loaded = false;
         this.kit = new (0, _tone.Players)({
             C1: "./samples/klick1.mp3",
             D1: "./samples/klick2.mp3",
@@ -34480,10 +34507,16 @@ class Klicks {
             D3: "./samples/klick16.mp3"
         }, ()=>{
             console.log("Klicks loaded");
+            this.loaded = true;
             this.kit.chain(this.eq, this.reverb, this.delay, this.out);
         });
     }
 }
+// 1. load buffers
+// 2. define function to check if buffers are loaded
+// 3. run this function in a loop with delay
+// 4. cancel the loop once all buffers are loaded
+const interval = setInterval(()=>{}, 500);
 function genrateKlicks(rhythmDensity) {
     let fullgeneratedKlicks;
     if (rhythmDensity === 3) {
@@ -34704,9 +34737,11 @@ function bassRhythm2(array, fullKickOutput, flag) {
 class Bass {
     out;
     kit;
+    loaded;
     constructor(volume){
         this.out = new (0, _tone.Gain)(volume);
         this.eq = new (0, _tone.EQ3)(0, 0, 0);
+        this.loaded = false;
         this.kit = new (0, _tone.Players)({
             C1: "./samples/bass101.mp3",
             D1: "./samples/bass102.mp3",
@@ -34715,6 +34750,7 @@ class Bass {
             G1: "./samples/bass105.mp3"
         }, ()=>{
             console.log("Bass loaded");
+            this.loaded = true;
             this.kit.chain(this.eq, this.out);
         });
     }
@@ -37102,6 +37138,138 @@ function generateRF2(rhythmDensity) {
     return generateRhythmFigure2();
 }
 
-},{"tone":"2tCfN","@parcel/transformer-js/src/esmodule-helpers.js":"aRELh"}]},["4pYfS","hxvqY"], "hxvqY", "parcelRequired404")
+},{"tone":"2tCfN","@parcel/transformer-js/src/esmodule-helpers.js":"aRELh"}],"ehf27":[function(require,module,exports) {
+/**
+ *  StartAudioContext.js
+ *  @author Yotam Mann
+ *  @license http://opensource.org/licenses/MIT MIT License
+ *  @copyright 2016 Yotam Mann
+ */ (function(root, factory) {
+    if (typeof define === "function" && define.amd) define([], factory);
+    else if (module.exports) module.exports = factory();
+    else root.StartAudioContext = factory();
+})(this, function() {
+    //TAP LISTENER/////////////////////////////////////////////////////////////
+    /**
+	 * @class  Listens for non-dragging tap ends on the given element
+	 * @param {Element} element
+	 * @internal
+	 */ var TapListener = function(element, context) {
+        this._dragged = false;
+        this._element = element;
+        this._bindedMove = this._moved.bind(this);
+        this._bindedEnd = this._ended.bind(this, context);
+        element.addEventListener("touchstart", this._bindedEnd);
+        element.addEventListener("touchmove", this._bindedMove);
+        element.addEventListener("touchend", this._bindedEnd);
+        element.addEventListener("mouseup", this._bindedEnd);
+    };
+    /**
+	 * drag move event
+	 */ TapListener.prototype._moved = function(e) {
+        this._dragged = true;
+    };
+    /**
+	 * tap ended listener
+	 */ TapListener.prototype._ended = function(context) {
+        if (!this._dragged) startContext(context);
+        this._dragged = false;
+    };
+    /**
+	 * remove all the bound events
+	 */ TapListener.prototype.dispose = function() {
+        this._element.removeEventListener("touchstart", this._bindedEnd);
+        this._element.removeEventListener("touchmove", this._bindedMove);
+        this._element.removeEventListener("touchend", this._bindedEnd);
+        this._element.removeEventListener("mouseup", this._bindedEnd);
+        this._bindedMove = null;
+        this._bindedEnd = null;
+        this._element = null;
+    };
+    //END TAP LISTENER/////////////////////////////////////////////////////////
+    /**
+	 * Plays a silent sound and also invoke the "resume" method
+	 * @param {AudioContext} context
+	 * @private
+	 */ function startContext(context) {
+        // this accomplishes the iOS specific requirement
+        var buffer = context.createBuffer(1, 1, context.sampleRate);
+        var source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(0);
+        // resume the audio context
+        if (context.resume) context.resume();
+    }
+    /**
+	 * Returns true if the audio context is started
+	 * @param  {AudioContext}  context
+	 * @return {Boolean}
+	 * @private
+	 */ function isStarted(context) {
+        return context.state === "running";
+    }
+    /**
+	 * Invokes the callback as soon as the AudioContext
+	 * is started
+	 * @param  {AudioContext}   context
+	 * @param  {Function} callback
+	 */ function onStarted(context, callback) {
+        function checkLoop() {
+            if (isStarted(context)) callback();
+            else {
+                requestAnimationFrame(checkLoop);
+                if (context.resume) context.resume();
+            }
+        }
+        if (isStarted(context)) callback();
+        else checkLoop();
+    }
+    /**
+	 * Add a tap listener to the audio context
+	 * @param  {Array|Element|String|jQuery} element
+	 * @param {Array} tapListeners
+	 */ function bindTapListener(element, tapListeners, context) {
+        if (Array.isArray(element) || NodeList && element instanceof NodeList) for(var i = 0; i < element.length; i++)bindTapListener(element[i], tapListeners, context);
+        else if (typeof element === "string") bindTapListener(document.querySelectorAll(element), tapListeners, context);
+        else if (element.jquery && typeof element.toArray === "function") bindTapListener(element.toArray(), tapListeners, context);
+        else if (Element && element instanceof Element) {
+            //if it's an element, create a TapListener
+            var tap = new TapListener(element, context);
+            tapListeners.push(tap);
+        }
+    }
+    /**
+	 * @param {AudioContext} context The AudioContext to start.
+	 * @param {Array|String|Element|jQuery=} elements For iOS, the list of elements
+	 *                                               to bind tap event listeners
+	 *                                               which will start the AudioContext. If
+	 *                                               no elements are given, it will bind
+	 *                                               to the document.body.
+	 * @param {Function=} callback The callback to invoke when the AudioContext is started.
+	 * @return {Promise} The promise is invoked when the AudioContext
+	 *                       is started.
+	 */ function StartAudioContext(context, elements, callback) {
+        //the promise is invoked when the AudioContext is started
+        var promise = new Promise(function(success) {
+            onStarted(context, success);
+        });
+        // The TapListeners bound to the elements
+        var tapListeners = [];
+        // add all the tap listeners
+        if (!elements) elements = document.body;
+        bindTapListener(elements, tapListeners, context);
+        //dispose all these tap listeners when the context is started
+        promise.then(function() {
+            for(var i = 0; i < tapListeners.length; i++)tapListeners[i].dispose();
+            tapListeners = null;
+            if (callback) callback();
+        });
+        return promise;
+    }
+    return StartAudioContext;
+});
+
+},{}]},["4pYfS","hxvqY"], "hxvqY", "parcelRequired404")
 
 //# sourceMappingURL=index.04166089.js.map

@@ -27323,6 +27323,13 @@ class $48e418653d1eb56b$export$7f6d62d95a630450 {
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
         this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
         this.biquad = new (0, $e8d9115796c61b99$export$26bbc35c91a15e23)(0, "highpass");
+        let flagKick = true;
+        (function myLoop() {
+            setTimeout(function() {
+                console.log("Kicks waiting...");
+                if (flagKick) myLoop();
+            }, 200);
+        })();
         this.kit = new (0, $a23f185f5730393d$export$1912c9d78e93a6ed)({
             "C1": "./samples/kick01.mp3",
             "D1": "./samples/kick02.mp3",
@@ -27333,6 +27340,7 @@ class $48e418653d1eb56b$export$7f6d62d95a630450 {
             "B1": "./samples/kick07.mp3"
         }, ()=>{
             console.log("Kicks loaded");
+            flagKick = false;
             this.kit.chain(this.eq, this.biquad, this.out);
         });
     }
@@ -27473,6 +27481,13 @@ class $1e8cb74b9ccead8b$export$4050a8406ef7a0ff {
         this.reverb.wet.value = 0;
         this.delay = new (0, $8c7ffa1824c6758b$export$28e4d032ddc580fa)("4n", 0.5);
         this.delay.wet.value = 0;
+        let flagKlicks = true;
+        (function myLoop() {
+            setTimeout(function() {
+                console.log("Klicks waiting...");
+                if (flagKlicks) myLoop();
+            }, 500);
+        })();
         this.kit = new (0, $a23f185f5730393d$export$1912c9d78e93a6ed)({
             C1: "./samples/klick1.mp3",
             D1: "./samples/klick2.mp3",
@@ -27492,10 +27507,16 @@ class $1e8cb74b9ccead8b$export$4050a8406ef7a0ff {
             D3: "./samples/klick16.mp3"
         }, ()=>{
             console.log("Klicks loaded");
+            flagKlicks = false;
             this.kit.chain(this.eq, this.reverb, this.delay, this.out);
         });
     }
 }
+// 1. load buffers
+// 2. define function to check if buffers are loaded
+// 3. run this function in a loop with delay
+// 4. cancel the loop once all buffers are loaded
+const $1e8cb74b9ccead8b$var$interval = setInterval(()=>{}, 500);
 function $1e8cb74b9ccead8b$export$6f06ea81d179a00b(rhythmDensity) {
     let fullgeneratedKlicks;
     if (rhythmDensity === 3) {
@@ -27715,6 +27736,13 @@ class $2dca7dec7a08b206$export$4371c5e3dd55b9f7 {
     constructor(volume){
         this.out = new (0, $200a6bd89d4579f9$export$acd19d919666900d)(volume);
         this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
+        let flagBass = true;
+        (function myLoop() {
+            setTimeout(function() {
+                console.log("Bass waiting...");
+                if (flagBass) myLoop();
+            }, 500);
+        })();
         this.kit = new (0, $a23f185f5730393d$export$1912c9d78e93a6ed)({
             C1: "./samples/bass101.mp3",
             D1: "./samples/bass102.mp3",
@@ -27723,6 +27751,7 @@ class $2dca7dec7a08b206$export$4371c5e3dd55b9f7 {
             G1: "./samples/bass105.mp3"
         }, ()=>{
             console.log("Bass loaded");
+            flagBass = false;
             this.kit.chain(this.eq, this.out);
         });
     }
@@ -30097,6 +30126,139 @@ function $6200da4dfb771318$export$1b7687825ff5a57e(rhythmDensity) {
 
 
 
+var $c1f9072cc68ee50d$exports = {};
+/**
+ *  StartAudioContext.js
+ *  @author Yotam Mann
+ *  @license http://opensource.org/licenses/MIT MIT License
+ *  @copyright 2016 Yotam Mann
+ */ (function(root, factory) {
+    if (typeof define === "function" && define.amd) define([], factory);
+    else if ($c1f9072cc68ee50d$exports) $c1f9072cc68ee50d$exports = factory();
+    else root.StartAudioContext = factory();
+})($c1f9072cc68ee50d$exports, function() {
+    //TAP LISTENER/////////////////////////////////////////////////////////////
+    /**
+	 * @class  Listens for non-dragging tap ends on the given element
+	 * @param {Element} element
+	 * @internal
+	 */ var TapListener = function(element, context) {
+        this._dragged = false;
+        this._element = element;
+        this._bindedMove = this._moved.bind(this);
+        this._bindedEnd = this._ended.bind(this, context);
+        element.addEventListener("touchstart", this._bindedEnd);
+        element.addEventListener("touchmove", this._bindedMove);
+        element.addEventListener("touchend", this._bindedEnd);
+        element.addEventListener("mouseup", this._bindedEnd);
+    };
+    /**
+	 * drag move event
+	 */ TapListener.prototype._moved = function(e) {
+        this._dragged = true;
+    };
+    /**
+	 * tap ended listener
+	 */ TapListener.prototype._ended = function(context) {
+        if (!this._dragged) startContext(context);
+        this._dragged = false;
+    };
+    /**
+	 * remove all the bound events
+	 */ TapListener.prototype.dispose = function() {
+        this._element.removeEventListener("touchstart", this._bindedEnd);
+        this._element.removeEventListener("touchmove", this._bindedMove);
+        this._element.removeEventListener("touchend", this._bindedEnd);
+        this._element.removeEventListener("mouseup", this._bindedEnd);
+        this._bindedMove = null;
+        this._bindedEnd = null;
+        this._element = null;
+    };
+    //END TAP LISTENER/////////////////////////////////////////////////////////
+    /**
+	 * Plays a silent sound and also invoke the "resume" method
+	 * @param {AudioContext} context
+	 * @private
+	 */ function startContext(context) {
+        // this accomplishes the iOS specific requirement
+        var buffer = context.createBuffer(1, 1, context.sampleRate);
+        var source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(0);
+        // resume the audio context
+        if (context.resume) context.resume();
+    }
+    /**
+	 * Returns true if the audio context is started
+	 * @param  {AudioContext}  context
+	 * @return {Boolean}
+	 * @private
+	 */ function isStarted(context) {
+        return context.state === "running";
+    }
+    /**
+	 * Invokes the callback as soon as the AudioContext
+	 * is started
+	 * @param  {AudioContext}   context
+	 * @param  {Function} callback
+	 */ function onStarted(context, callback) {
+        function checkLoop() {
+            if (isStarted(context)) callback();
+            else {
+                requestAnimationFrame(checkLoop);
+                if (context.resume) context.resume();
+            }
+        }
+        if (isStarted(context)) callback();
+        else checkLoop();
+    }
+    /**
+	 * Add a tap listener to the audio context
+	 * @param  {Array|Element|String|jQuery} element
+	 * @param {Array} tapListeners
+	 */ function bindTapListener(element, tapListeners, context) {
+        if (Array.isArray(element) || NodeList && element instanceof NodeList) for(var i = 0; i < element.length; i++)bindTapListener(element[i], tapListeners, context);
+        else if (typeof element === "string") bindTapListener(document.querySelectorAll(element), tapListeners, context);
+        else if (element.jquery && typeof element.toArray === "function") bindTapListener(element.toArray(), tapListeners, context);
+        else if (Element && element instanceof Element) {
+            //if it's an element, create a TapListener
+            var tap = new TapListener(element, context);
+            tapListeners.push(tap);
+        }
+    }
+    /**
+	 * @param {AudioContext} context The AudioContext to start.
+	 * @param {Array|String|Element|jQuery=} elements For iOS, the list of elements
+	 *                                               to bind tap event listeners
+	 *                                               which will start the AudioContext. If
+	 *                                               no elements are given, it will bind
+	 *                                               to the document.body.
+	 * @param {Function=} callback The callback to invoke when the AudioContext is started.
+	 * @return {Promise} The promise is invoked when the AudioContext
+	 *                       is started.
+	 */ function StartAudioContext(context, elements, callback) {
+        //the promise is invoked when the AudioContext is started
+        var promise = new Promise(function(success) {
+            onStarted(context, success);
+        });
+        // The TapListeners bound to the elements
+        var tapListeners = [];
+        // add all the tap listeners
+        if (!elements) elements = document.body;
+        bindTapListener(elements, tapListeners, context);
+        //dispose all these tap listeners when the context is started
+        promise.then(function() {
+            for(var i = 0; i < tapListeners.length; i++)tapListeners[i].dispose();
+            tapListeners = null;
+            if (callback) callback();
+        });
+        return promise;
+    }
+    return StartAudioContext;
+});
+
+
 "use strict";
 const $21df9c1ea4331da7$var$kicks = new (0, $48e418653d1eb56b$export$7f6d62d95a630450)(3);
 const $21df9c1ea4331da7$var$klicks = new (0, $1e8cb74b9ccead8b$export$4050a8406ef7a0ff)(0);
@@ -30918,24 +31080,32 @@ function $21df9c1ea4331da7$var$startAudio() {
         $21df9c1ea4331da7$var$droneNoise.distortion.wet.value = 0.5;
     }
     console.log("BPM: " + (0, $193d86afce95aa9f$export$86495b081fef8e52).bpm.value);
-    (0, $193d86afce95aa9f$export$86495b081fef8e52).start();
-    $21df9c1ea4331da7$var$droneNoise.noise.start();
-    $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
 }
-//console.log(context.state);
-console.log((0, $0eb7340e2d092af9$export$12b11dc969d02fed).version);
-console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
 let $21df9c1ea4331da7$var$alreadyKlicked = false;
-if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "suspended") window.addEventListener("click", ()=>{
-    if ($21df9c1ea4331da7$var$alreadyKlicked === false) {
-        $21df9c1ea4331da7$var$alreadyKlicked = true;
-        console.log("Clicked!");
-        //StartAudioContext(Tone.context) https://codepen.io/enteleform/pen/PepqYV?__cf_chl_tk=v.XU_dfJYahRSsy0rdIL8X.eOLfqOMFlWbje9wiTnWE-1658652732-0-gaNycGzNB30
+console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
+(0, $3d00f6854e3cc34b$export$b3571188c770cc5a)().then(()=>{
+    console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
+    if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "running") {
         $21df9c1ea4331da7$var$startAudio();
-        window.removeEventListener("click", undefined);
-        console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
+        (0, $193d86afce95aa9f$export$86495b081fef8e52).start();
+        $21df9c1ea4331da7$var$droneNoise.noise.start();
+        $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
     }
 });
-else if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "running") $21df9c1ea4331da7$var$startAudio();
+if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "suspended") {
+    console.log("hello");
+    window.addEventListener("click", ()=>{
+        if ($21df9c1ea4331da7$var$alreadyKlicked === false) {
+            $21df9c1ea4331da7$var$alreadyKlicked = true;
+            console.log("Clicked!");
+            $21df9c1ea4331da7$var$startAudio();
+            (0, $193d86afce95aa9f$export$86495b081fef8e52).start();
+            $21df9c1ea4331da7$var$droneNoise.noise.start();
+            $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
+            window.removeEventListener("click", undefined);
+            console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
+        }
+    });
+}
 
 

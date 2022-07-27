@@ -91,6 +91,7 @@ export class Klicks {
 
     out;
     kit;
+    loaded;
 
     constructor(volume) {
 
@@ -105,6 +106,8 @@ export class Klicks {
         this.reverb.wet.value = 0;
         this.delay = new FeedbackDelay('4n', 0.5);
         this.delay.wet.value = 0;
+
+        this.loaded = false;
 
         this.kit = new Players({
             C1: './samples/klick1.mp3',
@@ -125,11 +128,20 @@ export class Klicks {
             D3: './samples/klick16.mp3'
         }, () => {
             console.log('Klicks loaded');
+            this.loaded = true;
             this.kit.chain(this.eq, this.reverb, this.delay, this.out);
-
         });
     };   
 }
+
+// 1. load buffers
+// 2. define function to check if buffers are loaded
+// 3. run this function in a loop with delay
+// 4. cancel the loop once all buffers are loaded
+
+const interval = setInterval(() => {
+
+}, 500);
 
 export function genrateKlicks (rhythmDensity){
     let fullgeneratedKlicks;

@@ -235,11 +235,14 @@ export class Bass {
 
     out;
     kit;
+    loaded;
 
     constructor(volume) {
 
         this.out = new Gain(volume);
         this.eq = new EQ3(0, 0, 0);
+
+        this.loaded = false;
 
         this.kit = new Players({
             C1: './samples/bass101.mp3',
@@ -249,9 +252,10 @@ export class Bass {
             G1: './samples/bass105.mp3'
         }, () => {
             console.log('Bass loaded');
+            this.loaded = true;
             this.kit.chain(this.eq, this.out);
-
         });
+
     };   
 }
 

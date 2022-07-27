@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "math": "^0.0.3",
+    "startaudiocontext": "^1.2.1",
     "tone": "^14.7.77"
   },
   "repository": {
@@ -23,4 +24,3 @@
   "homepage": "https://github.com/milianmori/generativemusic#readme",
   "description": ""
 }
-
