@@ -1369,27 +1369,22 @@ function startAudio() {
 let alreadyKlicked = false;
 //console.log(context.state);
 const ctx = new AudioContext();
-if (ctx.state === "suspended") {
-    if ((0, _tone.context).state === "suspended") {
-        console.log("hello");
-        window.addEventListener("click", ()=>{
-            if (alreadyKlicked === false) {
-                alreadyKlicked = true;
-                console.log("Clicked!");
-                startAudio();
-                (0, _tone.Transport).start();
-                droneNoise.noise.start();
-                drone.osc.forEach((e)=>e.start());
-                window.removeEventListener("click", undefined);
-                console.log((0, _tone.context).state);
-            }
-        });
+if (ctx.state === "suspended") window.addEventListener("click", ()=>{
+    if (alreadyKlicked === false) {
+        alreadyKlicked = true;
+        console.log("Clicked!");
+        startAudio();
+        (0, _tone.Transport).start();
+        droneNoise.noise.start();
+        drone.osc.forEach((e)=>e.start());
+        window.removeEventListener("click", undefined);
+        console.log((0, _tone.context).state);
     }
-} else if (ctx.state === "running") (0, _tone.start)().then(()=>{
+});
+else if (ctx.state === "running") (0, _tone.start)().then(()=>{
     console.log((0, _tone.context).state);
     if ((0, _tone.context).state === "running") {
         startAudio();
-        window.removeEventListener("click", undefined);
         (function waitForLoading() {
             setTimeout(function() {
                 if (kicks.loaded && klicks.loaded && bass.loaded) {
@@ -1400,7 +1395,7 @@ if (ctx.state === "suspended") {
                     console.log("waiting for buffers to load...");
                     waitForLoading();
                 }
-            }, 42);
+            }, 0);
         })();
     }
 });

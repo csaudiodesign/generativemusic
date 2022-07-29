@@ -662,32 +662,27 @@ let alreadyKlicked = false;
 const ctx = new AudioContext();
 
 if(ctx.state === 'suspended'){
-    if (context.state === 'suspended') {
-    console.log('hello')
-    window.addEventListener("click", () => {
-        if (alreadyKlicked===false){
-            alreadyKlicked = true;
-            console.log("Clicked!")
+        window.addEventListener("click", () => {
+            if (alreadyKlicked===false){
+                alreadyKlicked = true;
+                console.log("Clicked!")
 
-            startAudio();
-            Transport.start();
-            droneNoise.noise.start();
-            drone.osc.forEach((e) => e.start());
-            
-            window.removeEventListener("click",this);
-            console.log(context.state);
-        }
-    });
-
-} 
+                startAudio();
+                Transport.start();
+                droneNoise.noise.start();
+                drone.osc.forEach((e) => e.start());
+                
+                window.removeEventListener("click",this);
+                console.log(context.state);
+            }
+        });
 }
+
 else if(ctx.state === 'running'){
     start().then(() => {
         console.log(context.state);
         if (context.state==='running'){
             startAudio();
-    
-            window.removeEventListener("click",this);
     
             (function waitForLoading() {
                 setTimeout(function() {
@@ -699,7 +694,7 @@ else if(ctx.state === 'running'){
                         console.log('waiting for buffers to load...');             
                         waitForLoading();
                     }
-                }, 42)
+                }, 0)
             })(); 
             
         }
