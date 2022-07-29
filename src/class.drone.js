@@ -56,7 +56,7 @@ export class Drone {
             })).connect(this.gains[index]);
         });
 
-        console.log('Drone ready');
+        //console.log('Drone ready');
         this.gain.chain(this.distortion,this.chorus,this.eq, this.out);
 
     };   

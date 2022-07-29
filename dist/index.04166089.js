@@ -697,8 +697,7 @@ function exponentialGain(index, dropgains, loudnessControl) {
 function startAudio() {
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    rhythmDensity = 9;
-    console.log(rhythmDensity);
+    /* rhythmDensity = 9; */ console.log(rhythmDensity);
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
     const finalMasterVolume = new (0, _tone.Volume)(0).toDestination();
     const limiter = new (0, _tone.Limiter)(0).connect(finalMasterVolume);
@@ -1368,11 +1367,29 @@ function startAudio() {
     console.log("BPM: " + (0, _tone.Transport).bpm.value);
 }
 let alreadyKlicked = false;
-console.log((0, _tone.context).state);
-(0, _tone.start)().then(()=>{
+//console.log(context.state);
+const ctx = new AudioContext();
+if (ctx.state === "suspended") {
+    if ((0, _tone.context).state === "suspended") {
+        console.log("hello");
+        window.addEventListener("click", ()=>{
+            if (alreadyKlicked === false) {
+                alreadyKlicked = true;
+                console.log("Clicked!");
+                startAudio();
+                (0, _tone.Transport).start();
+                droneNoise.noise.start();
+                drone.osc.forEach((e)=>e.start());
+                window.removeEventListener("click", undefined);
+                console.log((0, _tone.context).state);
+            }
+        });
+    }
+} else if (ctx.state === "running") (0, _tone.start)().then(()=>{
     console.log((0, _tone.context).state);
     if ((0, _tone.context).state === "running") {
         startAudio();
+        window.removeEventListener("click", undefined);
         (function waitForLoading() {
             setTimeout(function() {
                 if (kicks.loaded && klicks.loaded && bass.loaded) {
@@ -1387,21 +1404,6 @@ console.log((0, _tone.context).state);
         })();
     }
 });
-if ((0, _tone.context).state === "suspended") {
-    console.log("hello");
-    window.addEventListener("click", ()=>{
-        if (alreadyKlicked === false) {
-            alreadyKlicked = true;
-            console.log("Clicked!");
-            startAudio();
-            (0, _tone.Transport).start();
-            droneNoise.noise.start();
-            drone.osc.forEach((e)=>e.start());
-            window.removeEventListener("click", undefined);
-            console.log((0, _tone.context).state);
-        }
-    });
-}
 
 },{"tone":"2tCfN","./class.kicks":"g1JB6","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx","tone/build/esm/core/Tone":"6Gzxl","startaudiocontext":"ehf27","@parcel/transformer-js/src/esmodule-helpers.js":"aRELh"}],"2tCfN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -34340,7 +34342,7 @@ class Kicks {
             "A1": "./samples/kick06.mp3",
             "B1": "./samples/kick07.mp3"
         }, ()=>{
-            console.log("Kicks loaded");
+            //console.log('Kicks loaded');
             this.loaded = true;
             this.kit.chain(this.eq, this.biquad, this.out);
         });
@@ -34506,7 +34508,7 @@ class Klicks {
             C3: "./samples/klick15.mp3",
             D3: "./samples/klick16.mp3"
         }, ()=>{
-            console.log("Klicks loaded");
+            //console.log('Klicks loaded');
             this.loaded = true;
             this.kit.chain(this.eq, this.reverb, this.delay, this.out);
         });
@@ -34749,7 +34751,7 @@ class Bass {
             F1: "./samples/bass104.mp3",
             G1: "./samples/bass105.mp3"
         }, ()=>{
-            console.log("Bass loaded");
+            //console.log('Bass loaded');
             this.loaded = true;
             this.kit.chain(this.eq, this.out);
         });
@@ -34944,7 +34946,7 @@ class rhythmFigure1 {
                 type: "sine"
             }).connect(gainsRythmFigure1[index]);
         });
-        console.log("RhyhtmFigure1 ready");
+        //console.log('RhyhtmFigure1 ready');
         this.env.chain(this.eq, this.out);
     }
 }
@@ -35049,7 +35051,7 @@ class Drone {
                 type: "sine"
             }).connect(this.gains[index]);
         });
-        console.log("Drone ready");
+        //console.log('Drone ready');
         this.gain.chain(this.distortion, this.chorus, this.eq, this.out);
     }
 }
@@ -37109,7 +37111,7 @@ class rhythmFigure2 {
                 type: "sine"
             }).connect(this.gains[index]);
         });
-        console.log("RhyhtmFigure2 ready");
+        //console.log('RhyhtmFigure2 ready');
         this.env.chain(this.delay, this.reverb, this.filter, this.eq, this.out);
     }
 }

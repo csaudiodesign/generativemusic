@@ -71,7 +71,7 @@ export class rhythmFigure2 {
             })).connect(this.gains[index])
         });
 
-        console.log('RhyhtmFigure2 ready');
+       //console.log('RhyhtmFigure2 ready');
         this.env.chain(this.delay,this.reverb, this.filter,this.eq, this.out);
 
     };   

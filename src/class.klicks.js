@@ -127,7 +127,7 @@ export class Klicks {
             C3: './samples/klick15.mp3',
             D3: './samples/klick16.mp3'
         }, () => {
-            console.log('Klicks loaded');
+            //console.log('Klicks loaded');
             this.loaded = true;
             this.kit.chain(this.eq, this.reverb, this.delay, this.out);
         });

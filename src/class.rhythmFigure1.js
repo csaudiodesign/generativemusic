@@ -192,7 +192,7 @@ export class rhythmFigure1 {
             })).connect(gainsRythmFigure1[index]);
         });
 
-        console.log('RhyhtmFigure1 ready');
+        //console.log('RhyhtmFigure1 ready');
         this.env.chain(this.eq, this.out);
 
     };   

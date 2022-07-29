@@ -198,7 +198,7 @@ function startAudio(){
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    rhythmDensity = 9;
+    /* rhythmDensity = 9; */
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -652,37 +652,17 @@ function startAudio(){
     }
 
     console.log('BPM: ' + Transport.bpm.value);
-
-
 }
 
 
 let alreadyKlicked = false;
-console.log(context.state);
-
-start().then(() => {
-    console.log(context.state);
-    if (context.state==='running'){
-        startAudio();
-
-        (function waitForLoading() {
-            setTimeout(function() {
-                if (kicks.loaded && klicks.loaded && bass.loaded) {
-                    Transport.start();
-                    droneNoise.noise.start();
-                    drone.osc.forEach((e) => e.start());
-                } else {
-                    console.log('waiting for buffers to load...');             
-                    waitForLoading();
-                }
-            }, 42)
-        })(); 
-        
-    }
-}) 
+//console.log(context.state);
 
 
-if (context.state === 'suspended') {
+const ctx = new AudioContext();
+
+if(ctx.state === 'suspended'){
+    if (context.state === 'suspended') {
     console.log('hello')
     window.addEventListener("click", () => {
         if (alreadyKlicked===false){
@@ -699,4 +679,32 @@ if (context.state === 'suspended') {
         }
     });
 
+} 
 }
+else if(ctx.state === 'running'){
+    start().then(() => {
+        console.log(context.state);
+        if (context.state==='running'){
+            startAudio();
+    
+            window.removeEventListener("click",this);
+    
+            (function waitForLoading() {
+                setTimeout(function() {
+                    if (kicks.loaded && klicks.loaded && bass.loaded) {
+                        Transport.start();
+                        droneNoise.noise.start();
+                        drone.osc.forEach((e) => e.start());
+                    } else {
+                        console.log('waiting for buffers to load...');             
+                        waitForLoading();
+                    }
+                }, 42)
+            })(); 
+            
+        }
+    })
+}
+
+
+

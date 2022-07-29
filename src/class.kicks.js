@@ -244,7 +244,7 @@ export class Kicks {
             'A1': "./samples/kick06.mp3",
             'B1': "./samples/kick07.mp3",
         }, () => {
-            console.log('Kicks loaded');
+            //console.log('Kicks loaded');
             this.loaded = true;
             this.kit.chain(this.eq, this.biquad, this.out);
         });

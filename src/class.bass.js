@@ -251,7 +251,7 @@ export class Bass {
             F1: './samples/bass104.mp3',
             G1: './samples/bass105.mp3'
         }, () => {
-            console.log('Bass loaded');
+            //console.log('Bass loaded');
             this.loaded = true;
             this.kit.chain(this.eq, this.out);
         });

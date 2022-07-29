@@ -27319,17 +27319,12 @@ function $48e418653d1eb56b$var$fillKick(size, alternate) {
 class $48e418653d1eb56b$export$7f6d62d95a630450 {
     out;
     kit;
+    loaded;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
         this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
         this.biquad = new (0, $e8d9115796c61b99$export$26bbc35c91a15e23)(0, "highpass");
-        let flagKick = true;
-        (function myLoop() {
-            setTimeout(function() {
-                console.log("Kicks waiting...");
-                if (flagKick) myLoop();
-            }, 200);
-        })();
+        this.loaded = false;
         this.kit = new (0, $a23f185f5730393d$export$1912c9d78e93a6ed)({
             "C1": "./samples/kick01.mp3",
             "D1": "./samples/kick02.mp3",
@@ -27339,8 +27334,8 @@ class $48e418653d1eb56b$export$7f6d62d95a630450 {
             "A1": "./samples/kick06.mp3",
             "B1": "./samples/kick07.mp3"
         }, ()=>{
-            console.log("Kicks loaded");
-            flagKick = false;
+            //console.log('Kicks loaded');
+            this.loaded = true;
             this.kit.chain(this.eq, this.biquad, this.out);
         });
     }
@@ -27469,6 +27464,7 @@ function $1e8cb74b9ccead8b$var$generateRF2() {
 class $1e8cb74b9ccead8b$export$4050a8406ef7a0ff {
     out;
     kit;
+    loaded;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
         this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)({
@@ -27481,13 +27477,7 @@ class $1e8cb74b9ccead8b$export$4050a8406ef7a0ff {
         this.reverb.wet.value = 0;
         this.delay = new (0, $8c7ffa1824c6758b$export$28e4d032ddc580fa)("4n", 0.5);
         this.delay.wet.value = 0;
-        let flagKlicks = true;
-        (function myLoop() {
-            setTimeout(function() {
-                console.log("Klicks waiting...");
-                if (flagKlicks) myLoop();
-            }, 500);
-        })();
+        this.loaded = false;
         this.kit = new (0, $a23f185f5730393d$export$1912c9d78e93a6ed)({
             C1: "./samples/klick1.mp3",
             D1: "./samples/klick2.mp3",
@@ -27506,8 +27496,8 @@ class $1e8cb74b9ccead8b$export$4050a8406ef7a0ff {
             C3: "./samples/klick15.mp3",
             D3: "./samples/klick16.mp3"
         }, ()=>{
-            console.log("Klicks loaded");
-            flagKlicks = false;
+            //console.log('Klicks loaded');
+            this.loaded = true;
             this.kit.chain(this.eq, this.reverb, this.delay, this.out);
         });
     }
@@ -27733,16 +27723,11 @@ function $2dca7dec7a08b206$var$bassRhythm2(array, fullKickOutput, flag) {
 class $2dca7dec7a08b206$export$4371c5e3dd55b9f7 {
     out;
     kit;
+    loaded;
     constructor(volume){
         this.out = new (0, $200a6bd89d4579f9$export$acd19d919666900d)(volume);
         this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
-        let flagBass = true;
-        (function myLoop() {
-            setTimeout(function() {
-                console.log("Bass waiting...");
-                if (flagBass) myLoop();
-            }, 500);
-        })();
+        this.loaded = false;
         this.kit = new (0, $a23f185f5730393d$export$1912c9d78e93a6ed)({
             C1: "./samples/bass101.mp3",
             D1: "./samples/bass102.mp3",
@@ -27750,8 +27735,8 @@ class $2dca7dec7a08b206$export$4371c5e3dd55b9f7 {
             F1: "./samples/bass104.mp3",
             G1: "./samples/bass105.mp3"
         }, ()=>{
-            console.log("Bass loaded");
-            flagBass = false;
+            //console.log('Bass loaded');
+            this.loaded = true;
             this.kit.chain(this.eq, this.out);
         });
     }
@@ -27940,7 +27925,7 @@ class $b2c93cc76e2da2ab$export$56d9c0f62401e959 {
                 type: "sine"
             }).connect($b2c93cc76e2da2ab$var$gainsRythmFigure1[index]);
         });
-        console.log("RhyhtmFigure1 ready");
+        //console.log('RhyhtmFigure1 ready');
         this.env.chain(this.eq, this.out);
     }
 }
@@ -28040,7 +28025,7 @@ class $ad81f6362d05f163$export$3bf9263b7cac56ad {
                 type: "sine"
             }).connect(this.gains[index]);
         });
-        console.log("Drone ready");
+        //console.log('Drone ready');
         this.gain.chain(this.distortion, this.chorus, this.eq, this.out);
     }
 }
@@ -30095,7 +30080,7 @@ class $6200da4dfb771318$export$696465113711a6c9 {
                 type: "sine"
             }).connect(this.gains[index]);
         });
-        console.log("RhyhtmFigure2 ready");
+        //console.log('RhyhtmFigure2 ready');
         this.env.chain(this.delay, this.reverb, this.filter, this.eq, this.out);
     }
 }
@@ -31083,15 +31068,6 @@ function $21df9c1ea4331da7$var$startAudio() {
 }
 let $21df9c1ea4331da7$var$alreadyKlicked = false;
 console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
-(0, $3d00f6854e3cc34b$export$b3571188c770cc5a)().then(()=>{
-    console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
-    if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "running") {
-        $21df9c1ea4331da7$var$startAudio();
-        (0, $193d86afce95aa9f$export$86495b081fef8e52).start();
-        $21df9c1ea4331da7$var$droneNoise.noise.start();
-        $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
-    }
-});
 if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "suspended") {
     console.log("hello");
     window.addEventListener("click", ()=>{
@@ -31107,5 +31083,24 @@ if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "suspended") {
         }
     });
 }
+(0, $3d00f6854e3cc34b$export$b3571188c770cc5a)().then(()=>{
+    console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
+    if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "running") {
+        $21df9c1ea4331da7$var$startAudio();
+        window.removeEventListener("click", undefined);
+        (function waitForLoading() {
+            setTimeout(function() {
+                if ($21df9c1ea4331da7$var$kicks.loaded && $21df9c1ea4331da7$var$klicks.loaded && $21df9c1ea4331da7$var$bass.loaded) {
+                    (0, $193d86afce95aa9f$export$86495b081fef8e52).start();
+                    $21df9c1ea4331da7$var$droneNoise.noise.start();
+                    $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
+                } else {
+                    console.log("waiting for buffers to load...");
+                    waitForLoading();
+                }
+            }, 42);
+        })();
+    }
+});
 
 
