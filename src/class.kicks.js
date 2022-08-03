@@ -1,5 +1,5 @@
-import { Volume, EQ3, Players} from "tone";
-const rfx = fxrand;
+import { Volume, EQ3, Players, Part } from "tone";
+import { converto2Dto1D, translateBinarytoTone } from './lib';
 
 function generateRandom(min, max) {
 
@@ -7,7 +7,7 @@ function generateRandom(min, max) {
     let difference = max - min;
 
     // generate random number 
-    let rand = rfx();
+    let rand = Math.random();
 
     // multiply with difference 
     rand = Math.round(rand * difference * 100) / 100;
@@ -54,8 +54,8 @@ function triggerABS(array) {
 }
 
 function shuffle(array) {
-    const r = (from = 0, to = 1) => from + rfx() * (to - from);
-    var m = array.length,
+    const r = (from = 0, to = 1) => from + Math.random() * (to - from);
+    let m = array.length,
         t,
         i;
     while (m) {
@@ -74,14 +74,13 @@ function shuffle(array) {
 3. Rule: expertion: last trigger can have 2 trigger dicance:    [1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0]
 4. Rule: if there is a trigger on the 2nd last trigger of the bar before, the trigger cant land on the 2nd trigger becuase of 2. Rule: Bar1: [1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0], Bar2: [0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0]*/
 function kickRhythm(array, flag) {
-
     //count how much triggers are in array
-    var count = 0;
+    let count = 0;
     array.forEach((e, i) => {
         if (e === 1) count++;
     });
 
-    var arrayABS = [];
+    let arrayABS = [];
     while (true) {
         //1. Rule
         while (true) {
@@ -186,7 +185,6 @@ function fillKick(size,alternate){
 
     for (var i = 0; i < 9; i++) {
         array[i] = [];
-        //console.log(array[i]);
         for (var j = 0; j < 16; j++) {
             if(alternate===0){
                 if(j<size)array[i][j] = 1;
@@ -221,13 +219,39 @@ function fillKick(size,alternate){
     return array;
 }
 
+function nonRepeatingRhythmArray(length) {
+    let arr = [];
+    let iter = 0;
+    do {
+        let ran = Math.floor(Math.random() * length); 
+        arr = arr.indexOf(ran) > -1 ? arr : arr.concat(ran);
+        iter++;
+     } while (arr.length < length && iter <= 1000)
+     
+     return arr;
+}
+
 export class Kicks {
 
     out;
     kit;
     loaded;
+    kickCounter = 0;
+    nonRepeatingArray;
 
-    constructor(volume) {
+    /** ToneJS Part */
+    part;
+
+    /** use this for mutually exclusive bass pattern */
+    baserhythm;
+
+    /** the kick pattern */
+    pattern;
+
+    /** mapping of numbers to sample slots */
+    mapping = [ 'G1', 'A1', 'B1', 'C1', 'D1', 'E1', 'F1' ];
+
+    constructor(volume, rhythmDensity) {
 
         this.out = new Volume(volume);
         //this.eq = new EQ3(0, 0, 0);
@@ -244,14 +268,52 @@ export class Kicks {
             'A1': "./samples/kick06.mp3",
             'B1': "./samples/kick07.mp3",
         }, () => {
-            //console.log('Kicks loaded');
             this.loaded = true;
             //this.kit.chain(this.eq, this.biquad, this.out);
             this.kit.chain(this.out);
         });
 
-    };   
+        this.generatePattern(rhythmDensity);
+        
+        this.nonRepeatingArray = nonRepeatingRhythmArray(7);
+
+        this.part = new Part(this.playKick, this.pattern)
+        this.part.loopEnd = '9:0:0';
+        this.part.loop = true;
+    };
+
+    generatePattern(density) {
+        this.baserhythm = generateKicks(density);
+        this.pattern = translateBinarytoTone(
+            converto2Dto1D(this.baserhythm)
+        );
+    }
+
+    playKick = (time, note) => {
+        // randomize sequence of kick samples
+        let random;
+        this.kickCounter++;
+        if (this.kickCounter > 6) {
+            this.kickCounter = 0;
+            random = this.nonRepeatingArray[this.kickCounter];
+            const lastNumberofArray = this.nonRepeatingArray[6]
+            while(lastNumberofArray === this.nonRepeatingArray[6]) {
+                this.nonRepeatingArray = nonRepeatingRhythmArray(7);
+            }
+        } else {
+            random = this.nonRepeatingArray[this.kickCounter];
+        }
+
+        // play the sample
+        this.kit.player(this.mapping[random]).start(time);
+    }
 }
+
+/**
+ * ## Generate Rhythm Pattern
+ * @param {number} rhythmDensity 
+ * @returns Array pattern, length = 144
+ */
 export function generateKicks(rhythmDensity) {
 
     let kickInput = [[],[]];
@@ -259,8 +321,7 @@ export function generateKicks(rhythmDensity) {
     let flag = 0;
 
     if (rhythmDensity === 3) {
-        let random = Math.floor((rfx()*3));
-        console.log('random is ' + random);
+        let random = Math.floor((Math.random()*3));
         if (random === 0) {
             kickInput = fillKick(3,0);
         } else if (random === 1) {
@@ -269,7 +330,7 @@ export function generateKicks(rhythmDensity) {
         else kickInput = fillKick(1,0);
 
     } else if (rhythmDensity === 4) {
-        let random = Math.floor((rfx()*3));
+        let random = Math.floor((Math.random()*3));
         if(random === 0) kickInput = fillKick(4,1);
         if(random === 1) kickInput = fillKick(3,1);
         if(random === 2) kickInput = fillKick(2,1);

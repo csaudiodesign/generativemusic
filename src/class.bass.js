@@ -1,5 +1,5 @@
-import { Gain, EQ3, Sampler, Players } from "tone";
-const rfx = fxrand;
+import { Gain, EQ3, Sampler, Players, Part } from "tone";
+import { converto2Dto1D, translateBinarytoTone } from "./lib";
 
 function fillBass(size,alternate){
     let flag = 0;
@@ -41,21 +41,14 @@ function fillBass(size,alternate){
     return kickInputTriggers;
 }
 
-function converto2Dto1D(array){
-    var newArr = [];
-    for(var i = 0; i < array.length; i++)
-    {
-        newArr = newArr.concat(array[i]);
-    }
-    return newArr;
-}
+
 
 function checklastTrigger(array) {
     if (array[14] === 1) return 1;
     else return 0;
 }
 function shuffle(array) {
-    const r = (from = 0, to = 1) => from + rfx() * (to - from);
+    const r = (from = 0, to = 1) => from + Math.random() * (to - from);
     var m = array.length,
         t,
         i;
@@ -237,7 +230,13 @@ export class Bass {
     kit;
     loaded;
 
-    constructor(volume) {
+    /** the bass pattern */
+    pattern;
+
+    /** mapping of numbers to sample slots */
+    mapping = [ 'C1', 'D1', 'E1', 'F1', 'G1' ]
+
+    constructor(volume, density, kick_baserhythm) {
 
         this.out = new Gain(volume);
         //this.eq = new EQ3(0, 0, 0);
@@ -257,7 +256,22 @@ export class Bass {
             this.kit.chain(this.out);
         });
 
-    };   
+        this.generatePattern(density, kick_baserhythm);
+
+        this.part = new Part(this.playBass, this.pattern);
+        this.part.loopEnd = '9:0:0';
+        this.part.loop = true;
+
+    };
+
+    generatePattern(density, kick_baserhythm) {
+        this.pattern = translateBinarytoTone(generateBass(density, kick_baserhythm));
+    }
+
+    playBass = (time, note) => {
+        const random = Math.floor(Math.random() * 5);
+        this.kit.player(this.mapping[random]).start(time);
+    };
 }
 
 export function generateBass(rhythmDensity,kicksForBass){
