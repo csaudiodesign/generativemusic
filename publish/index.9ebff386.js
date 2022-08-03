@@ -27322,8 +27322,8 @@ class $48e418653d1eb56b$export$7f6d62d95a630450 {
     loaded;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
-        this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
-        this.biquad = new (0, $e8d9115796c61b99$export$26bbc35c91a15e23)(0, "highpass");
+        //this.eq = new EQ3(0, 0, 0);
+        //this.biquad = new BiquadFilter(10, 'highpass');
         this.loaded = false;
         this.kit = new (0, $a23f185f5730393d$export$1912c9d78e93a6ed)({
             "C1": "./samples/kick01.mp3",
@@ -27336,7 +27336,8 @@ class $48e418653d1eb56b$export$7f6d62d95a630450 {
         }, ()=>{
             //console.log('Kicks loaded');
             this.loaded = true;
-            this.kit.chain(this.eq, this.biquad, this.out);
+            //this.kit.chain(this.eq, this.biquad, this.out);
+            this.kit.chain(this.out);
         });
     }
 }
@@ -27467,13 +27468,12 @@ class $1e8cb74b9ccead8b$export$4050a8406ef7a0ff {
     loaded;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
-        this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)({
+        /* this.eq = new EQ3({
             low: 0,
             mid: 0,
             high: 0,
-            highFrequency: 8000
-        });
-        this.reverb = new (0, $2e8f4e99de55838b$export$6fb1520d4329a18d)(100);
+            highFrequency: 8000,
+        }); */ this.reverb = new (0, $2e8f4e99de55838b$export$6fb1520d4329a18d)(100);
         this.reverb.wet.value = 0;
         this.delay = new (0, $8c7ffa1824c6758b$export$28e4d032ddc580fa)("4n", 0.5);
         this.delay.wet.value = 0;
@@ -27498,7 +27498,8 @@ class $1e8cb74b9ccead8b$export$4050a8406ef7a0ff {
         }, ()=>{
             //console.log('Klicks loaded');
             this.loaded = true;
-            this.kit.chain(this.eq, this.reverb, this.delay, this.out);
+            //this.kit.chain(this.eq, this.reverb, this.delay, this.out);
+            this.kit.chain(this.reverb, this.delay, this.out);
         });
     }
 }
@@ -27726,7 +27727,7 @@ class $2dca7dec7a08b206$export$4371c5e3dd55b9f7 {
     loaded;
     constructor(volume){
         this.out = new (0, $200a6bd89d4579f9$export$acd19d919666900d)(volume);
-        this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.loaded = false;
         this.kit = new (0, $a23f185f5730393d$export$1912c9d78e93a6ed)({
             C1: "./samples/bass101.mp3",
@@ -27737,7 +27738,8 @@ class $2dca7dec7a08b206$export$4371c5e3dd55b9f7 {
         }, ()=>{
             //console.log('Bass loaded');
             this.loaded = true;
-            this.kit.chain(this.eq, this.out);
+            //this.kit.chain(this.eq, this.out);
+            this.kit.chain(this.out);
         });
     }
 }
@@ -27907,7 +27909,7 @@ class $b2c93cc76e2da2ab$export$56d9c0f62401e959 {
     env;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
-        this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.env = new (0, $f7e83647bb4822ef$export$e04e0eedd8192587)({
             attack: 0.01,
             decay: 0.5,
@@ -27926,7 +27928,8 @@ class $b2c93cc76e2da2ab$export$56d9c0f62401e959 {
             }).connect($b2c93cc76e2da2ab$var$gainsRythmFigure1[index]);
         });
         //console.log('RhyhtmFigure1 ready');
-        this.env.chain(this.eq, this.out);
+        //this.env.chain(this.eq, this.out);
+        this.env.chain(this.out);
     }
 }
 class $b2c93cc76e2da2ab$export$c4c19a222f9ff2dc {
@@ -27935,7 +27938,7 @@ class $b2c93cc76e2da2ab$export$c4c19a222f9ff2dc {
     noise;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
-        this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.bitcrusher = new (0, $7c1e5f6380696f95$export$89e1fd5b393fbb6e)(4);
         this.bitcrusher.wet.value = 0;
         this.distortion = new (0, $50c94488d85f7cab$export$406bc4309a3e7a54)(0.5);
@@ -27953,7 +27956,8 @@ class $b2c93cc76e2da2ab$export$c4c19a222f9ff2dc {
             release: 0.0
         });
         this.noise = new (0, $76955c76dcac2d3e$export$484d33a0500a4ce1)("pink");
-        this.noise.chain(this.env, this.bitcrusher, this.distortion, this.eq, this.compressor, this.out);
+        //this.noise.chain(this.env,this.bitcrusher,this.distortion,this.eq,this.compressor,this.out);
+        this.noise.chain(this.env, this.bitcrusher, this.distortion, this.compressor, this.out);
     }
 }
 function $b2c93cc76e2da2ab$export$9623113201233140(rhythmDensity) {
@@ -28002,7 +28006,7 @@ class $ad81f6362d05f163$export$3bf9263b7cac56ad {
     out;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
-        this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.distortion = new (0, $50c94488d85f7cab$export$406bc4309a3e7a54)({
             distortion: 0.5,
             wet: 0
@@ -28026,7 +28030,8 @@ class $ad81f6362d05f163$export$3bf9263b7cac56ad {
             }).connect(this.gains[index]);
         });
         //console.log('Drone ready');
-        this.gain.chain(this.distortion, this.chorus, this.eq, this.out);
+        //this.gain.chain(this.distortion,this.chorus,this.eq, this.out);
+        this.gain.chain(this.distortion, this.chorus, this.out);
     }
 }
 class $ad81f6362d05f163$export$dce84c771bd35990 {
@@ -28034,22 +28039,22 @@ class $ad81f6362d05f163$export$dce84c771bd35990 {
     noise;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
-        this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
-        this.bitcrusher = new (0, $7c1e5f6380696f95$export$89e1fd5b393fbb6e)(10);
-        this.bitcrusher.wet.value = 0;
+        //this.eq = new EQ3(0, 0, 0);
         this.distortion = new (0, $50c94488d85f7cab$export$406bc4309a3e7a54)(1);
         this.distortion.wet.value = 0;
-        this.filter = new (0, $e8d9115796c61b99$export$26bbc35c91a15e23)(2000, "highpass");
-        this.lfo = new (0, $4a4529bace75b797$export$603054d5ec296d77)({
+        this.bitcrusher = new (0, $7c1e5f6380696f95$export$89e1fd5b393fbb6e)(10);
+        this.bitcrusher.wet.value = 0;
+        //this.filter = new BiquadFilter(2000, 'highpass');
+        /* this.lfo = new LFO({
             frequency: 0.1,
             min: 1000,
             max: 4500,
             amplitude: 1,
             phase: 0
-        }).connect(this.filter.frequency);
-        this.gain = new (0, $7d48f9af04226b93$export$dde279e52d625429)(-50);
+        }).connect(this.filter.frequency); */ this.gain = new (0, $7d48f9af04226b93$export$dde279e52d625429)(-50);
         this.noise = new (0, $76955c76dcac2d3e$export$484d33a0500a4ce1)("pink");
-        this.noise.chain(this.gain, this.filter, this.bitcrusher, this.distortion, this.eq, this.out);
+        //this.noise.chain(this.gain,this.filter,this.bitcrusher,this.distortion,this.eq, this.out);
+        this.noise.chain(this.gain, this.bitcrusher, this.distortion, this.out);
     }
 }
 function $ad81f6362d05f163$export$a2b2d7914a45f81b(rhythmDensity) {
@@ -30055,10 +30060,8 @@ class $6200da4dfb771318$export$696465113711a6c9 {
     env;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
-        this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
-        this.filter = new (0, $e8d9115796c61b99$export$26bbc35c91a15e23)(750, "bandpass");
-        this.filter.type = "highpass";
-        this.filter.frequency.value = 0;
+        //this.eq = new EQ3(0, 0, 0);
+        //this.filter = new BiquadFilter(0, 'highpass');
         this.reverb = new (0, $2e8f4e99de55838b$export$6fb1520d4329a18d)(150);
         this.reverb.wet.value = 0;
         this.delay = new (0, $8c7ffa1824c6758b$export$28e4d032ddc580fa)("2n", 0.5);
@@ -30081,7 +30084,8 @@ class $6200da4dfb771318$export$696465113711a6c9 {
             }).connect(this.gains[index]);
         });
         //console.log('RhyhtmFigure2 ready');
-        this.env.chain(this.delay, this.reverb, this.filter, this.eq, this.out);
+        //this.env.chain(this.delay,this.reverb, this.filter,this.eq, this.out);
+        this.env.chain(this.delay, this.reverb, this.out);
     }
 }
 class $6200da4dfb771318$export$c4c19a222f9ff2dc {
@@ -30090,7 +30094,7 @@ class $6200da4dfb771318$export$c4c19a222f9ff2dc {
     noise;
     constructor(volume){
         this.out = new (0, $7d48f9af04226b93$export$dde279e52d625429)(volume);
-        this.eq = new (0, $d5b9bf13f6ee2dd7$export$2adf407ed955ca5d)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.bitcrusher = new (0, $7c1e5f6380696f95$export$89e1fd5b393fbb6e)(4);
         this.bitcrusher.wet.value = 0;
         this.distortion = new (0, $50c94488d85f7cab$export$406bc4309a3e7a54)(0.5);
@@ -30102,146 +30106,13 @@ class $6200da4dfb771318$export$c4c19a222f9ff2dc {
             release: 0.0
         });
         this.noise = new (0, $76955c76dcac2d3e$export$484d33a0500a4ce1)("pink").connect(this.env);
-        this.env.chain(this.bitcrusher, this.distortion, this.eq, this.out);
+        //this.env.chain(this.bitcrusher,this.distortion,this.eq, this.out);
+        this.env.chain(this.bitcrusher, this.distortion, this.out);
     }
 }
 function $6200da4dfb771318$export$1b7687825ff5a57e(rhythmDensity) {
     return $6200da4dfb771318$var$generateRhythmFigure2();
 }
-
-
-
-var $c1f9072cc68ee50d$exports = {};
-/**
- *  StartAudioContext.js
- *  @author Yotam Mann
- *  @license http://opensource.org/licenses/MIT MIT License
- *  @copyright 2016 Yotam Mann
- */ (function(root, factory) {
-    if (typeof define === "function" && define.amd) define([], factory);
-    else if ($c1f9072cc68ee50d$exports) $c1f9072cc68ee50d$exports = factory();
-    else root.StartAudioContext = factory();
-})($c1f9072cc68ee50d$exports, function() {
-    //TAP LISTENER/////////////////////////////////////////////////////////////
-    /**
-	 * @class  Listens for non-dragging tap ends on the given element
-	 * @param {Element} element
-	 * @internal
-	 */ var TapListener = function(element, context) {
-        this._dragged = false;
-        this._element = element;
-        this._bindedMove = this._moved.bind(this);
-        this._bindedEnd = this._ended.bind(this, context);
-        element.addEventListener("touchstart", this._bindedEnd);
-        element.addEventListener("touchmove", this._bindedMove);
-        element.addEventListener("touchend", this._bindedEnd);
-        element.addEventListener("mouseup", this._bindedEnd);
-    };
-    /**
-	 * drag move event
-	 */ TapListener.prototype._moved = function(e) {
-        this._dragged = true;
-    };
-    /**
-	 * tap ended listener
-	 */ TapListener.prototype._ended = function(context) {
-        if (!this._dragged) startContext(context);
-        this._dragged = false;
-    };
-    /**
-	 * remove all the bound events
-	 */ TapListener.prototype.dispose = function() {
-        this._element.removeEventListener("touchstart", this._bindedEnd);
-        this._element.removeEventListener("touchmove", this._bindedMove);
-        this._element.removeEventListener("touchend", this._bindedEnd);
-        this._element.removeEventListener("mouseup", this._bindedEnd);
-        this._bindedMove = null;
-        this._bindedEnd = null;
-        this._element = null;
-    };
-    //END TAP LISTENER/////////////////////////////////////////////////////////
-    /**
-	 * Plays a silent sound and also invoke the "resume" method
-	 * @param {AudioContext} context
-	 * @private
-	 */ function startContext(context) {
-        // this accomplishes the iOS specific requirement
-        var buffer = context.createBuffer(1, 1, context.sampleRate);
-        var source = context.createBufferSource();
-        source.buffer = buffer;
-        source.connect(context.destination);
-        source.start(0);
-        // resume the audio context
-        if (context.resume) context.resume();
-    }
-    /**
-	 * Returns true if the audio context is started
-	 * @param  {AudioContext}  context
-	 * @return {Boolean}
-	 * @private
-	 */ function isStarted(context) {
-        return context.state === "running";
-    }
-    /**
-	 * Invokes the callback as soon as the AudioContext
-	 * is started
-	 * @param  {AudioContext}   context
-	 * @param  {Function} callback
-	 */ function onStarted(context, callback) {
-        function checkLoop() {
-            if (isStarted(context)) callback();
-            else {
-                requestAnimationFrame(checkLoop);
-                if (context.resume) context.resume();
-            }
-        }
-        if (isStarted(context)) callback();
-        else checkLoop();
-    }
-    /**
-	 * Add a tap listener to the audio context
-	 * @param  {Array|Element|String|jQuery} element
-	 * @param {Array} tapListeners
-	 */ function bindTapListener(element, tapListeners, context) {
-        if (Array.isArray(element) || NodeList && element instanceof NodeList) for(var i = 0; i < element.length; i++)bindTapListener(element[i], tapListeners, context);
-        else if (typeof element === "string") bindTapListener(document.querySelectorAll(element), tapListeners, context);
-        else if (element.jquery && typeof element.toArray === "function") bindTapListener(element.toArray(), tapListeners, context);
-        else if (Element && element instanceof Element) {
-            //if it's an element, create a TapListener
-            var tap = new TapListener(element, context);
-            tapListeners.push(tap);
-        }
-    }
-    /**
-	 * @param {AudioContext} context The AudioContext to start.
-	 * @param {Array|String|Element|jQuery=} elements For iOS, the list of elements
-	 *                                               to bind tap event listeners
-	 *                                               which will start the AudioContext. If
-	 *                                               no elements are given, it will bind
-	 *                                               to the document.body.
-	 * @param {Function=} callback The callback to invoke when the AudioContext is started.
-	 * @return {Promise} The promise is invoked when the AudioContext
-	 *                       is started.
-	 */ function StartAudioContext(context, elements, callback) {
-        //the promise is invoked when the AudioContext is started
-        var promise = new Promise(function(success) {
-            onStarted(context, success);
-        });
-        // The TapListeners bound to the elements
-        var tapListeners = [];
-        // add all the tap listeners
-        if (!elements) elements = document.body;
-        bindTapListener(elements, tapListeners, context);
-        //dispose all these tap listeners when the context is started
-        promise.then(function() {
-            for(var i = 0; i < tapListeners.length; i++)tapListeners[i].dispose();
-            tapListeners = null;
-            if (callback) callback();
-        });
-        return promise;
-    }
-    return StartAudioContext;
-});
 
 
 "use strict";
@@ -30263,55 +30134,17 @@ function $21df9c1ea4331da7$var$nonRepeatingRhythmArray(length) {
     return arr;
 }
 function $21df9c1ea4331da7$var$converto2Dto1D(array) {
-    var newArr = [];
-    for(var i = 0; i < array.length; i++)newArr = newArr.concat(array[i]);
+    let newArr = [];
+    for(let i = 0; i < array.length; i++)newArr = newArr.concat(array[i]);
     return newArr;
 }
-function $21df9c1ea4331da7$var$shuffle(array) {
-    const r = (from = 0, to = 1)=>from + $21df9c1ea4331da7$var$rfx() * (to - from);
-    var m = array.length, t, i;
-    while(m){
-        i = Math.floor(r() * m--);
-        t = array[m]; // temporary storage
-        array[m] = array[i];
-        array[i] = t;
-    }
-    return array;
-}
-function $21df9c1ea4331da7$var$checklastTrigger(array) {
-    if (array[14] === 1) return 1;
-    else return 0;
-}
-function $21df9c1ea4331da7$var$triggerABS(array) {
-    const arrayABS = [];
-    var x = 0;
-    var z = 0;
-    var y = new Boolean(false);
-    var a = new Boolean(false);
-    for(var i = 0; i < 16; i++){
-        if (i === 15) {
-            z++;
-            arrayABS[x] = z;
-        } else if (array[i] === 0) {
-            if (y === true) {
-                a = true;
-                z++;
-            }
-        } else if (array[i] === 1) {
-            y = true;
-            if (i > 0 && a === true) {
-                z++;
-                arrayABS[x] = z;
-                x++;
-                z = 0;
-            }
-        }
-    }
-    return arrayABS;
-}
-function $21df9c1ea4331da7$var$translateBinarytoTone(array) {
+/**
+ * 
+ * @param {144} input array => länge loop 
+ * @returns ToneJS part lango
+ */ function $21df9c1ea4331da7$var$translateBinarytoTone(array) {
     let current = 0;
-    var returnArray = array.map((e, i)=>{
+    return array.map((e, i)=>{
         if (i <= 15) {
             current = i;
             return [
@@ -30367,13 +30200,12 @@ function $21df9c1ea4331da7$var$translateBinarytoTone(array) {
                 `8:${Math.floor(current / 4)}:${i % 4}`
             ];
         }
-    });
-    returnArray = returnArray.filter((e)=>e[0] === 1);
-    returnArray = returnArray.map((e, i)=>[
+    }).filter((e)=>e[0] === 1).map((e, i)=>[
             e[1],
-            `C${i}`
+            `C0`
         ]);
-    return returnArray;
+//1 8:1:3 tone Format
+//0 8:2:1 -->wird gelöscht mit filter
 }
 function $21df9c1ea4331da7$var$generateRandom(min, max) {
     // find diff
@@ -30397,7 +30229,8 @@ function $21df9c1ea4331da7$var$exponentialGain(index, dropgains, loudnessControl
 function $21df9c1ea4331da7$var$startAudio() {
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round($21df9c1ea4331da7$var$generateRandom(3, 9));
-    /* rhythmDensity = 9; */ console.log(rhythmDensity);
+    rhythmDensity = 9;
+    console.log(rhythmDensity);
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
     const finalMasterVolume = new (0, $7d48f9af04226b93$export$dde279e52d625429)(0).toDestination();
     const limiter = new (0, $3028028622c75f19$export$18d8154f27ea9172)(0).connect(finalMasterVolume);
@@ -30448,7 +30281,7 @@ function $21df9c1ea4331da7$var$startAudio() {
         if (random === 3) $21df9c1ea4331da7$var$kicks.kit.player("C1").start(time);
         else if (random === 2) $21df9c1ea4331da7$var$kicks.kit.player("D1").start(time);
         else if (random === 1) $21df9c1ea4331da7$var$kicks.kit.player("E1").start(time);
-        else $21df9c1ea4331da7$var$kicks.kit.player("F1").start(time);
+        else if (random === 0) $21df9c1ea4331da7$var$kicks.kit.player("F1").start(time);
     }
     const patternKick = $21df9c1ea4331da7$var$translateBinarytoTone(kick);
     const partKick = new (0, $3dead49a17571b0f$export$7b5bf7981d51054e)(playKick, patternKick);
@@ -30470,7 +30303,7 @@ function $21df9c1ea4331da7$var$startAudio() {
         else if (random === 2) $21df9c1ea4331da7$var$bass.kit.player("F1").start(time);
         else $21df9c1ea4331da7$var$bass.kit.player("G1").start(time);
     }
-    const patternBass = $21df9c1ea4331da7$var$translateBinarytoTone($21df9c1ea4331da7$var$converto2Dto1D(generatedBass));
+    const patternBass = $21df9c1ea4331da7$var$translateBinarytoTone(generatedBass);
     const partBass = new (0, $3dead49a17571b0f$export$7b5bf7981d51054e)(playBass, patternBass);
     partBass.loopEnd = "9:0:0";
     partBass.loop = true;
@@ -30573,7 +30406,7 @@ function $21df9c1ea4331da7$var$startAudio() {
                 $21df9c1ea4331da7$var$klicks.delay.delayTime.value = "2n";
             }
         } else if (rhythmDensity === 9) {
-            envNoiseKlick.attack = $21df9c1ea4331da7$var$generateRandom(0.001, 0.0001);
+            envNoiseKlick.attack = 0.001;
             envNoiseKlick.triggerAttack(time);
         }
     }
@@ -30588,12 +30421,7 @@ function $21df9c1ea4331da7$var$startAudio() {
     });
     $21df9c1ea4331da7$var$drone.out.connect(masterVolumeDrone);
     $21df9c1ea4331da7$var$droneNoise.out.connect(masterVolumeDrone);
-    $21df9c1ea4331da7$var$droneNoise.lfo.start();
-    $21df9c1ea4331da7$var$drone.chorus.start();
-    let filterFRQDrone = 100;
-    const autoFilterDrone = new (0, $e8d9115796c61b99$export$26bbc35c91a15e23)(filterFRQDrone, "highpass").connect(masterVolumeDrone);
-    let masterDroneGain = new (0, $200a6bd89d4579f9$export$acd19d919666900d)(1).connect(autoFilterDrone);
-    if (rhythmDensity === 0) autoFilterDrone.type = "bandpass";
+    /* droneNoise.lfo.start(); */ $21df9c1ea4331da7$var$drone.chorus.start();
     let rampTimeDroneGain = 0.6;
     let numberofSineDrone = 15;
     const droneTriggerGains = (0, $ad81f6362d05f163$export$a2b2d7914a45f81b)(rhythmDensity);
@@ -30981,9 +30809,8 @@ function $21df9c1ea4331da7$var$startAudio() {
         $21df9c1ea4331da7$var$kicks.kit.player.playbackRate = 20;
         $21df9c1ea4331da7$var$kicks.kit.player.playbackRate = 20;
         $21df9c1ea4331da7$var$kicks.kit.player.playbackRate = 20;
-        $21df9c1ea4331da7$var$kicks.biquad.frequency.value = 300;
-        $21df9c1ea4331da7$var$kicks.biquad.type = "bandpass";
-        partKick.start();
+        /* kicks.biquad.frequency.value  = 300;
+        kicks.biquad.type = 'bandpass'; */ partKick.start();
         partBass.start();
         partKlick.start();
         partRhythmFigure2.start();
@@ -31059,48 +30886,41 @@ function $21df9c1ea4331da7$var$startAudio() {
         rampTimeDroneGain = Math.round($21df9c1ea4331da7$var$generateRandom(4, 7));
         numberofSineDrone = Math.round($21df9c1ea4331da7$var$generateRandom(5, 20));
         $21df9c1ea4331da7$var$droneNoise.gain.volume.value = -45;
-        $21df9c1ea4331da7$var$droneNoise.lfo.min = 4000;
-        $21df9c1ea4331da7$var$droneNoise.lfo.max = 6000;
-        $21df9c1ea4331da7$var$droneNoise.bitcrusher.wet.value = 0.5;
+        /* droneNoise.lfo.min = 4000;
+        droneNoise.lfo.max = 6000; */ $21df9c1ea4331da7$var$droneNoise.bitcrusher.wet.value = 0.5;
         $21df9c1ea4331da7$var$droneNoise.distortion.wet.value = 0.5;
     }
     console.log("BPM: " + (0, $193d86afce95aa9f$export$86495b081fef8e52).bpm.value);
 }
 let $21df9c1ea4331da7$var$alreadyKlicked = false;
 console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
-if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "suspended") {
-    console.log("hello");
-    window.addEventListener("click", ()=>{
-        if ($21df9c1ea4331da7$var$alreadyKlicked === false) {
-            $21df9c1ea4331da7$var$alreadyKlicked = true;
-            console.log("Clicked!");
-            $21df9c1ea4331da7$var$startAudio();
-            (0, $193d86afce95aa9f$export$86495b081fef8e52).start();
-            $21df9c1ea4331da7$var$droneNoise.noise.start();
-            $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
-            window.removeEventListener("click", undefined);
-            console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
-        }
-    });
-}
-(0, $3d00f6854e3cc34b$export$b3571188c770cc5a)().then(()=>{
-    console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
-    if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "running") {
+const $21df9c1ea4331da7$var$ctx = new AudioContext();
+if ($21df9c1ea4331da7$var$ctx.state === "suspended") window.addEventListener("click", ()=>{
+    if ($21df9c1ea4331da7$var$alreadyKlicked === false) {
+        $21df9c1ea4331da7$var$alreadyKlicked = true;
+        console.log("Clicked!");
         $21df9c1ea4331da7$var$startAudio();
+        //Transport.start();
+        //droneNoise.noise.start();
+        $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
         window.removeEventListener("click", undefined);
-        (function waitForLoading() {
-            setTimeout(function() {
-                if ($21df9c1ea4331da7$var$kicks.loaded && $21df9c1ea4331da7$var$klicks.loaded && $21df9c1ea4331da7$var$bass.loaded) {
-                    (0, $193d86afce95aa9f$export$86495b081fef8e52).start();
-                    $21df9c1ea4331da7$var$droneNoise.noise.start();
-                    $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
-                } else {
-                    console.log("waiting for buffers to load...");
-                    waitForLoading();
-                }
-            }, 42);
-        })();
     }
+});
+else if ($21df9c1ea4331da7$var$ctx.state === "running") (0, $3d00f6854e3cc34b$export$b3571188c770cc5a)().then(()=>{
+    console.log((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state);
+    if ((0, $193d86afce95aa9f$export$a078c61943f9dbbe).state === "running") (function waitForLoading() {
+        setTimeout(function() {
+            if ($21df9c1ea4331da7$var$kicks.loaded && $21df9c1ea4331da7$var$klicks.loaded && $21df9c1ea4331da7$var$bass.loaded) {
+                $21df9c1ea4331da7$var$startAudio();
+                (0, $193d86afce95aa9f$export$86495b081fef8e52).start();
+                $21df9c1ea4331da7$var$droneNoise.noise.start();
+                $21df9c1ea4331da7$var$drone.osc.forEach((e)=>e.start());
+            } else {
+                console.log("waiting for buffers to load...");
+                waitForLoading();
+            }
+        }, 0);
+    })();
 });
 
 

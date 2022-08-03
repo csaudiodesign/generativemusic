@@ -1,4 +1,4 @@
-import { Volume, EQ3, Sampler,Players, BiquadFilter,Transport, ScaleExp} from "tone";
+import { Volume, EQ3, Players} from "tone";
 const rfx = fxrand;
 
 function generateRandom(min, max) {
@@ -230,8 +230,8 @@ export class Kicks {
     constructor(volume) {
 
         this.out = new Volume(volume);
-        this.eq = new EQ3(0, 0, 0);
-        this.biquad = new BiquadFilter(0, 'highpass');
+        //this.eq = new EQ3(0, 0, 0);
+        //this.biquad = new BiquadFilter(10, 'highpass');
 
         this.loaded = false;
 
@@ -246,7 +246,8 @@ export class Kicks {
         }, () => {
             //console.log('Kicks loaded');
             this.loaded = true;
-            this.kit.chain(this.eq, this.biquad, this.out);
+            //this.kit.chain(this.eq, this.biquad, this.out);
+            this.kit.chain(this.out);
         });
 
     };   

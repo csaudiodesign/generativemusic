@@ -170,7 +170,7 @@ export class rhythmFigure1 {
     constructor(volume) {
 
         this.out = new Volume(volume);
-        this.eq = new EQ3(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
 
         this.env = new AmplitudeEnvelope({
             attack: 0.01,
@@ -193,7 +193,8 @@ export class rhythmFigure1 {
         });
 
         //console.log('RhyhtmFigure1 ready');
-        this.env.chain(this.eq, this.out);
+        //this.env.chain(this.eq, this.out);
+        this.env.chain(this.out);
 
     };   
 }
@@ -207,7 +208,7 @@ export class rhythmFigure1Noise {
     constructor(volume){
 
         this.out = new Volume(volume);
-        this.eq = new EQ3(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.bitcrusher = new BitCrusher(4);
         this.bitcrusher.wet.value = 0;
         this.distortion = new Distortion(0.5);
@@ -227,7 +228,8 @@ export class rhythmFigure1Noise {
         })
 
         this.noise = new Noise("pink");
-        this.noise.chain(this.env,this.bitcrusher,this.distortion,this.eq,this.compressor,this.out);
+        //this.noise.chain(this.env,this.bitcrusher,this.distortion,this.eq,this.compressor,this.out);
+        this.noise.chain(this.env,this.bitcrusher,this.distortion,this.compressor,this.out);
     }
 
 }

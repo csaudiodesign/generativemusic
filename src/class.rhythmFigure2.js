@@ -41,10 +41,8 @@ export class rhythmFigure2 {
     constructor(volume) {
 
         this.out = new Volume(volume);
-        this.eq = new EQ3(0, 0, 0);
-        this.filter = new BiquadFilter(750, 'bandpass');
-        this.filter.type = 'highpass';
-        this.filter.frequency.value = 0;
+        //this.eq = new EQ3(0, 0, 0);
+        //this.filter = new BiquadFilter(0, 'highpass');
         this.reverb = new Reverb(150);
         this.reverb.wet.value = 0;
         this.delay = new FeedbackDelay('2n', 0.5);
@@ -72,7 +70,8 @@ export class rhythmFigure2 {
         });
 
        //console.log('RhyhtmFigure2 ready');
-        this.env.chain(this.delay,this.reverb, this.filter,this.eq, this.out);
+       //this.env.chain(this.delay,this.reverb, this.filter,this.eq, this.out);
+       this.env.chain(this.delay,this.reverb,this.out);
 
     };   
 }
@@ -86,7 +85,7 @@ export class rhythmFigure1Noise {
     constructor(volume){
 
         this.out = new Volume(volume);
-        this.eq = new EQ3(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.bitcrusher = new BitCrusher(4);
         this.bitcrusher.wet.value = 0;
         this.distortion = new Distortion(0.5);
@@ -100,7 +99,8 @@ export class rhythmFigure1Noise {
         })
 
         this.noise = new Noise("pink").connect(this.env);
-        this.env.chain(this.bitcrusher,this.distortion,this.eq, this.out);
+        //this.env.chain(this.bitcrusher,this.distortion,this.eq, this.out);
+        this.env.chain(this.bitcrusher,this.distortion,this.out);
     }
 
 }

@@ -532,7 +532,6 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"hxvqY":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _tone = require("tone");
 //import * as ac from 'startaudiocontext';
 var _classKicks = require("./class.kicks");
@@ -541,9 +540,6 @@ var _classBass = require("./class.bass");
 var _classRhythmFigure1 = require("./class.rhythmFigure1");
 var _classDrone = require("./class.drone");
 var _classRhythmFigure2 = require("./class.rhythmFigure2");
-var _tone1 = require("tone/build/esm/core/Tone");
-var _startaudiocontext = require("startaudiocontext");
-var _startaudiocontextDefault = parcelHelpers.interopDefault(_startaudiocontext);
 "use strict";
 const kicks = new (0, _classKicks.Kicks)(3);
 const klicks = new (0, _classKlicks.Klicks)(0);
@@ -563,55 +559,17 @@ function nonRepeatingRhythmArray(length) {
     return arr;
 }
 function converto2Dto1D(array) {
-    var newArr = [];
-    for(var i = 0; i < array.length; i++)newArr = newArr.concat(array[i]);
+    let newArr = [];
+    for(let i = 0; i < array.length; i++)newArr = newArr.concat(array[i]);
     return newArr;
 }
-function shuffle(array) {
-    const r = (from = 0, to = 1)=>from + rfx() * (to - from);
-    var m = array.length, t, i;
-    while(m){
-        i = Math.floor(r() * m--);
-        t = array[m]; // temporary storage
-        array[m] = array[i];
-        array[i] = t;
-    }
-    return array;
-}
-function checklastTrigger(array) {
-    if (array[14] === 1) return 1;
-    else return 0;
-}
-function triggerABS(array) {
-    const arrayABS = [];
-    var x = 0;
-    var z = 0;
-    var y = new Boolean(false);
-    var a = new Boolean(false);
-    for(var i = 0; i < 16; i++){
-        if (i === 15) {
-            z++;
-            arrayABS[x] = z;
-        } else if (array[i] === 0) {
-            if (y === true) {
-                a = true;
-                z++;
-            }
-        } else if (array[i] === 1) {
-            y = true;
-            if (i > 0 && a === true) {
-                z++;
-                arrayABS[x] = z;
-                x++;
-                z = 0;
-            }
-        }
-    }
-    return arrayABS;
-}
-function translateBinarytoTone(array) {
+/**
+ * 
+ * @param {144} input array => länge loop 
+ * @returns ToneJS part lango
+ */ function translateBinarytoTone(array) {
     let current = 0;
-    var returnArray = array.map((e, i)=>{
+    return array.map((e, i)=>{
         if (i <= 15) {
             current = i;
             return [
@@ -667,13 +625,12 @@ function translateBinarytoTone(array) {
                 `8:${Math.floor(current / 4)}:${i % 4}`
             ];
         }
-    });
-    returnArray = returnArray.filter((e)=>e[0] === 1);
-    returnArray = returnArray.map((e, i)=>[
+    }).filter((e)=>e[0] === 1).map((e, i)=>[
             e[1],
-            `C${i}`
+            `C0`
         ]);
-    return returnArray;
+//1 8:1:3 tone Format
+//0 8:2:1 -->wird gelöscht mit filter
 }
 function generateRandom(min, max) {
     // find diff
@@ -697,7 +654,8 @@ function exponentialGain(index, dropgains, loudnessControl) {
 function startAudio() {
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    /* rhythmDensity = 9; */ console.log(rhythmDensity);
+    rhythmDensity = 9;
+    console.log(rhythmDensity);
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
     const finalMasterVolume = new (0, _tone.Volume)(0).toDestination();
     const limiter = new (0, _tone.Limiter)(0).connect(finalMasterVolume);
@@ -748,7 +706,7 @@ function startAudio() {
         if (random === 3) kicks.kit.player("C1").start(time);
         else if (random === 2) kicks.kit.player("D1").start(time);
         else if (random === 1) kicks.kit.player("E1").start(time);
-        else kicks.kit.player("F1").start(time);
+        else if (random === 0) kicks.kit.player("F1").start(time);
     }
     const patternKick = translateBinarytoTone(kick);
     const partKick = new (0, _tone.Part)(playKick, patternKick);
@@ -770,7 +728,7 @@ function startAudio() {
         else if (random === 2) bass.kit.player("F1").start(time);
         else bass.kit.player("G1").start(time);
     }
-    const patternBass = translateBinarytoTone(converto2Dto1D(generatedBass));
+    const patternBass = translateBinarytoTone(generatedBass);
     const partBass = new (0, _tone.Part)(playBass, patternBass);
     partBass.loopEnd = "9:0:0";
     partBass.loop = true;
@@ -873,7 +831,7 @@ function startAudio() {
                 klicks.delay.delayTime.value = "2n";
             }
         } else if (rhythmDensity === 9) {
-            envNoiseKlick.attack = generateRandom(0.001, 0.0001);
+            envNoiseKlick.attack = 0.001;
             envNoiseKlick.triggerAttack(time);
         }
     }
@@ -888,12 +846,7 @@ function startAudio() {
     });
     drone.out.connect(masterVolumeDrone);
     droneNoise.out.connect(masterVolumeDrone);
-    droneNoise.lfo.start();
-    drone.chorus.start();
-    let filterFRQDrone = 100;
-    const autoFilterDrone = new (0, _tone.BiquadFilter)(filterFRQDrone, "highpass").connect(masterVolumeDrone);
-    let masterDroneGain = new (0, _tone.Gain)(1).connect(autoFilterDrone);
-    if (rhythmDensity === 0) autoFilterDrone.type = "bandpass";
+    /* droneNoise.lfo.start(); */ drone.chorus.start();
     let rampTimeDroneGain = 0.6;
     let numberofSineDrone = 15;
     const droneTriggerGains = (0, _classDrone.generateDroneGains)(rhythmDensity);
@@ -1281,9 +1234,8 @@ function startAudio() {
         kicks.kit.player.playbackRate = 20;
         kicks.kit.player.playbackRate = 20;
         kicks.kit.player.playbackRate = 20;
-        kicks.biquad.frequency.value = 300;
-        kicks.biquad.type = "bandpass";
-        partKick.start();
+        /* kicks.biquad.frequency.value  = 300;
+        kicks.biquad.type = 'bandpass'; */ partKick.start();
         partBass.start();
         partKlick.start();
         partRhythmFigure2.start();
@@ -1347,7 +1299,7 @@ function startAudio() {
         rampTimeDroneGain = Math.round(generateRandom(5, 9));
     }
     if (rhythmDensity === 9) {
-        (0, _tone.Transport).bpm.value = generateRandom(160, 185);
+        (0, _tone.Transport).bpm.value = Math.round(generateRandom(160, 185));
         bassMasterGain.volume.value = 2;
         masterVolumeKlick.volume.value = -100;
         partKick.start();
@@ -1358,49 +1310,71 @@ function startAudio() {
         masterVolumeDrone.volume.value = 3;
         rampTimeDroneGain = Math.round(generateRandom(4, 7));
         numberofSineDrone = Math.round(generateRandom(5, 20));
-        droneNoise.gain.volume.value = -45;
-        droneNoise.lfo.min = 4000;
-        droneNoise.lfo.max = 6000;
-        droneNoise.bitcrusher.wet.value = 0.5;
-        droneNoise.distortion.wet.value = 0.5;
-    }
+    //droneNoise.gain.volume.value = -45;
+    /* droneNoise.lfo.min = 4000;
+        droneNoise.lfo.max = 6000; */ /* droneNoise.bitcrusher.wet.value = 0.5
+        droneNoise.distortion.wet.value = 0.5 */ }
     console.log("BPM: " + (0, _tone.Transport).bpm.value);
 }
 let alreadyKlicked = false;
-//console.log(context.state);
-const ctx = new AudioContext();
-if (ctx.state === "suspended") window.addEventListener("click", ()=>{
+console.log((0, _tone.context).state);
+window.addEventListener("click", ()=>{
     if (alreadyKlicked === false) {
         alreadyKlicked = true;
         console.log("Clicked!");
         startAudio();
+        (0, _tone.start)();
         (0, _tone.Transport).start();
-        droneNoise.noise.start();
-        drone.osc.forEach((e)=>e.start());
+        //drone.osc.forEach((e) => e.start());
         window.removeEventListener("click", undefined);
-        console.log((0, _tone.context).state);
     }
-});
-else if (ctx.state === "running") (0, _tone.start)().then(()=>{
-    console.log((0, _tone.context).state);
-    if ((0, _tone.context).state === "running") {
-        startAudio();
-        (function waitForLoading() {
-            setTimeout(function() {
-                if (kicks.loaded && klicks.loaded && bass.loaded) {
-                    (0, _tone.Transport).start();
-                    droneNoise.noise.start();
-                    drone.osc.forEach((e)=>e.start());
-                } else {
-                    console.log("waiting for buffers to load...");
-                    waitForLoading();
-                }
-            }, 0);
-        })();
-    }
-});
+}); /* 
+const ctx = new AudioContext();
 
-},{"tone":"2tCfN","./class.kicks":"g1JB6","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx","tone/build/esm/core/Tone":"6Gzxl","startaudiocontext":"ehf27","@parcel/transformer-js/src/esmodule-helpers.js":"aRELh"}],"2tCfN":[function(require,module,exports) {
+if(ctx.state === 'suspended'){
+
+        
+        window.addEventListener("click", () => {
+            if (alreadyKlicked===false){
+                alreadyKlicked = true;
+                console.log("Clicked!")
+
+                startAudio();
+                //Transport.start();
+                //droneNoise.noise.start();
+                drone.osc.forEach((e) => e.start());
+                
+                window.removeEventListener("click",this);
+            }
+        });
+}
+
+else if(ctx.state === 'running'){
+    start().then(() => {
+        console.log(context.state);
+        if (context.state==='running'){
+            
+    
+            (function waitForLoading() {
+                setTimeout(function() {
+                    if (kicks.loaded && klicks.loaded && bass.loaded) {
+
+                        startAudio();
+                        Transport.start();
+                        droneNoise.noise.start();
+                        drone.osc.forEach((e) => e.start());
+                    } else {
+                        console.log('waiting for buffers to load...');             
+                        waitForLoading();
+                    }
+                }, 0)
+            })(); 
+            
+        }
+    })
+} */ 
+
+},{"tone":"2tCfN","./class.kicks":"g1JB6","./class.klicks":"5kDJ3","./class.bass":"2OyFN","./class.rhythmFigure1":"ihbg2","./class.drone":"72IyT","./class.rhythmFigure2":"8wSNx"}],"2tCfN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getContext", ()=>(0, _global.getContext));
@@ -34325,8 +34299,8 @@ class Kicks {
     loaded;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
-        this.eq = new (0, _tone.EQ3)(0, 0, 0);
-        this.biquad = new (0, _tone.BiquadFilter)(0, "highpass");
+        //this.eq = new EQ3(0, 0, 0);
+        //this.biquad = new BiquadFilter(10, 'highpass');
         this.loaded = false;
         this.kit = new (0, _tone.Players)({
             "C1": "./samples/kick01.mp3",
@@ -34339,7 +34313,8 @@ class Kicks {
         }, ()=>{
             //console.log('Kicks loaded');
             this.loaded = true;
-            this.kit.chain(this.eq, this.biquad, this.out);
+            //this.kit.chain(this.eq, this.biquad, this.out);
+            this.kit.chain(this.out);
         });
     }
 }
@@ -34474,13 +34449,12 @@ class Klicks {
     loaded;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
-        this.eq = new (0, _tone.EQ3)({
+        /* this.eq = new EQ3({
             low: 0,
             mid: 0,
             high: 0,
-            highFrequency: 8000
-        });
-        this.reverb = new (0, _tone.Reverb)(100);
+            highFrequency: 8000,
+        }); */ this.reverb = new (0, _tone.Reverb)(100);
         this.reverb.wet.value = 0;
         this.delay = new (0, _tone.FeedbackDelay)("4n", 0.5);
         this.delay.wet.value = 0;
@@ -34505,7 +34479,8 @@ class Klicks {
         }, ()=>{
             //console.log('Klicks loaded');
             this.loaded = true;
-            this.kit.chain(this.eq, this.reverb, this.delay, this.out);
+            //this.kit.chain(this.eq, this.reverb, this.delay, this.out);
+            this.kit.chain(this.reverb, this.delay, this.out);
         });
     }
 }
@@ -34737,7 +34712,7 @@ class Bass {
     loaded;
     constructor(volume){
         this.out = new (0, _tone.Gain)(volume);
-        this.eq = new (0, _tone.EQ3)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.loaded = false;
         this.kit = new (0, _tone.Players)({
             C1: "./samples/bass101.mp3",
@@ -34748,7 +34723,8 @@ class Bass {
         }, ()=>{
             //console.log('Bass loaded');
             this.loaded = true;
-            this.kit.chain(this.eq, this.out);
+            //this.kit.chain(this.eq, this.out);
+            this.kit.chain(this.out);
         });
     }
 }
@@ -34923,7 +34899,7 @@ class rhythmFigure1 {
     env;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
-        this.eq = new (0, _tone.EQ3)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.env = new (0, _tone.AmplitudeEnvelope)({
             attack: 0.01,
             decay: 0.5,
@@ -34942,7 +34918,8 @@ class rhythmFigure1 {
             }).connect(gainsRythmFigure1[index]);
         });
         //console.log('RhyhtmFigure1 ready');
-        this.env.chain(this.eq, this.out);
+        //this.env.chain(this.eq, this.out);
+        this.env.chain(this.out);
     }
 }
 class rhythmFigure1Noise {
@@ -34951,7 +34928,7 @@ class rhythmFigure1Noise {
     noise;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
-        this.eq = new (0, _tone.EQ3)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.bitcrusher = new (0, _tone.BitCrusher)(4);
         this.bitcrusher.wet.value = 0;
         this.distortion = new (0, _tone.Distortion)(0.5);
@@ -34969,7 +34946,8 @@ class rhythmFigure1Noise {
             release: 0.0
         });
         this.noise = new (0, _tone.Noise)("pink");
-        this.noise.chain(this.env, this.bitcrusher, this.distortion, this.eq, this.compressor, this.out);
+        //this.noise.chain(this.env,this.bitcrusher,this.distortion,this.eq,this.compressor,this.out);
+        this.noise.chain(this.env, this.bitcrusher, this.distortion, this.compressor, this.out);
     }
 }
 function generateRF1(rhythmDensity) {
@@ -35023,7 +35001,7 @@ class Drone {
     out;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
-        this.eq = new (0, _tone.EQ3)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.distortion = new (0, _tone.Distortion)({
             distortion: 0.5,
             wet: 0
@@ -35047,7 +35025,8 @@ class Drone {
             }).connect(this.gains[index]);
         });
         //console.log('Drone ready');
-        this.gain.chain(this.distortion, this.chorus, this.eq, this.out);
+        //this.gain.chain(this.distortion,this.chorus,this.eq, this.out);
+        this.gain.chain(this.distortion, this.chorus, this.out);
     }
 }
 class DroneNoise {
@@ -35055,22 +35034,22 @@ class DroneNoise {
     noise;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
-        this.eq = new (0, _tone.EQ3)(0, 0, 0);
-        this.bitcrusher = new (0, _tone.BitCrusher)(10);
-        this.bitcrusher.wet.value = 0;
+        //this.eq = new EQ3(0, 0, 0);
         this.distortion = new (0, _tone.Distortion)(1);
         this.distortion.wet.value = 0;
-        this.filter = new (0, _tone.BiquadFilter)(2000, "highpass");
-        this.lfo = new (0, _tone.LFO)({
+        this.bitcrusher = new (0, _tone.BitCrusher)(10);
+        this.bitcrusher.wet.value = 0;
+        //this.filter = new BiquadFilter(2000, 'highpass');
+        /* this.lfo = new LFO({
             frequency: 0.1,
             min: 1000,
             max: 4500,
             amplitude: 1,
             phase: 0
-        }).connect(this.filter.frequency);
-        this.gain = new (0, _tone.Volume)(-50);
+        }).connect(this.filter.frequency); */ this.gain = new (0, _tone.Volume)(-50);
         this.noise = new (0, _tone.Noise)("pink");
-        this.noise.chain(this.gain, this.filter, this.bitcrusher, this.distortion, this.eq, this.out);
+        //this.noise.chain(this.gain,this.filter,this.bitcrusher,this.distortion,this.eq, this.out);
+        this.noise.chain(this.gain, this.bitcrusher, this.distortion, this.out);
     }
 }
 function generateDroneGains(rhythmDensity) {
@@ -37081,10 +37060,8 @@ class rhythmFigure2 {
     env;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
-        this.eq = new (0, _tone.EQ3)(0, 0, 0);
-        this.filter = new (0, _tone.BiquadFilter)(750, "bandpass");
-        this.filter.type = "highpass";
-        this.filter.frequency.value = 0;
+        //this.eq = new EQ3(0, 0, 0);
+        //this.filter = new BiquadFilter(0, 'highpass');
         this.reverb = new (0, _tone.Reverb)(150);
         this.reverb.wet.value = 0;
         this.delay = new (0, _tone.FeedbackDelay)("2n", 0.5);
@@ -37107,7 +37084,8 @@ class rhythmFigure2 {
             }).connect(this.gains[index]);
         });
         //console.log('RhyhtmFigure2 ready');
-        this.env.chain(this.delay, this.reverb, this.filter, this.eq, this.out);
+        //this.env.chain(this.delay,this.reverb, this.filter,this.eq, this.out);
+        this.env.chain(this.delay, this.reverb, this.out);
     }
 }
 class rhythmFigure1Noise {
@@ -37116,7 +37094,7 @@ class rhythmFigure1Noise {
     noise;
     constructor(volume){
         this.out = new (0, _tone.Volume)(volume);
-        this.eq = new (0, _tone.EQ3)(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.bitcrusher = new (0, _tone.BitCrusher)(4);
         this.bitcrusher.wet.value = 0;
         this.distortion = new (0, _tone.Distortion)(0.5);
@@ -37128,145 +37106,14 @@ class rhythmFigure1Noise {
             release: 0.0
         });
         this.noise = new (0, _tone.Noise)("pink").connect(this.env);
-        this.env.chain(this.bitcrusher, this.distortion, this.eq, this.out);
+        //this.env.chain(this.bitcrusher,this.distortion,this.eq, this.out);
+        this.env.chain(this.bitcrusher, this.distortion, this.out);
     }
 }
 function generateRF2(rhythmDensity) {
     return generateRhythmFigure2();
 }
 
-},{"tone":"2tCfN","@parcel/transformer-js/src/esmodule-helpers.js":"aRELh"}],"ehf27":[function(require,module,exports) {
-/**
- *  StartAudioContext.js
- *  @author Yotam Mann
- *  @license http://opensource.org/licenses/MIT MIT License
- *  @copyright 2016 Yotam Mann
- */ (function(root, factory) {
-    if (typeof define === "function" && define.amd) define([], factory);
-    else if (module.exports) module.exports = factory();
-    else root.StartAudioContext = factory();
-})(this, function() {
-    //TAP LISTENER/////////////////////////////////////////////////////////////
-    /**
-	 * @class  Listens for non-dragging tap ends on the given element
-	 * @param {Element} element
-	 * @internal
-	 */ var TapListener = function(element, context) {
-        this._dragged = false;
-        this._element = element;
-        this._bindedMove = this._moved.bind(this);
-        this._bindedEnd = this._ended.bind(this, context);
-        element.addEventListener("touchstart", this._bindedEnd);
-        element.addEventListener("touchmove", this._bindedMove);
-        element.addEventListener("touchend", this._bindedEnd);
-        element.addEventListener("mouseup", this._bindedEnd);
-    };
-    /**
-	 * drag move event
-	 */ TapListener.prototype._moved = function(e) {
-        this._dragged = true;
-    };
-    /**
-	 * tap ended listener
-	 */ TapListener.prototype._ended = function(context) {
-        if (!this._dragged) startContext(context);
-        this._dragged = false;
-    };
-    /**
-	 * remove all the bound events
-	 */ TapListener.prototype.dispose = function() {
-        this._element.removeEventListener("touchstart", this._bindedEnd);
-        this._element.removeEventListener("touchmove", this._bindedMove);
-        this._element.removeEventListener("touchend", this._bindedEnd);
-        this._element.removeEventListener("mouseup", this._bindedEnd);
-        this._bindedMove = null;
-        this._bindedEnd = null;
-        this._element = null;
-    };
-    //END TAP LISTENER/////////////////////////////////////////////////////////
-    /**
-	 * Plays a silent sound and also invoke the "resume" method
-	 * @param {AudioContext} context
-	 * @private
-	 */ function startContext(context) {
-        // this accomplishes the iOS specific requirement
-        var buffer = context.createBuffer(1, 1, context.sampleRate);
-        var source = context.createBufferSource();
-        source.buffer = buffer;
-        source.connect(context.destination);
-        source.start(0);
-        // resume the audio context
-        if (context.resume) context.resume();
-    }
-    /**
-	 * Returns true if the audio context is started
-	 * @param  {AudioContext}  context
-	 * @return {Boolean}
-	 * @private
-	 */ function isStarted(context) {
-        return context.state === "running";
-    }
-    /**
-	 * Invokes the callback as soon as the AudioContext
-	 * is started
-	 * @param  {AudioContext}   context
-	 * @param  {Function} callback
-	 */ function onStarted(context, callback) {
-        function checkLoop() {
-            if (isStarted(context)) callback();
-            else {
-                requestAnimationFrame(checkLoop);
-                if (context.resume) context.resume();
-            }
-        }
-        if (isStarted(context)) callback();
-        else checkLoop();
-    }
-    /**
-	 * Add a tap listener to the audio context
-	 * @param  {Array|Element|String|jQuery} element
-	 * @param {Array} tapListeners
-	 */ function bindTapListener(element, tapListeners, context) {
-        if (Array.isArray(element) || NodeList && element instanceof NodeList) for(var i = 0; i < element.length; i++)bindTapListener(element[i], tapListeners, context);
-        else if (typeof element === "string") bindTapListener(document.querySelectorAll(element), tapListeners, context);
-        else if (element.jquery && typeof element.toArray === "function") bindTapListener(element.toArray(), tapListeners, context);
-        else if (Element && element instanceof Element) {
-            //if it's an element, create a TapListener
-            var tap = new TapListener(element, context);
-            tapListeners.push(tap);
-        }
-    }
-    /**
-	 * @param {AudioContext} context The AudioContext to start.
-	 * @param {Array|String|Element|jQuery=} elements For iOS, the list of elements
-	 *                                               to bind tap event listeners
-	 *                                               which will start the AudioContext. If
-	 *                                               no elements are given, it will bind
-	 *                                               to the document.body.
-	 * @param {Function=} callback The callback to invoke when the AudioContext is started.
-	 * @return {Promise} The promise is invoked when the AudioContext
-	 *                       is started.
-	 */ function StartAudioContext(context, elements, callback) {
-        //the promise is invoked when the AudioContext is started
-        var promise = new Promise(function(success) {
-            onStarted(context, success);
-        });
-        // The TapListeners bound to the elements
-        var tapListeners = [];
-        // add all the tap listeners
-        if (!elements) elements = document.body;
-        bindTapListener(elements, tapListeners, context);
-        //dispose all these tap listeners when the context is started
-        promise.then(function() {
-            for(var i = 0; i < tapListeners.length; i++)tapListeners[i].dispose();
-            tapListeners = null;
-            if (callback) callback();
-        });
-        return promise;
-    }
-    return StartAudioContext;
-});
-
-},{}]},["4pYfS","hxvqY"], "hxvqY", "parcelRequired404")
+},{"tone":"2tCfN","@parcel/transformer-js/src/esmodule-helpers.js":"aRELh"}]},["4pYfS","hxvqY"], "hxvqY", "parcelRequired404")
 
 //# sourceMappingURL=index.04166089.js.map

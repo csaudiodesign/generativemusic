@@ -240,7 +240,7 @@ export class Bass {
     constructor(volume) {
 
         this.out = new Gain(volume);
-        this.eq = new EQ3(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
 
         this.loaded = false;
 
@@ -253,7 +253,8 @@ export class Bass {
         }, () => {
             //console.log('Bass loaded');
             this.loaded = true;
-            this.kit.chain(this.eq, this.out);
+            //this.kit.chain(this.eq, this.out);
+            this.kit.chain(this.out);
         });
 
     };   

@@ -28,7 +28,7 @@ export class Drone {
     constructor(volume) {
 
         this.out = new Volume(volume);
-        this.eq = new EQ3(0, 0, 0);
+        //this.eq = new EQ3(0, 0, 0);
         this.distortion = new Distortion({
             distortion: 0.5,
             wet: 0
@@ -57,7 +57,8 @@ export class Drone {
         });
 
         //console.log('Drone ready');
-        this.gain.chain(this.distortion,this.chorus,this.eq, this.out);
+        //this.gain.chain(this.distortion,this.chorus,this.eq, this.out);
+        this.gain.chain(this.distortion,this.chorus, this.out);
 
     };   
 }
@@ -70,24 +71,25 @@ export class DroneNoise {
     constructor(volume){
 
         this.out = new Volume(volume);
-        this.eq = new EQ3(0, 0, 0);
-        this.bitcrusher = new BitCrusher(10);
-        this.bitcrusher.wet.value = 0;
+        //this.eq = new EQ3(0, 0, 0);
         this.distortion = new Distortion(1);
         this.distortion.wet.value = 0;
-        this.filter = new BiquadFilter(2000, 'highpass');
-        this.lfo = new LFO({
+        this.bitcrusher = new BitCrusher(10);
+        this.bitcrusher.wet.value = 0;
+        //this.filter = new BiquadFilter(2000, 'highpass');
+        /* this.lfo = new LFO({
             frequency: 0.1,
             min: 1000,
             max: 4500,
             amplitude: 1,
             phase: 0
-        }).connect(this.filter.frequency);
+        }).connect(this.filter.frequency); */
         
         this.gain = new Volume(-50);
         this.noise = new Noise("pink");
 
-        this.noise.chain(this.gain,this.filter,this.bitcrusher,this.distortion,this.eq, this.out);
+        //this.noise.chain(this.gain,this.filter,this.bitcrusher,this.distortion,this.eq, this.out);
+        this.noise.chain(this.gain,this.bitcrusher,this.distortion, this.out);
     }
 
 }

@@ -1,6 +1,5 @@
 "use strict";
 import {
-    BiquadFilter,
     Volume,
     EQ3,
     Limiter,
@@ -52,8 +51,6 @@ import {
     rhythmFigure2,
     generateRF2
 } from './class.rhythmFigure2';
-import { Tone } from 'tone/build/esm/core/Tone';
-import StartAudioContext from 'startaudiocontext';
 
 const rfx = fxrand;
 const rf2 = new rhythmFigure2;
@@ -69,102 +66,59 @@ function nonRepeatingRhythmArray(length) {
 }
   
 function converto2Dto1D(array){
-    var newArr = [];
-    for(var i = 0; i < array.length; i++)
+    let newArr = [];
+    for(let i = 0; i < array.length; i++)
     {
         newArr = newArr.concat(array[i]);
     }
     return newArr;
 }
 
-function shuffle(array) {
-    const r = (from = 0, to = 1) => from + rfx() * (to - from);
-    var m = array.length,
-        t,
-        i;
-    while (m) {
-        i = Math.floor(r() * m--);
-        t = array[m]; // temporary storage
-        array[m] = array[i];
-        array[i] = t;
-    }
 
-    return array;
-}
-
-function checklastTrigger(array) {
-    if (array[14] === 1) return 1;
-    else return 0;
-}
-
-function triggerABS(array) {
-    const arrayABS = [];
-    var x = 0;
-    var z = 0;
-    var y = new Boolean(false);
-    var a = new Boolean(false);
-
-    for (var i = 0; i < 16; i++) {
-        if (i === 15) {
-            z++;
-            arrayABS[x] = z;
-        } else if (array[i] === 0) {
-            if (y === true) {
-                a = true;
-                z++;
-            }
-        } else if (array[i] === 1) {
-            y = true;
-            if (i > 0 && a === true) {
-                z++;
-                arrayABS[x] = z;
-                x++;
-                z = 0;
-            }
-        }
-    }
-    return (arrayABS);
-
-}
-
+/**
+ * 
+ * @param {144} input array => länge loop 
+ * @returns ToneJS part lango
+ */
 function translateBinarytoTone(array) {
 
     let current = 0;
-    var returnArray = array.map((e, i) => {
-        if (i <= 15) {
-            current = i;
-            return [e, `0:${Math.floor(current/4)}:${i%4}`]
-        } else if (i >= 16 && i < 32) {
-            current = i - 16;
-            return [e, `1:${Math.floor(current/4)}:${i%4}`]
-        } else if (i >= 32 && i < 48) {
-            current = i - 32;
-            return [e, `2:${Math.floor(current/4)}:${i%4}`]
-        } else if (i >= 48 && i < 64) {
-            current = i - 48;
-            return [e, `3:${Math.floor(current/4)}:${i%4}`]
-        } else if (i >= 64 && i < 80) {
-            current = i - 64;
-            return [e, `4:${Math.floor(current/4)}:${i%4}`]
-        } else if (i >= 80 && i < 96) {
-            current = i - 80;
-            return [e, `5:${Math.floor(current/4)}:${i%4}`]
-        } else if (i >= 96 && i < 112) {
-            current = i - 96;
-            return [e, `6:${Math.floor(current/4)}:${i%4}`]
-        } else if (i >= 112 && i < 128) {
-            current = i - 112;
-            return [e, `7:${Math.floor(current/4)}:${i%4}`]
-        } else {
-            current = i - 128;
-            return [e, `8:${Math.floor(current/4)}:${i%4}`]
-        }
-    });
+    return array
+        .map((e, i) => {
+            if (i <= 15) {
+                current = i;
+                return [e, `0:${Math.floor(current/4)}:${i%4}`]
+            } else if (i >= 16 && i < 32) {
+                current = i - 16;
+                return [e, `1:${Math.floor(current/4)}:${i%4}`]
+            } else if (i >= 32 && i < 48) {
+                current = i - 32;
+                return [e, `2:${Math.floor(current/4)}:${i%4}`]
+            } else if (i >= 48 && i < 64) {
+                current = i - 48;
+                return [e, `3:${Math.floor(current/4)}:${i%4}`]
+            } else if (i >= 64 && i < 80) {
+                current = i - 64;
+                return [e, `4:${Math.floor(current/4)}:${i%4}`]
+            } else if (i >= 80 && i < 96) {
+                current = i - 80;
+                return [e, `5:${Math.floor(current/4)}:${i%4}`]
+            } else if (i >= 96 && i < 112) {
+                current = i - 96;
+                return [e, `6:${Math.floor(current/4)}:${i%4}`]
+            } else if (i >= 112 && i < 128) {
+                current = i - 112;
+                return [e, `7:${Math.floor(current/4)}:${i%4}`]
+            } else {
+                current = i - 128;
+                return [e, `8:${Math.floor(current/4)}:${i%4}`]
+            }
+        })
+        .filter(e => e[0] === 1)
+        .map((e, i) => [e[1], `C0`]);
 
-    returnArray = returnArray.filter(e => e[0] === 1)
-    returnArray = returnArray.map((e, i) => [e[1], `C${i}`]);
-
-    return returnArray;
+        //1 8:1:3 tone Format
+        //0 8:2:1 -->wird gelöscht mit filter
 }
 
 function generateRandom(min, max) {
@@ -198,7 +152,7 @@ function startAudio(){
 
     //////////////////////////////////////////////////////////////////<<DENSITY------------------------------------------------------------------------------
     let rhythmDensity = Math.round(generateRandom(3, 9));
-    /* rhythmDensity = 9; */
+    rhythmDensity = 9;
     console.log(rhythmDensity);
 
     //////////////////////////////////////////////////////////////////<<MASTER------------------------------------------------------------------------------
@@ -265,7 +219,7 @@ function startAudio(){
         if (random === 3) kicks.kit.player('C1').start(time);
         else if (random === 2) kicks.kit.player('D1').start(time);
         else if (random === 1) kicks.kit.player('E1').start(time);
-        else kicks.kit.player('F1').start(time);
+        else if (random === 0) kicks.kit.player('F1').start(time);
     };
 
     const patternKick = translateBinarytoTone(kick);
@@ -290,7 +244,7 @@ function startAudio(){
         else bass.kit.player('G1').start(time);
     };
 
-    const patternBass = translateBinarytoTone(converto2Dto1D(generatedBass));
+    const patternBass = translateBinarytoTone(generatedBass);
     const partBass = new Part(playBass, patternBass);
     partBass.loopEnd = '9:0:0';
     partBass.loop = true;
@@ -403,7 +357,8 @@ function startAudio(){
                 klicks.delay.delayTime.value = '2n';
             }
         } else if (rhythmDensity === 9) {
-            envNoiseKlick.attack = generateRandom(0.001, 0.0001);
+            envNoiseKlick.attack = 0.001;
+            
             envNoiseKlick.triggerAttack(time);
         }
     };
@@ -420,13 +375,8 @@ function startAudio(){
     drone.out.connect(masterVolumeDrone);
     droneNoise.out.connect(masterVolumeDrone);
     
-    droneNoise.lfo.start();
+    /* droneNoise.lfo.start(); */
     drone.chorus.start();
-
-    let filterFRQDrone = 100
-    const autoFilterDrone = new BiquadFilter(filterFRQDrone, 'highpass').connect(masterVolumeDrone);
-    let masterDroneGain = new Gain(1).connect(autoFilterDrone);
-    if (rhythmDensity === 0) autoFilterDrone.type = 'bandpass';
 
     let rampTimeDroneGain = 0.6;
     let numberofSineDrone = 15;
@@ -542,8 +492,8 @@ function startAudio(){
         kicks.kit.player.playbackRate = 20;
         kicks.kit.player.playbackRate = 20;
         kicks.kit.player.playbackRate = 20;
-        kicks.biquad.frequency.value  = 300;
-        kicks.biquad.type = 'bandpass';
+        /* kicks.biquad.frequency.value  = 300;
+        kicks.biquad.type = 'bandpass'; */
         partKick.start();
         partBass.start();
         partKlick.start();
@@ -629,7 +579,7 @@ function startAudio(){
         
     }
     if (rhythmDensity === 9) {
-        Transport.bpm.value = generateRandom(160, 185);
+        Transport.bpm.value = Math.round(generateRandom(160, 185));
 
         bassMasterGain.volume.value = 2;
         masterVolumeKlick.volume.value = -100;
@@ -644,11 +594,11 @@ function startAudio(){
         rampTimeDroneGain = Math.round(generateRandom(4,7));
         numberofSineDrone = Math.round(generateRandom(5,20));
         
-        droneNoise.gain.volume.value = -45;
-        droneNoise.lfo.min = 4000;
-        droneNoise.lfo.max = 6000;
-        droneNoise.bitcrusher.wet.value = 0.5
-        droneNoise.distortion.wet.value = 0.5
+        //droneNoise.gain.volume.value = -45;
+        /* droneNoise.lfo.min = 4000;
+        droneNoise.lfo.max = 6000; */
+        /* droneNoise.bitcrusher.wet.value = 0.5
+        droneNoise.distortion.wet.value = 0.5 */
     }
 
     console.log('BPM: ' + Transport.bpm.value);
@@ -656,24 +606,40 @@ function startAudio(){
 
 
 let alreadyKlicked = false;
-//console.log(context.state);
+console.log(context.state);
 
+window.addEventListener("click", () => {
+    if (alreadyKlicked===false){
+        alreadyKlicked = true;
+        console.log("Clicked!")
 
+        
+        startAudio();        
+        start();
+        Transport.start();
+        //drone.osc.forEach((e) => e.start());
+        
+        window.removeEventListener("click",this);
+    }
+});
+
+/* 
 const ctx = new AudioContext();
 
 if(ctx.state === 'suspended'){
+
+        
         window.addEventListener("click", () => {
             if (alreadyKlicked===false){
                 alreadyKlicked = true;
                 console.log("Clicked!")
 
                 startAudio();
-                Transport.start();
-                droneNoise.noise.start();
+                //Transport.start();
+                //droneNoise.noise.start();
                 drone.osc.forEach((e) => e.start());
                 
                 window.removeEventListener("click",this);
-                console.log(context.state);
             }
         });
 }
@@ -682,11 +648,13 @@ else if(ctx.state === 'running'){
     start().then(() => {
         console.log(context.state);
         if (context.state==='running'){
-            startAudio();
+            
     
             (function waitForLoading() {
                 setTimeout(function() {
                     if (kicks.loaded && klicks.loaded && bass.loaded) {
+
+                        startAudio();
                         Transport.start();
                         droneNoise.noise.start();
                         drone.osc.forEach((e) => e.start());
@@ -699,7 +667,7 @@ else if(ctx.state === 'running'){
             
         }
     })
-}
+} */
 
 
 

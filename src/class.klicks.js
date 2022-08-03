@@ -96,12 +96,12 @@ export class Klicks {
     constructor(volume) {
 
         this.out = new Volume(volume);
-        this.eq = new EQ3({
+        /* this.eq = new EQ3({
             low: 0,
             mid: 0,
             high: 0,
             highFrequency: 8000,
-        });
+        }); */
         this.reverb = new Reverb (100);
         this.reverb.wet.value = 0;
         this.delay = new FeedbackDelay('4n', 0.5);
@@ -129,7 +129,8 @@ export class Klicks {
         }, () => {
             //console.log('Klicks loaded');
             this.loaded = true;
-            this.kit.chain(this.eq, this.reverb, this.delay, this.out);
+            //this.kit.chain(this.eq, this.reverb, this.delay, this.out);
+            this.kit.chain(this.reverb, this.delay, this.out);
         });
     };   
 }
